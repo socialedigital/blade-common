@@ -1,0 +1,25 @@
+{
+  "name": "blade-common",
+  "version": "0.1.0",
+  "description": "contains models, etc. that are common to all blade services",
+  "main": "index.js",
+  "sails": {
+    "isHook": true
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cliff Vick <cliff@bladepayments.com>",
+  "license": "Blade",
+  "dependencies": {
+    "bluebird": "^2.9.24",
+    "lodash": "^3.7.0",
+    "sails-build-dictionary": "^0.10.1",
+    "sails-redis": "^0.10.3",
+    "sails-util": "^0.10.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bladesystem/blade-common.git"
+  }
+}
