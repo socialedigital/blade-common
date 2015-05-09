@@ -7,6 +7,7 @@ var Promise = require('bluebird');
 
 module.exports = function(sails) {
     var apiDirectory = path.join(__dirname, 'api');
+    var libDirectory = path.join(__dirname, 'lib');
 
     return {
         /**
@@ -91,6 +92,11 @@ module.exports = function(sails) {
                 });
             });
         },
+        Service: function() {
+            var discover = require(libDirectory + '/discovery.js');
+            discover.setSails(sails);
+            return discover.Service;
+        }
     }
 
 };
