@@ -19,6 +19,9 @@ module.exports = function(sails) {
             this.getModelNames(apiDirectory, function(err, modelNames) {
                 if (err) return cb(err);
                 sails.log.info(modelNames.length + ' additional Blade models loaded.');
+                _.each(modelNames, function(modelName) {
+                    sails.log.trace(modelName);
+                })
                 cb();
             })
             //this.getPluginsNames(apiDirectory, function (err, pluginsNames) {
@@ -91,9 +94,7 @@ module.exports = function(sails) {
                 });
             });
         },
-        Service: function() {
-            return require(libDirectory + '/discovery.js').Service();
-        }
+        Service: require(libDirectory + '/discovery.js').Service
     }
 
 };
