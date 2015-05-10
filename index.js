@@ -20,7 +20,7 @@ module.exports = function(sails) {
                 if (err) return cb(err);
                 sails.log.info(modelNames.length + ' additional Blade models loaded.');
                 _.each(modelNames, function(modelName) {
-                    sails.log.trace(modelName);
+                    sails.log.verbose(modelName);
                 })
                 cb();
             })
