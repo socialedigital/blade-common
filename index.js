@@ -20,7 +20,6 @@ module.exports = function() {
                 // provide other services with a means to discover this service's capabilities
                 'get /info': 'ServiceController.info'
             }
-        },
-        Service: require(__dirname + '/lib/discovery.js').Service
+        }
     };
 };
