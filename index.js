@@ -5,6 +5,10 @@ var buildDictionary = require('sails-build-dictionary');
 var fs = require('fs');
 var Promise = require('bluebird');
 
+if (process.env['NODE_ENV'] == 'test') {
+    process.env['USE_MOCKS'] = true;
+}
+
 module.exports = function(sails) {
     var apiDirectory = path.join(__dirname, 'api');
     var libDirectory = path.join(__dirname, 'lib');
