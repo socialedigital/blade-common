@@ -19,7 +19,8 @@
     "portfinder": "^0.4.0",
     "sails-build-dictionary": "^0.10.1",
     "sails-redis": "^0.10.3",
-    "sails-util": "^0.10.4"
+    "sails-util": "^0.10.4",
+    "sails-util-mvcsloader": "^0.1.7"
   },
   "repository": {
     "type": "git",
