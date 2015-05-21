@@ -6,6 +6,10 @@ module.exports = function(sails) {
     return {
         initialize : function (next)
         {
+            //initialize discovery
+            var discovery = require("./lib/discovery.js");
+            discovery.initialize(sails);
+
             var loader = require("sails-util-mvcsloader")(sails);
             loader.injectAll({
                 //policies : __dirname + '/api/policies',
