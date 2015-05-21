@@ -1,5 +1,4 @@
 var Promise = require('bluebird');
-var ServiceDiscovery = require('node-discover');
 var discovery = require('../../lib/discovery.js');
 var request = require('../../lib/request.js');
 
