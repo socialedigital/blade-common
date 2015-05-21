@@ -1,8 +1,11 @@
-module.exports = function() {
+if (process.env['NODE_ENV'] == 'test') {
+    process.env['USE_MOCKS'] = true;
+}
+
+module.exports = function(sails) {
     return {
         initialize : function (next)
         {
-            var sails = require('sails');
             var loader = require("sails-util-mvcsloader")(sails);
             loader.injectAll({
                 //policies : __dirname + '/api/policies',
