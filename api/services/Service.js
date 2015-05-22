@@ -7,5 +7,8 @@ module.exports = {
 
     mocks: {
         add: discovery.addMock
-    }
+    },
+
+    getName: discovery.getName,
+
 };
