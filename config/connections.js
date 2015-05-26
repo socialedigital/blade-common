@@ -1,12 +1,14 @@
 
 module.exports.connections = {
-
+    /*
     bladeRedis: {
         adapter: 'sails-redis',
         port: 6379,
         host: 'localhost',
         password: null,
-        database: null,
+        database: null
+
+        ,
         options: {
             parser: 'hiredis',
             return_buffers: false,
@@ -16,4 +18,5 @@ module.exports.connections = {
             enable_offline_queue: true
         }
     }
+     */
 };

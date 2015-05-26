@@ -25,7 +25,9 @@ module.exports = {
         });
 
         return res.json({
-            routes: routes
+            routes: routes,
+            bladeServices: sails.config.bladeServices,
+            cacheConfig: sails.config.cacheConfig
         });
     }
 };
