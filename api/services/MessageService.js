@@ -13,7 +13,7 @@ module.exports = {
      * @param message - text message
      * @returns {string}
      */
-    sendMessage: function(type, from, to, message) {
+    sendMessage: function (type, from, to, message) {
         var messageToSend = {
             serviceType: type + 'Service',
             messageKey: '123', // need a unique key here
@@ -21,25 +21,19 @@ module.exports = {
             to: to,
             body: message
         };
-        Connection.nextGlobalCounter().then(function(counter) {
-            messageToSend.messageKey = counter;
-        }).then(function() {
-            CacheService.hashGet(serviceType, messageToSend.messageKey).then(function(data) {
-                if (!data) {
-                    Connection.addHandler(messageToSend.messageKey, function(messageKey) {
-                        CacheService.hashDel(serviceType, messageKey).then(function() {
-                            Connection.removeHandler(messageKey);
-                        });
-                    }).then(function() {
-                        CacheService.hashSet(serviceType, messageToSend.messageKey, messageToSend).then(function() {
-                            Service.request('service.core').post('/sendMessage').then(function() {
-                                sails.log.info('Message sent from client.');
-                            });
-                        });
+        return Connection.nextGlobalCounter()
+            .then(function (newKey) {
+                messageToSend.messageKey = newKey;
+                Connection.addHandler(newKey, function (messageKey) {
+                    CacheService.hashDelete(messageToSend.serviceType, messageKey).then(function () {
+                        Connection.removeHandler(messageKey);
                     });
-                }
+                });
+                return CacheService.hashSet(messageToSend.serviceType, messageToSend.messageKey, JSON.stringify(messageToSend));
+            }).then(function () {
+                return Service.request('service.core').post('/sendMessage', messageToSend);
+            }).then(function (results) {
+                return JSON.parse(results.body);
             });
-        });
-        return 'ok';
     }
 };

@@ -9,18 +9,16 @@ module.exports = {
      * @param value
      * @returns {*|old}
      */
-    set: function(key, value) {
-        return new Promise(function(resolve, reject) {
-            Connection.isConnected().then(function() {
-                Connection.getClient().then(function(client) {
-                    client.setAsync(key, value).then(function() {
-                        client.end();
-                    });
-                });
-            }).then(function() {
-                resolve();
+    set: function (key, value) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function (client) {
+                cli = client;
+                return client.setAsync(key, JSON.stringify(value));
+            }).then(function (results) {
+                cli.end();
+                return results;
             });
-        });
     },
     /**
      * get -
@@ -28,37 +26,32 @@ module.exports = {
      * @param value
      * @returns {*|old}
      */
-    get: function(key, value) {
-        return new Promise(function(resolve, reject) {
-            Connection.isConnected().then(function() {
-                Connection.getClient().then(function(client) {
-                    client.getAsync(key).then(function(data) {
-                        client.end();
-                        return data;
-                    });
-                });
-            }).then(function(data) {
-                resolve(data);
+    get: function (key, value) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function (client) {
+                cli = client;
+                return client.getAsync(key);
+            }).then(function(results) {
+                cli.end();
+                return JSON.parse(results);
             });
-        });
     },
     /**
-     * del -
+     * delete -
      * @param key
      * @returns {*|old}
      */
-    del: function(key) {
-        return new Promise(function(resolve, reject) {
-            Connection.isConnected().then(function() {
-                Connection.getClient().then(function(client) {
-                    client.delAsync(key).then(function(data) {
-                        client.end();
-                    });
-                });
-            }).then(function() {
-                resolve();
+    delete: function (key) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function (client) {
+                cli = client;
+                return client.delAsync(key);
+            }).then(function(results) {
+                cli.end();
+                return results;
             });
-        });
     },
     /**
      * hashSet
@@ -67,18 +60,16 @@ module.exports = {
      * @param value
      * @returns {*|old}
      */
-    hashSet: function(key, field, value) {
-        return new Promise(function(resolve, reject) {
-            Connection.isConnected().then(function() {
-                Connection.getClient().then(function(client) {
-                    client.hsetAsync(key, field, value).then(function () {
-                        client.end();
-                    });
-                });
-            }).then(function() {
-                resolve();
+    hashSet: function (key, field, value) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function (client) {
+                cli = client;
+                return client.hsetAsync(key, field, JSON.stringify(value));
+            }).then(function(results) {
+                cli.end();
+                return results;
             });
-        });
     },
     /**
      * hashGet -
@@ -86,58 +77,49 @@ module.exports = {
      * @param field
      * @returns {*|old}
      */
-    hashGet: function(key, field) {
-        return new Promise(function(resolve, reject) {
-            Connection.isConnected().then(function() {
-                Connection.getClient().then(function(client) {
-                    client.hgetAsync(key, field).then(function (result) {
-                        client.end();
-                        return result;
-                    });
-                });
-            }).then(function(data) {
-                resolve(data);
+    hashGet: function (key, field) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function (client) {
+                cli = client;
+                return client.hgetAsync(key, field);
+            }).then(function(results) {
+                cli.end();
+                return JSON.parse(results);
             });
-        });
     },
     /**
      * hashKeys -
      * @param key
      * @returns {*|old}
      */
-    hashKeys: function(key) {
-        return new Promise(function(resolve, reject) {
-            Connection.isConnected().then(function() {
-                Connection.getClient().then(function(client) {
-                    client.hkeysAsync(key).then(function (result) {
-                        client.end();
-                        return result;
-                    });
-                });
-            }).then(function(data) {
-                resolve(data);
+    hashKeys: function (key) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function (client) {
+                cli = client;
+                return client.hkeysAsync(key);
+            }).then(function(results) {
+                cli.end();
+                return results;
             });
-        });
     },
     /**
-     * hashDel -
+     * hashDelete -
      * @param key
      * @param field
      * @returns {*|old}
      */
-    hashDel: function(key, field) {
-        return new Promise(function(resolve, reject) {
-            Connection.isConnected().then(function() {
-                Connection.getClient().then(function(client) {
-                    client.hdelAsync(key, field).then(function (result) {
-                        client.end();
-                        return result;
-                    });
-                });
-            }).then(function(data) {
-                resolve(data);
+    hashDelete: function (key, field) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function (client) {
+                cli = client;
+                return client.hdelAsync(key, field);
+            }).then(function(results) {
+                cli.end();
+                return results;
             });
-        });
     },
     /**
      * enQueue - fifo queueing
@@ -145,37 +127,31 @@ module.exports = {
      * @param object
      * @returns {*|old}
      */
-    enQueue: function(key, object) {
-        return new Promise(function(resolve, reject) {
-            Connection.isConnected().then(function() {
-                Connection.getClient().then(function(client) {
-                    client.rpushAsync(key, object).then(function (result) {
-                        client.end();
-                        return result;
-                    });
-                });
-            }).then(function(data) {
-                resolve(data);
+    enQueue: function (key, object) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function (client) {
+                cli = client;
+                return client.rpushAsync(key, JSON.stringify(object));
+            }).then(function(results) {
+                cli.end();
+                return results;
             });
-        });
     },
     /**
      * deQueue - get next queue item
      * @param key
      * @returns {*|old}
      */
-    deQueue: function(key) {
-        return new Promise(function(resolve, reject) {
-            Connection.isConnected().then(function() {
-                Connection.getClient().then(function(client) {
-                    client.lpopAsync(key).then(function (result) {
-                        client.end();
-                        return result;
-                    });
-                });
-            }).then(function(data) {
-                resolve(data);
+    deQueue: function (key) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function (client) {
+                cli = client;
+                return client.lpopAsync(key);
+            }).then(function(results) {
+                cli.end();
+                return JSON.parse(results);
             });
-        });
     }
 };
