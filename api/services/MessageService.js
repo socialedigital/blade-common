@@ -5,20 +5,35 @@
  */
 module.exports = {
 
-    sendText: function() {
-        // wrapper to call core-service endpoint for fulfillment -
-        //  - log into pending list awaiting confirmation
-        //  - setup listener for confirmation
-        //  - call endpoint to queue message
-        return 'ok';
-    },
-
-    sendEmail: function() {
-        // wrapper to call core-service endpoint for fulfullment -
-        //  - log into pending email list awaiting confirmation
-        //  - setup listener for confirmation
-        //  - call endpoint to queue message
-        return 'ok';
+    /**
+     * sendMessage function
+     * @param type - text or mail
+     * @param from - phone number of origin
+     * @param to - target phone number
+     * @param message - text message
+     * @returns {string}
+     */
+    sendMessage: function (type, from, to, message) {
+        var messageToSend = {
+            serviceType: type + 'Service',
+            messageKey: '123', // need a unique key here
+            from: from,
+            to: to,
+            body: message
+        };
+        return Connection.nextGlobalCounter()
+            .then(function (newKey) {
+                messageToSend.messageKey = newKey;
+                Connection.addHandler(newKey, function (messageKey) {
+                    CacheService.hashDelete(messageToSend.serviceType, messageKey).then(function () {
+                        Connection.removeHandler(messageKey);
+                    });
+                });
+                return CacheService.hashSet(messageToSend.serviceType, messageToSend.messageKey, JSON.stringify(messageToSend));
+            }).then(function () {
+                return Service.request('service.core').post('/sendMessage', messageToSend);
+            }).then(function (results) {
+                return JSON.parse(results.body);
+            });
     }
-
 };
