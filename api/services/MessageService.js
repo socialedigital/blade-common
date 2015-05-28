@@ -7,19 +7,21 @@ module.exports = {
 
     /**
      * sendMessage function
-     * @param type - text or mail
-     * @param from - phone number of origin
+     * @param type - sms or mail
      * @param to - target phone number
+     * @param from - phone number of origin
      * @param message - text message
+     * @param subject - text for subjet line
      * @returns {string}
      */
-    sendMessage: function (type, from, to, message) {
+    sendMessage: function (type, to, message, from, subject) {
         var messageToSend = {
-            serviceType: type + 'Service',
-            messageKey: '123', // need a unique key here
-            from: from,
-            to: to,
-            body: message
+            serviceType: type,
+            messageKey: '', // need a unique key here
+            subject: (subject) ? subject : '<empty>',
+            from: (from) ? from : '<empty>',
+            to: (to) ? to : '<empty>',
+            message: (message) ? message : '<empty>'
         };
         return Connection.nextGlobalCounter()
             .then(function (newKey) {
@@ -33,7 +35,7 @@ module.exports = {
             }).then(function () {
                 return Service.request('service.core').post('/sendMessage', messageToSend);
             }).then(function (results) {
-                return JSON.parse(results.body);
+                return ((results.body) && (results.body !== "")) ? JSON.parse(results.body) : results;
             });
     }
 };
