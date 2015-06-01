@@ -79,7 +79,7 @@ describe("Controller Test", function () {
     describe("POST /doit", function () {
 		it("should do it!", function (done) {
 			//set up the mock for the client service
-			Service.mocks.add('service.client', function() {
+			Service.addMock('service.client', function() {
 				return nock("http://service.client")
 				.get("/client/1234")
 				.reply(200, {
@@ -100,9 +100,9 @@ describe("Controller Test", function () {
 		
 ```
 
-The first parameter to the `Service.mocks.add` call is the name of the service that needs to be mocked for the test.  In this case, we're testing code that contains a request to the client service, so we use `'service.client'` as the service name that we are mocking.  This will create a mocked object that will be used instead of trying to make a request on the client service that won't be running when our tests are being run.
+The first parameter to the `Service.addMock` call is the name of the service that needs to be mocked for the test.  In this case, we're testing code that contains a request to the client service, so we use `'service.client'` as the service name that we are mocking.  This will create a mocked object that will be used instead of trying to make a request on the client service that won't be running when our tests are being run.
 
-The second parameter to the `Service.mocks.add` call is a function that returns the object that will be mocking the client service (in this case, a `nock` interceptor, but, again, it could be an object from another mocking library as long as it allows you to define what should be returned from a specific http request).
+The second parameter to the `Service.addMock` call is a function that returns the object that will be mocking the client service (in this case, a `nock` interceptor, but, again, it could be an object from another mocking library as long as it allows you to define what should be returned from a specific http request).
 
 Our convention for the mocked host url is `http://service.name`.  This is just a convention - it doesn't correspond to anything in the 'real' world, and, if you wanted to use a different url, that would be fine.
 
