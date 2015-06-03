@@ -25,6 +25,8 @@ module.exports = {
             type: 'string',
             required: true
         }
-    }
+    },
+
+    seedData: __dirname + '/../../lib/data/cardStatus.json'
 };
 

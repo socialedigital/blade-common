@@ -1,0 +1,27 @@
+[
+  {
+    "code": "IAC",
+    "name": "Inactive",
+    "description": "The card has been issued, but the Accountholder has not activated the card yet."
+  },
+  {
+    "code": "ACT",
+    "name": "Active",
+    "description": "The card is active and is able to use for normal txs."
+  },
+  {
+    "code": "SUS",
+    "name": "Suspended",
+    "description": "The card has been placed in a suspended state, probably due to a negative status with the Accountholder."
+  },
+  {
+    "code": "EXP",
+    "name": "Expired",
+    "description": "The card is past the expiry date.  Expired cards effectively deactivated."
+  },
+  {
+    "code": "CLO",
+    "name": "Closed",
+    "description": "The card has been closed by an account administrator or by request of the Accountholder."
+  }
+]
