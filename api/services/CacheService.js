@@ -56,6 +56,25 @@ module.exports = {
                 return results;
             });
     },
+
+    /**
+     * expireKey - set a key to expire and delete itself
+     * @param key
+     * @param seconds
+     */
+    expireKey: function(key, seconds) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function(client) {
+                cli = client;
+                return cli.expireAsync(key, seconds);
+            })
+            .then(function() {
+                cli.end();
+                return key;
+            });
+    },
+
     /**
      * hashSet
      * @param key

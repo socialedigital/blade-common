@@ -6,9 +6,7 @@ module.exports = function(req, res, next) {
     // write authentication record
     // return next()
 
-    return (req.headers.authentication === 'ecdf6e5bd244cfbb4a45d6259eeb7424')  // for inter-service passage
-        ? next()
-        : CacheService.getTimedKey(req.headers.authentication, (60 * 15))
+    return CacheService.getTimedKey(req.headers.Authorization, sails.config.blade.inactivityTimeout)
         .then(function(data) {
             if ((data) && (data !== '')) {
                 return next();
@@ -20,4 +18,3 @@ module.exports = function(req, res, next) {
             return res.forbidden('You shall not pass.');
         });
 };
-
