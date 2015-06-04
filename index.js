@@ -9,7 +9,7 @@ module.exports = function(sails) {
      * need to be in place before sails binding
      */
     loader.injectAll({
-        //policies : __dirname + '/api/policies',
+        policies : __dirname + '/api/policies',
         config   : __dirname + '/config'
     });
     return {
