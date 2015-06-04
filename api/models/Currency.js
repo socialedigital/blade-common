@@ -32,6 +32,8 @@ module.exports = {
         },
         rounding: 'integer',
         name_plural: 'string'
-    }
+    },
+
+    seedData: __dirname + '/../../lib/data/currencies.json'
 };
 

@@ -15,17 +15,21 @@ module.exports = function(sails) {
     return {
         initialize : function (next)
         {
-            //initialize discovery
-            var discovery = require("./lib/discovery.js");
-            discovery.initialize(sails);
-
             loader.injectAll({
                 controllers : __dirname + '/api/controllers',
                 models      : __dirname + '/api/models',
                 services : __dirname + '/api/services'
             }, function (err)
             {
-                return next(err);
+                if (err) {
+                    return next(err);
+                }
+
+                //initialize discovery
+                var discovery = require("./lib/discovery.js");
+                discovery.initialize(sails);
+
+                next();
             });
         }
     };

@@ -1,0 +1,22 @@
+[
+  {
+    "code": "BL",
+    "name": "Blade",
+    "description": "Blade owns the corresponding responsibility."
+  },
+  {
+    "code": "CL",
+    "name": "Client",
+    "description": "Client owns the corresponding responsibility."
+  },
+  {
+    "code": "BK",
+    "name": "Bank/Processor",
+    "description": "Bank/Processor owns the corresponding responsibility."
+  },
+  {
+    "code": "AH",
+    "name": "Accountholder",
+    "description": "Accountholder owns the corresponding responsibility."
+  }
+]

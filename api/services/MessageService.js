@@ -5,20 +5,37 @@
  */
 module.exports = {
 
-    sendText: function() {
-        // wrapper to call core-service endpoint for fulfillment -
-        //  - log into pending list awaiting confirmation
-        //  - setup listener for confirmation
-        //  - call endpoint to queue message
-        return 'ok';
-    },
-
-    sendEmail: function() {
-        // wrapper to call core-service endpoint for fulfullment -
-        //  - log into pending email list awaiting confirmation
-        //  - setup listener for confirmation
-        //  - call endpoint to queue message
-        return 'ok';
+    /**
+     * sendMessage function
+     * @param type - sms or mail
+     * @param to - target phone number
+     * @param from - phone number of origin
+     * @param message - text message
+     * @param subject - text for subjet line
+     * @returns {string}
+     */
+    sendMessage: function (type, to, message, from, subject) {
+        var messageToSend = {
+            serviceType: type,
+            messageKey: '', // need a unique key here
+            subject: (subject) ? subject : '<empty>',
+            from: (from) ? from : '<empty>',
+            to: (to) ? to : '<empty>',
+            message: (message) ? message : '<empty>'
+        };
+        return Connection.nextGlobalCounter()
+            .then(function (newKey) {
+                messageToSend.messageKey = newKey;
+                Connection.addHandler(newKey, function (messageKey) {
+                    CacheService.hashDelete(messageToSend.serviceType, messageKey).then(function () {
+                        Connection.removeHandler(messageKey);
+                    });
+                });
+                return CacheService.hashSet(messageToSend.serviceType, messageToSend.messageKey, JSON.stringify(messageToSend));
+            }).then(function () {
+                return Service.request('service.core').post('/sendMessage', messageToSend);
+            }).then(function (results) {
+                return ((results.body) && (results.body !== "")) ? JSON.parse(results.body) : results;
+            });
     }
-
 };
