@@ -1,0 +1,22 @@
+[
+  {
+    "code": "ACT",
+    "name": "Active",
+    "description": "The client is an active client."
+  },
+  {
+    "code": "SUS",
+    "name": "Suspended",
+    "description": "The client's account is currently suspended.  A client's account can be suspended due to missing payments or any negative activing issue."
+  },
+  {
+    "code": "DEA",
+    "name": "Deactivated",
+    "description": "The client's account has been deactivated.  Deactivated accounts are set to archive after a period of time."
+  },
+  {
+    "code": "ARC",
+    "name": "Archive",
+    "description": "The client is no longer active and their account has been deactivated and set to archive."
+  }
+]

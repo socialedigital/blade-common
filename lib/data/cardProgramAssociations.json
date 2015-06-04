@@ -1,0 +1,22 @@
+[
+  {
+    "code": "VISA",
+    "name": "Visa"
+  },
+  {
+    "code": "MC",
+    "name": "MasterCard"
+  },
+  {
+    "code": "AMEX",
+    "name": "American Express"
+  },
+  {
+    "code": "DISC",
+    "name": "Discover Card"
+  },
+  {
+    "code": "CLOP",
+    "name": "Closed Loop System"
+  }
+]

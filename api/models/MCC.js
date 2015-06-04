@@ -25,5 +25,8 @@ module.exports = {
         usda: 'string',
         irs: 'string',
         reportable: 'string'
-    }};
+    },
+
+    seedData: __dirname + '/../../lib/data/mcc.json'
+};
 
