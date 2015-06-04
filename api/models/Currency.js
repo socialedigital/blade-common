@@ -25,7 +25,7 @@ module.exports = {
             type: 'string',
             required: true
         },
-        native_symbol: 'string',
+        symbol_native: 'string',
         decimal_digits: {
             type: 'integer',
             required: true
