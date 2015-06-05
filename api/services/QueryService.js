@@ -14,7 +14,10 @@ module.exports = {
         var url = request._parsedUrl;
         var parameters = request.allParams();
         var primaryKey = model.primaryKey;
-        var paramKey = (options.parmKey) ? parmKey : null;
+        var paramKey;
+        if (options) {
+            paramKey = (options.parmKey) ? paramKey : null;
+        }
         //todo: what if the model doesn't have a primary key? (pkAuto is false and no primary key defined)
         return new Promise(function (resolve, reject) {
             try {

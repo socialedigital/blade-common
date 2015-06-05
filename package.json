@@ -23,6 +23,15 @@
     "sails-util": "^0.10.4",
     "sails-util-mvcsloader": "^0.1.7"
   },
+  "devDependencies": {
+    "chai": "2.2.0",
+    "mocha": "^2.2.4",
+    "superagent": "1.1.0",
+    "supertest": "^0.15.0"
+  },
+  "scripts": {
+    "test": "make test"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/bladesystem/blade-common.git"
