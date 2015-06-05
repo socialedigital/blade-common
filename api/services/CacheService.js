@@ -1,3 +1,4 @@
+var moment = require('moment');
 /**
  * CacheService.js - provides cache read/write, and publish/subscribe through redis
  * @type {{set: Function, get: Function, hashSet: Function, hashGet: Function, hashKeys: Function}}
@@ -15,7 +16,8 @@ module.exports = {
             .then(function (client) {
                 cli = client;
                 return client.setAsync(key, JSON.stringify(value));
-            }).then(function (results) {
+            })
+            .then(function (results) {
                 cli.end();
                 return results;
             });
@@ -23,16 +25,16 @@ module.exports = {
     /**
      * get -
      * @param key
-     * @param value
      * @returns {*|old}
      */
-    get: function (key, value) {
+    get: function (key) {
         var cli = null;
         return Connection.getClient()
             .then(function (client) {
                 cli = client;
                 return client.getAsync(key);
-            }).then(function(results) {
+            })
+            .then(function (results) {
                 cli.end();
                 return JSON.parse(results);
             });
@@ -48,11 +50,31 @@ module.exports = {
             .then(function (client) {
                 cli = client;
                 return client.delAsync(key);
-            }).then(function(results) {
+            })
+            .then(function (results) {
                 cli.end();
                 return results;
             });
     },
+
+    /**
+     * expireKey - set a key to expire and delete itself
+     * @param key
+     * @param seconds
+     */
+    expireKey: function(key, seconds) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function(client) {
+                cli = client;
+                return cli.expireAsync(key, seconds);
+            })
+            .then(function() {
+                cli.end();
+                return key;
+            });
+    },
+
     /**
      * hashSet
      * @param key
@@ -66,7 +88,8 @@ module.exports = {
             .then(function (client) {
                 cli = client;
                 return client.hsetAsync(key, field, JSON.stringify(value));
-            }).then(function(results) {
+            })
+            .then(function (results) {
                 cli.end();
                 return results;
             });
@@ -83,7 +106,8 @@ module.exports = {
             .then(function (client) {
                 cli = client;
                 return client.hgetAsync(key, field);
-            }).then(function(results) {
+            })
+            .then(function (results) {
                 cli.end();
                 return JSON.parse(results);
             });
@@ -99,7 +123,8 @@ module.exports = {
             .then(function (client) {
                 cli = client;
                 return client.hkeysAsync(key);
-            }).then(function(results) {
+            })
+            .then(function (results) {
                 cli.end();
                 return results;
             });
@@ -116,7 +141,8 @@ module.exports = {
             .then(function (client) {
                 cli = client;
                 return client.hdelAsync(key, field);
-            }).then(function(results) {
+            })
+            .then(function (results) {
                 cli.end();
                 return results;
             });
@@ -133,7 +159,8 @@ module.exports = {
             .then(function (client) {
                 cli = client;
                 return client.rpushAsync(key, JSON.stringify(object));
-            }).then(function(results) {
+            })
+            .then(function (results) {
                 cli.end();
                 return results;
             });
@@ -149,9 +176,63 @@ module.exports = {
             .then(function (client) {
                 cli = client;
                 return client.lpopAsync(key);
-            }).then(function(results) {
+            })
+            .then(function (results) {
                 cli.end();
                 return JSON.parse(results);
+            });
+    },
+    /**
+     * setTimedKey - set up a timed secret code for sending to logged in
+     * @param key
+     * @param timeout - ttl for the key
+     */
+    setTimedKey: function(key, timeout) {
+        var cli = null;
+        return Connection.getClient()
+            .then(function(client) {
+                cli = client;
+                return cli.setAsync(key, moment().utc());
+            })
+            .then(function() {
+                return cli.expireAsync(key, timeout);
+            })
+            .then(function() {
+                cli.end();
+                return key;
+            });
+    },
+    /**
+     * getTimedKey - get a timer key from root and reset its timeout (act of reading restores timeout)
+     * @param key
+     * @param timeout
+     */
+    getTimedKey: function(key, timeout) {
+        var cli = null,
+            retdata = null;
+        return Connection.getClient()
+            .then(function(client) {
+                cli = client;
+                return cli.getAsync(key);
+            })
+            .then(function(data) {
+                retdata = data;
+                if ((retdata !== '') && (timeout > 0)) {
+                    return cli.setAsync(key, moment().utc());
+                } else {
+                    return cli.delAsync(key);
+                }
+            })
+            .then(function() {
+                if ((retdata !== '') && (timeout > 0)) {
+                    return cli.expireAsync(key, timeout);
+                } else {
+                    Promise.resolve();
+                }
+            })
+            .then(function() {
+                cli.end();
+                return retdata;
             });
     }
 };

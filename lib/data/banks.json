@@ -1,0 +1,14 @@
+[
+  {
+    "bank": "WAVEC",
+    "name": "Wavecrest"
+  },
+  {
+    "bank": "FIDOR",
+    "name": "FIDOR Bank"
+  },
+  {
+    "bank": "EPAY",
+    "name": "ePayments GPS"
+  }
+]
