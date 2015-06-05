@@ -1,5 +1,5 @@
 /**
- * Owner.js
+ * Bank.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/#!documentation/models
@@ -10,9 +10,8 @@ module.exports = {
     autoPK: false,
 
     attributes: {
-        code: {
+        bank: {
             type: 'string',
-            size: 2,
             required: true,
             unique: true,
             primaryKey: true
@@ -20,13 +19,9 @@ module.exports = {
         name: {
             type: 'string',
             required: true
-        },
-        description: {
-            type: 'string',
-            required: true
         }
     },
 
-    seedData: __dirname + '/../../lib/data/owners.json'
+    seedData: __dirname + '/../../lib/data/banks.json'
 };
 
