@@ -2,6 +2,7 @@
 module.exports.policies = {
     ServiceController: {
         '*': false,
-        info: true
+        info: true,
+        metrics: true
     }
 };

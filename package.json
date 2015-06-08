@@ -7,7 +7,7 @@
     "isHook": true
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test"
   },
   "author": "Cliff Vick <cliff@bladepayments.com>",
   "license": "Blade",
@@ -17,6 +17,7 @@
     "moment": "^2.10.3",
     "node-discover": "0.0.17",
     "portfinder": "^0.4.0",
+    "prometheus-client": "^0.1.0",
     "redis": "^0.12.1",
     "sails-build-dictionary": "^0.10.1",
     "sails-redis": "^0.10.3",
@@ -28,9 +29,6 @@
     "mocha": "^2.2.4",
     "superagent": "1.1.0",
     "supertest": "^0.15.0"
-  },
-  "scripts": {
-    "test": "make test"
   },
   "repository": {
     "type": "git",

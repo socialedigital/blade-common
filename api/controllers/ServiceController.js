@@ -5,7 +5,6 @@
 
 module.exports = {
     info: function (req, res){
-
         if (!sails.config.service.routes) {
             //format routes
             var rawRoutes = sails.config.routes;
@@ -31,6 +30,9 @@ module.exports = {
         var info = sails.config.service;
         info.started = Service.getStartTime() + ' (' + Service.getElapsedTime() + ')';
 
+        sails.config.metrics.httpResponseCounter.increment({code: 200});
         return res.json(sails.config.service);
-    }
+    },
+
+    metrics: sails.config.metrics.client.metricsFunc()
 };
