@@ -1,4 +1,4 @@
-Blade Common
+Blade Common [![Circle CI](https://circleci.com/gh/bladesystem/blade-common.svg?style=svg)](https://circleci.com/gh/bladesystem/blade-common)
 -------------
 ###Getting Started
 The blade-common package is a Sails add-on that, when installed in another Sails application, will add common models, routes, controllers, and services that you will have available to you in your Blade Sails service or adapter.
