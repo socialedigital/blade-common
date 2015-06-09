@@ -22,13 +22,19 @@ module.exports.metrics = {
     httpRequestCounter: metricsClient.newCounter({
         namespace: "http",
         name     : "http_requests_total",
-        help     : "The number of http requests."
+        help     : "The number of http requests received."
     }),
 
     httpResponseCounter: metricsClient.newCounter({
         namespace: "http",
         name     : "http_responses_total",
-        help     : "The number of http responses."
+        help     : "The number of http responses sent."
+    }),
+
+    serviceCallCounter: metricsClient.newCounter({
+        namespace: "blade",
+        name     : "service_call_total",
+        help     : "The number of Blade service calls made."
     })
 
 };
