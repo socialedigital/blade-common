@@ -4,7 +4,7 @@
  */
 
 module.exports = {
-    info: function (req, res){
+    info: function (req, res) {
         if (!sails.config.service.routes) {
             //format routes
             var rawRoutes = sails.config.routes;
