@@ -39,8 +39,6 @@ module.exports.models = {
                     info[modelName] = results;
                 }
                 return info;
-            }).catch(function (error) {
-                sails.log.error(error);
             })
         }
         else {
