@@ -175,15 +175,6 @@ This particular configuration indicates that the `mocks.js` file is in a directo
 
 If you create a `mocks.js` file (and any corresponding response files), you should check them into your project's git repo as they are part of your test suite and will be used when automated tests are run for continuous integration and deployment.
 
-
-###USE_MOCKS Environment Variable
-In order for Service mocks to work in your tests, the USE_MOCKS environment variable must be set to `true`.  This is done automatically when you use the `npm test` script on *nix systems.
-
-The `npm test` script sets the `NODE_ENV` environment variable to `test`, and, as a result, the `USE_MOCKS` environment variable is automatically set to `true` when the `npm test` script is run from the command line.
-
-Unfortunately, the `npm test` script does not work on Windows systems and testing must be performed another way.  If you are using the JetBrains WebStorm IDE, you can set the `NODE_ENV` to `test` in a run-configuration and run your tests that way and everything will work as expected.  
-#######If anyone can figure out how to set the `NODE_ENV` environment variable in the npm test script so that it works correctly on Windows Systems, please do so!
-
 ###Using Mocks During Development
 The Blade service you are writing probably will need to collaborate with one or more other Blade services in order to fulfill it's particular functional responsiblity.  While we have tried to make collaborating with other Blade Services as easy as possible during local development, there may be times where you need more control over a specific service's response to a particular route, or you may be writing functionality that depends on a service that hasn't even been written yet! 
 
@@ -192,26 +183,45 @@ You can use Service Mocks outside of the testing environment to facilitate these
 ####Configuration
 The simplest way to use mocks in your local development is to create a `mocks.js` file in your project's `config` directory.  It should be constructed in exactly the same way as the `mocks.js` file described above for use in your tests.  *You should add this file to your .gitignore file so that it won't be checked into your project's repo.  __It should only be present in your local development environment.__*
 
-In order to enable the `mocks.js` file, you need to set the `USE_MOCKS` environment variable to `true` when you `sails lift` at the command line:
-
-`USE_MOCKS=true sails lift`
-
-Or, if you prefer to start your service with `node`:
-
-`USE_MOCKS=true node app.js`
-
-*(again, if you're in a Windows environment this won't work and you'll have to set the `USE_MOCKS` environment variable another way)*
-
-
-####Alternate Configurations
-If you don't want to put your `mocks.js` in your project's `config` directory (say you want to use the one that you already have in your `test` directory), then you can add a property to your `local.js` file in your `config` directory that points to the location of the `mocks.js` file that you want to use:
+In order to enable the `mocks.js` file, you need to add a `mocks` configuration element in your `config/local.js` configuration file and set it to `true`.
 
 ```javascript
-mocks: { path: __dirname + '/../test/serviceMocks/mocks.js' }
+module.exports = {
+
+	log: { level: 'info' },
+	
+	mocks: true,
+	
+		.
+		.
+		.
+	  
+```
+
+####Alternate Configurations
+If you don't want to put your `mocks.js` in your project's `config` directory (say you want to use the one that you already have in your `test` directory), then you can specify the path to the `mocks.js` file that you want to use (exactly like you would in the `bootstrap.text.js` file for tests).
+
+```javascript
+	mocks: { path: __dirname + '/../test/serviceMocks/mocks.js' }
 ```
 
 ####Service Mock Behavior During Development
-Service Mocks in use during development will work exactly as they do during testing by replacing the external service requests with the mocked results __as long as the mocked service is NOT actually running in your local environment!__  If you run the mocked service in your local environment, this will __override__ the mocked service and any calls to `Service.request()` on the mocked service will make an actual request to the locally running service.
+Service Mocks in use during development will work exactly as they do during testing by replacing the external service requests with the mocked results __as long as the mocked service is NOT actually running in your local environment!__  If you actually run the service that is being mocked in your local environment, this will __override__ the mocked service and any calls to `Service.request()` on the mocked service will make an actual request to the locally running service.
 
-This is useful so that you can easily switch from using a mocked service to the actual running service without ever having to shutdown and restart your service or change your configuration.
+This is useful so that you can easily switch from using a mocked service to the actual running service without ever having to shutdown and restart your service or change your configuration by simply starting and stopping the service that you are mocking.
+
+
+
+###USE_MOCKS Environment Variable
+In order for Service mocks to work in your tests or during development, the USE_MOCKS environment variable must be set.  This is done automatically when you use the `npm test` script on *nix systems, or when you set the `mocks` configuration property to `true` or assign it a valid path to a javascript file with your mock definitions.
+
+The `npm test` script sets the `NODE_ENV` environment variable to `test`, and, as a result, the `USE_MOCKS` environment variable is automatically set to `true` when the `npm test` script is run from the command line, so you don't have to set the `USE_MOCKS` environment variable directly.
+
+Unfortunately, the `npm test` script does not work on Windows systems and testing must be performed another way.  If you are using the JetBrains WebStorm IDE, you can set the `NODE_ENV` to `test` in a run-configuration and run your tests that way and everything will work as expected.  
+#######If anyone can figure out how to set the `NODE_ENV` environment variable in the npm test script so that it works correctly on Windows Systems, please do so!
+
+Setting the `mock` configuration property in your `config/local.js` file will also set this environment variable if and only if there there is either a `mocks.js` file in your `config` directory, or you have provided a path to a valid file with valid service mock definitions.
+
+Under normal circumstances, you should never have to set or modify the `USE_MOCKS` environment variable directly.
+
 
