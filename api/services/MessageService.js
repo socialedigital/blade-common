@@ -1,28 +1,17 @@
 /**
  * MessageService.js
  * @description :: allows local service to queue sms text and email messages into core and get feedback async
- * @type {{sendText: Function, sendEmail: Function}}
  */
+var _ = require('lodash');
 module.exports = {
 
     /**
      * sendMessage function
-     * @param type - sms or mail
-     * @param to - target phone number
-     * @param from - phone number of origin
-     * @param message - text message
-     * @param subject - text for subjet line
+     * @param msg - message data
      * @returns {string}
      */
-    sendMessage: function (type, to, message, from, subject) {
-        var messageToSend = {
-            serviceType: type,
-            messageKey: '', // need a unique key here
-            subject: (subject) ? subject : '<empty>',
-            from: (from) ? from : '<empty>',
-            to: (to) ? to : '<empty>',
-            message: (message) ? message : '<empty>'
-        };
+    sendMessage: function (msg) {
+        var messageToSend = _.extend(new messageStruct(), msg);
         return Connection.nextGlobalCounter()
             .then(function (newKey) {
                 messageToSend.messageKey = newKey;
@@ -32,10 +21,25 @@ module.exports = {
                     });
                 });
                 return CacheService.hashSet(messageToSend.serviceType, messageToSend.messageKey, JSON.stringify(messageToSend));
-            }).then(function () {
+            })
+            .then(function () {
                 return Service.request('service.core').post('/sendMessage', messageToSend);
-            }).then(function (results) {
-                return ((results.body) && (results.body !== "")) ? JSON.parse(results.body) : results;
+            })
+            .then(function (results) {
+                if (results.status !== 200) {
+                    throw new Error('Core Service message failure.');
+                } else {
+                    return JSON.parse(results.body);
+                }
             });
     }
 };
+
+function messageStruct() {
+    this.serviceType = '';
+    this.messageKey = '';
+    this.subject = '';
+    this.from = '';
+    this.to = '';
+    this.message = '';
+}
