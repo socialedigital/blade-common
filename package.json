@@ -12,7 +12,9 @@
   "author": "Cliff Vick <cliff@bladepayments.com>",
   "license": "Blade",
   "dependencies": {
+    "biguint-format": "^1.0.0",
     "bluebird": "^2.9.24",
+    "flake-idgen": "^1.0.0",
     "lodash": "^3.7.0",
     "moment": "^2.10.3",
     "node-discover": "0.0.17",

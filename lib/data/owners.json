@@ -15,6 +15,11 @@
     "description": "Bank/Processor owns the corresponding responsibility."
   },
   {
+    "code": "FX",
+    "name": "Foreign Exchange",
+    "description": "Exchange own the corresponding responsibility."
+  },
+  {
     "code": "AH",
     "name": "Accountholder",
     "description": "Accountholder owns the corresponding responsibility."
