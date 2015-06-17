@@ -11,19 +11,19 @@ module.exports = {
      * @returns {string}
      */
     sendMessage: function (msg) {
-        var messageToSend = _.extend(new messageStruct(), msg);
+        var sMsg = _.extend(new MessageStructure(), msg);
         return Connection.nextGlobalCounter()
             .then(function (newKey) {
-                messageToSend.messageKey = newKey;
+                sMsg.messageKey = newKey;
                 Connection.addHandler(newKey, function (messageKey) {
-                    CacheService.hashDelete(messageToSend.serviceType, messageKey).then(function () {
+                    CacheService.hashDelete(sMsg.serviceType, messageKey).then(function () {
                         Connection.removeHandler(messageKey);
                     });
                 });
-                return CacheService.hashSet(messageToSend.serviceType, messageToSend.messageKey, JSON.stringify(messageToSend));
+                return CacheService.hashSet(sMsg.serviceType, sMsg.messageKey, JSON.stringify(sMsg));
             })
             .then(function () {
-                return Service.request('service.core').post('/sendMessage', messageToSend);
+                return Service.request('service.core').post('/sendMessage', sMsg);
             })
             .then(function (results) {
                 if (results.status !== 200) {
@@ -35,7 +35,7 @@ module.exports = {
     }
 };
 
-function messageStruct() {
+function MessageStructure() {
     this.serviceType = '';
     this.messageKey = '';
     this.subject = '';
