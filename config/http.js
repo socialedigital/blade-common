@@ -32,7 +32,7 @@ module.exports.http = {
 
         order: [
             'startRequestTimer',
-            //'cookieParser',
+            'cookieParser',
             //'session',
             'requestLogger',
             'bodyParser',
@@ -43,7 +43,7 @@ module.exports.http = {
             'poweredByBlade',
             //'$custom',
             'router',
-            //'www',
+            'www',
             //'favicon',
             '404',
             '500'
