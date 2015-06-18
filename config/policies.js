@@ -1,8 +1,9 @@
 
 module.exports.policies = {
+
     ServiceController: {
         '*': false,
-        info: true,
-        metrics: true
+        info: 'serviceRequest',
+        metrics: 'serviceRequest'
     }
 };

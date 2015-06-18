@@ -27,8 +27,7 @@ module.exports = function(sails) {
 
                 //initialize discovery
                 var discovery = require("./lib/discovery.js");
-                discovery.initialize(sails);
-
+                discovery.initialize(sails)
                 next();
             });
         }
