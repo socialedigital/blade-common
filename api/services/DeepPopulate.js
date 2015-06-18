@@ -43,7 +43,7 @@ function populateDeep2(parentModelName, parentModel, path, cb) {
                     childAssociation.model.find(findCriteria)
                         .populate(pathArray[1]).exec(function (err, populatedChild) {
                             if(err) {
-                                console.log("Error:",err)
+                                sailslog.error("Error:",err)
                                 cb(err)
                             }
 //                            pathArray.splice(0,1)
@@ -53,7 +53,7 @@ function populateDeep2(parentModelName, parentModel, path, cb) {
                     childAssociation.model.find(findCriteria)
                         .exec(function (err, populatedChild) {
                             if(err) {
-                                console.log("Error:",err)
+                                sails.log.error("Error:",err)
                                 cb(err)
                             }
 //                            pathArray.splice(0,1)

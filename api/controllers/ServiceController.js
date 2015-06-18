@@ -11,7 +11,7 @@ module.exports = {
                 var rawRoutes = sails.config.routes;
                 var routes = _(_.keys(rawRoutes)).reduce(function (result, route) {
                     var parts = route.split(' ');
-                    var verb = parts[0];
+                    var verb = parts[0].toLowerCase();
                     switch (verb) {
                         case 'get':
                         case 'post':
