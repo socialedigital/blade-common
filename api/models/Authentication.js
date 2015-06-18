@@ -26,6 +26,9 @@ module.exports = {
         authToken: {
             type: 'string'
         },
+        requestToken: {
+            type: 'string'
+        },
         acctBlocked: {
             type: 'boolean'
         },

@@ -21,7 +21,8 @@ module.exports = {
     startAuthentication: function (req, res) {
         if (req.param('client_id')) {
             if ((req.body.user) && (req.body.password)) {
-                var acctHolder = null;
+                var acctHolder = null,
+                    reqToken = '';
                 CacheService.get('blocked-email-' + req.body.user)
                     .then(function (result) {
                         if ((result) && (result !== '')) {
@@ -45,11 +46,12 @@ module.exports = {
                             var hPwd = require('crypto').createHash('md5').update(req.body.password).digest("hex");
                             if (found.password === hPwd) {
                                 var aToken = intform(tokenGen.next(), 'dec');
+                                var rToken = intform(tokenGen.next(), 'dec');
                                 var cToken = intform(cyphGen.next(), 'dec');
                                 cToken = cToken.substr(cToken.length - 6);
                                 return CacheService.delete('failed-email-' + req.body.user)
                                     .then(function () {
-                                        return [aToken, cToken];
+                                        return [aToken, cToken, rToken];
                                     });
                             } else {
                                 var cnt = 0,
@@ -100,11 +102,16 @@ module.exports = {
                             email: req.body.user,
                             authToken: tokens[0],
                             authCode: tokens[1],
+                            requestToken: tokens[2],
                             url: req.url
                         })
                     })
                     .then(function (newRecord) {
-                        return CacheService.setTimedKey(newRecord.authCode, sails.config.blade.twoFactorCodeTimeout);
+                        return CacheService.setTimedKey(newRecord.requestToken, sails.config.blade.twoFactorCodeTimeout)
+                            .then(function(newCode) {
+                                reqToken = newCode;
+                                return CacheService.setTimedKey(newRecord.authCode, sails.config.blade.twoFactorCodeTimeout);
+                            })
                     })
                     .then(function (newCode) {
                         var msg = {
@@ -120,6 +127,7 @@ module.exports = {
                         return MessageService.sendMessage(msg);
                     })
                     .then(function (results) {
+                        results['requestToken'] = reqToken;
                         return res.json(results);
                     })
                     .catch(function (err) {
@@ -133,27 +141,35 @@ module.exports = {
         }
     },
 
-    resolveAuthentication: function (req, res) {
+    resolveAuthentication: function (req, res) {  // caller should be on authPass, see below and above
         var aCode = req.param('code');
+        var rToken = req.headers.Authorization;
         if (aCode) {
-            CacheService.getTimedKey(aCode, 0)
-                .then(function (results) {
+            CachService.getTimedKey(rToken, 0)
+                .then(function(result) {
                     if ((results) && (results !== '')) {
-                        return Authentication.findOne({authCode: aCode})
-                            .then(function (authRecord) {
-                                return CacheService
-                                    .setTimedKey(authRecord.authToken, sails.config.blade.inactivityTimeout);
-                            })
-                            .then(function (newKey) {
-                                return res.json({authToken: newKey});
-                            })
-                            .catch(function (err) {
-                                return res.badRequest(err);
-                            });
+                        return CacheService.getTimedKey(aCode, 0);
                     } else {
-                        return res.badRequest('Code is invalid.');
+                        throw new Error('Code is invalid.');
                     }
                 })
+                .then(function (results) {
+                    if ((results) && (results !== '')) {
+                        return Authentication.findOne({requestToken: rToken})
+                    } else {
+                        throw new Error('Code is invalid.');
+                    }
+                })
+                .then(function (authRecord) {
+                    return CacheService
+                        .setTimedKey(authRecord.authToken, sails.config.blade.inactivityTimeout);
+                })
+                .then(function (newKey) {
+                    return res.json({authToken: newKey});
+                })
+                .catch(function (err) {
+                    return res.badRequest(err);
+                });
         } else {
             return res.badRequest('Code is missing.');
         }
@@ -242,7 +258,14 @@ module.exports = {
     resolvePasswordChange: function (req, res) { // put/modify,  uses authPass
         if (req.param('code')) {
             var authRec = null;
-            Authentication.findOne({authCode: req.param('code')})
+            CacheService.getTimedKey(req.param('code'), 0)
+                .then(function(results) {
+                    if ((results) && (results !== '')) {
+                        return Authentication.findOne({authToken: req.headers.Authentication});
+                    } else {
+                        throw new Error("Code is invalid.");
+                    }
+                })
                 .then(function (authRecord) {
                     if (authRecord) {
                         authRec = authRecord;
