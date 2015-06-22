@@ -41,7 +41,8 @@ module.exports = {
                 else {
                     var result = {
                         data: [],
-                        _total: 0
+                        links: {},
+                        total: 0,
                     };
                     var where = parameters['where'];
                     if (_.isString(where)) {
@@ -57,12 +58,19 @@ module.exports = {
                     var criteria = {};
                     if (where) criteria.where = where;
                     criteria.limit = parameters['limit'] || defaultPageSize;
-                    if (parameters['skip']) criteria.skip = parameters['skip'];
-                    if (parameters['sort']) criteria.sort = parameters['sort'];
+                    result.limit = criteria.limit;
+                    if (parameters['skip']) {
+                        criteria.skip = parameters['skip'];
+                        result.offset = criteria.skip;
+                    }
+                    if (parameters['sort']) {
+                        criteria.sort = parameters['sort'];
+                        result.sort = criteria.sort;
+                    }
 
                     model.count(where)
                         .then(function (count) {
-                            result._total = count;
+                            result.total = count;
                             return model.find(criteria);
                         }).then(function (results) {
                             if (results.length > 0) {
@@ -71,31 +79,36 @@ module.exports = {
 
                                 var query;
                                 //previous link
-                                var skip = criteria.skip || 0;
-                                skip = parseInt(skip, 10);
-                                if (skip > 0) {
-                                    skip -= results.length;
-                                    if (skip >= 0) {
+                                var offset = parseInt(criteria.skip || 0, 10);
+                                if (offset > 0) {
+                                    offset -= results.length;
+                                    if (offset >= 0) {
                                         query = [];
                                         if (criteria.where) query.push('where=' + JSON.stringify(criteria.where));
                                         query.push('limit=' + criteria.limit);
-                                        if (skip > 0) {
-                                            query.push('skip=' + skip);
+                                        if (offset > 0) {
+                                            query.push('skip=' + offset);
                                         }
-                                        result._prev = url.pathname + '?' + query.join('&');
+                                        if (!result.links) {
+                                            result.links = {};
+                                        }
+                                        result.links.prev = url.pathname + '?' + query.join('&');
                                     }
                                 }
 
                                 //next link
-                                skip = criteria.skip || 0;
-                                skip = parseInt(skip, 10);
-                                skip += parseInt(criteria.limit, 10);
-                                if (skip <= result._total) {
+                                offset = criteria.skip || 0;
+                                offset = parseInt(offset, 10);
+                                offset += parseInt(criteria.limit, 10);
+                                if (offset <= result.total) {
                                     query = [];
                                     if (criteria.where) query.push('where=' + JSON.stringify(criteria.where));
                                     query.push('limit=' + criteria.limit);
-                                    query.push('skip=' + skip);
-                                    result._next = url.pathname + '?' + query.join('&');
+                                    query.push('skip=' + offset);
+                                    if (!result.links) {
+                                        result.links = {};
+                                    }
+                                    result.links.next = url.pathname + '?' + query.join('&');
                                 }
                                 resolve(result);
                             }
