@@ -33,35 +33,25 @@ module.exports.http = {
         order: [
             'startRequestTimer',
             'cookieParser',
-            //'session',
-            'requestLogger',
             'bodyParser',
             'handleBodyParserError',
             'compress',
             'methodOverride',
-            //'poweredBy',
             'poweredByBlade',
-            //'$custom',
+            'requestLogger',
             'router',
             'www',
-            //'favicon',
             '404',
             '500'
         ],
-
-        /****************************************************************************
-         *                                                                           *
-         * Example custom middleware; logs each request to the console.              *
-         *                                                                           *
-         ****************************************************************************/
 
         requestLogger: function (req, res, next) {
             var fromService = '';
             if (req.headers['x-blade-service']) {
                 fromService = '[from: ' + req.headers['x-blade-service'] + ']';
             }
-            sails.log.info("Requested :: :%s:", new Date(), req.method, req.url, fromService);
-            sails.config.metrics.httpRequestCounter.increment({ method: req.method, url: req.url});
+            sails.log.verbose("Requested :: :%s:", new Date(), req.method, req.url, fromService);
+            sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
             return next();
         },
 
@@ -69,30 +59,5 @@ module.exports.http = {
             res.header('X-Powered-By', 'Blade Payments Engine <bladepayments.com>');
             next();
         }
-
-
-        /***************************************************************************
-         *                                                                          *
-         * The body parser that will handle incoming multipart HTTP requests. By    *
-         * default as of v0.10, Sails uses                                          *
-         * [skipper](http://github.com/balderdashy/skipper). See                    *
-         * http://www.senchalabs.org/connect/multipart.html for other options.      *
-         *                                                                          *
-         ***************************************************************************/
-
-        // bodyParser: require('skipper')
-
-    },
-
-    /***************************************************************************
-     *                                                                          *
-     * The number of seconds to cache flat files on disk being served by        *
-     * Express static middleware (by default, these files are in `.tmp/public`) *
-     *                                                                          *
-     * The HTTP static cache is only active in a 'production' environment,      *
-     * since that's the only time Express will cache flat-files.                *
-     *                                                                          *
-     ***************************************************************************/
-
-    // cache: 31557600000
+    }
 };

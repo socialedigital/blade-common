@@ -30,11 +30,11 @@ module.exports = {
 
             var info = sails.config.service;
             info.started = Service.getStartTime() + ' (' + Service.getElapsedTime() + ')';
-
-            sails.config.metrics.httpResponseCounter.increment({code: 200});
-            return res.json(sails.config.service);
+            sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 200});
+            return res.status(200).json(sails.config.service);
         }
         else {
+            sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 404});
             return res.status(404).send();
         }
     },
@@ -42,9 +42,11 @@ module.exports = {
     metrics: function (req, res) {
         if (Service.getType() == 'service') {
             var metricsFunction = sails.config.metrics.client.metricsFunc();
+            sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 200});
             return metricsFunction(req, res);
         }
         else {
+            sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 400});
             return res.status(404).send();
         }
     }

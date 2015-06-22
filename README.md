@@ -3,7 +3,7 @@ Blade Common [![Circle CI](https://circleci.com/gh/bladesystem/blade-common.svg?
 ###Getting Started
 The blade-common package is a Sails add-on that, when installed in another Sails application, will add common models, routes, controllers, and services that you will have available to you in your Blade Sails service or adapter.
 
-###Install
+##Install
 Normally, you would just npm install this from Blade's private npm registry, but, as this package is still under development, installing in this way will only get you what has been committed to the 'master' branch of the git repo.  If this is what you want, then:
 
 ```npm install https://github.com/bladesystem/blade-common.git```
@@ -19,7 +19,7 @@ However, if you want to take advantage of what's being developed in the `develop
 
 ######Note: If you do an `npm update` or `npm install`, it will replace the symlink that you created with source from the `master` branch and you'll have to create the symlink again.
 
-###Service Object
+##Service Object
 Within a Blade service, you can call out to other blade services by using the Service object provided in this package.  The Service object is a Sails service object, and, as such will be available to you anywhere.  You don't have to `require` anything, it's just there waiting for you to use it.
 
 One of the first things that you want to do (in your `/config/bootstrap.js` file is to register your service.  You use the `Service` object to do this:
@@ -41,14 +41,19 @@ If you register a `service`, then the auto-discovery mechanism starts.  The `Ser
 You use the Service object to make requests on other services:
 
 ```
-Service.request('service.client').get('/clients/1234);
+Service.request('service.client').get('/clients/1234)
+.then(function(client) {
+	//use the client object
+}).catch(function(error) {
+	//do something with the error
+}).finally() {
+	//do something regardless of whether the request succeeded or failed
+};
 ```
 
 `Service.request()` returns a request object with HTTP methods that you can call if the service is available, or a rejected promise if the service is not available.
 
 You can use the `.get()`, `.put()`, `.post()`, or `.delete()` methods on the request object to make HTTP requests on the service that was specified in the `Service.request()` call.  The request object returns a promise with the result.
-
-#######more documentation about the Service object here!
 
 
 ###Service Mocks
@@ -223,5 +228,75 @@ Unfortunately, the `npm test` script does not work on Windows systems and testin
 Setting the `mock` configuration property in your `config/local.js` file will also set this environment variable if and only if there there is either a `mocks.js` file in your `config` directory, or you have provided a path to a valid file with valid service mock definitions.
 
 Under normal circumstances, you should never have to set or modify the `USE_MOCKS` environment variable directly.
+
+##Data Seeding
+The blade-common package will automatcially seed your models whenever you register your service or adapter.  This is necessary for testing, but is also useful in normal development if you have data that needs to be loaded before anything else happens.  In order for seed data to be loaded into your models, add the following outside your model's attribute section in your model definition:
+
+```
+	seedData: <path to JSON data to load>
+```
+
+For example, here's the definition for the Currency Model:
+
+```Javascript
+module.exports = {
+
+    autoPK: false,
+
+    attributes: {
+        code: {
+            type: 'string',
+            size: 3,
+            required: true,
+            unique: true,
+            primaryKey: true
+        },
+        symbol: {
+            type: 'string',
+            required: true
+        },
+        name: {
+            type: 'string',
+            required: true
+        },
+        symbol_native: 'string',
+        decimal_digits: {
+            type: 'integer',
+            required: true
+        },
+        rounding: 'integer',
+        name_plural: 'string'
+    },
+
+    seedData: __dirname + '/../../lib/data/currencies.json'
+};
+```
+You can put your seed data anywhere you wish, just provide a relative path to it in the seedData section of your model definition.
+
+The seed data functionality will not load data into the model if there is already data there.  It will only load data if there is NO data already present.
+
+##REST Responses
+The blade-common pckage extends the Sails response object with several responses that will assist in writing REST enpoints that are consistent with all other packages in the Blade Payment System.
+
+###2xx Success
+
+####200 OK
+
+####201 Created
+
+###4xx Client Error
+
+####400 Bad Request
+
+####401 Unauthorized
+
+####403 Forbidden
+
+####404 Not Found
+
+###5xx Server Error
+
+####500 Internal Server Error
+
 
 
