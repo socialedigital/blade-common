@@ -44,5 +44,22 @@ module.exports.models = {
         else {
             return Promise.reject('"seedData" property not specified in ' + modelName + ' model definition');
         }
+    },
+
+    /**
+     * This method checks an error to see if it contains validation
+     * error information for a particular model
+     *
+     */
+
+    isValidationError: function(error) {
+        var validationErrors = [];
+
+        if (error && error instanceof Error) {
+
+        }
+
+        return validationErrors;
     }
+
 };
