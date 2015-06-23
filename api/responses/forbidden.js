@@ -8,8 +8,7 @@
 
 var Response = require('../../lib/response.js');
 
-module.exports = function (data) {
+module.exports = function () {
     var response = new Response(this.req, this.res, 403);
-    this.req._sails.log.silly('Sent (403 FORBIDDEN)\n', response);
     response.send('Sent (403 FORBIDDEN');
 }
