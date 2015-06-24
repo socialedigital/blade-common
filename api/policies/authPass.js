@@ -6,15 +6,19 @@ module.exports = function(req, res, next) {
     // write authentication record
     // return next()
 
-    return CacheService.getTimedKey(req.headers.Authorization, sails.config.blade.inactivityTimeout)
-        .then(function(data) {
-            if ((data) && (data !== '')) {
-                return next();
-            } else {
+    if ((req.headers.authorization) && (req.headers.authorization !== '')) {
+        return CacheService.getTimedKey(req.headers.authorization, sails.config.blade.inactivityTimeout)
+            .then(function(data) {
+                if ((data) && (data !== '')) {
+                    return next();
+                } else {
+                    return res.forbidden('You shall not pass.');
+                }
+            })
+            .catch(function(err) {
                 return res.forbidden('You shall not pass.');
-            }
-        })
-        .catch(function(err) {
-            return res.forbidden('You shall not pass.');
-        });
+            });
+    } else {
+        return res.forbidden('You shall not pass.');
+    }
 };

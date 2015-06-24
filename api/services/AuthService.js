@@ -1,156 +1,149 @@
 var _ = require('lodash');
+var bluebird = require('bluebird');
+var fs = bluebird.promisifyAll(require('fs'));
 var moment = require('moment');
 var intform = require('biguint-format');
 var FlakeId = require('flake-idgen');
 var tokenGen = new FlakeId();
 var cyphGen = new FlakeId();
 
-/**
- *
- * Service.getName() = will return the currently running service
- * This should be used to determine the password lookup/reset data source
- * e.g., ui-service is using the client accountholders for lookup and reset (hard-coded below right now)
- * admin would be using something else, like a bladeUser table
- *
- * the lookup record should have fields:  email, mobile, bladeToken, twoFactorMethod
- *
- */
+function authFactory(serviceName, req) {
+    var libName = __dirname + '/../../lib/authLibs/' + serviceName + '/authLib.js';
+    return fs.openAsync(libName, 'r')
+        .then(function(file) {
+            return fs.closeAsync(file);
+        })
+        .then(function() {
+            return require(libName);
+        });
+}
 
 module.exports = {
 
     startAuthentication: function (req, res) {
-        if (req.param('client_id')) {
-            if ((req.body.user) && (req.body.password)) {
-                var acctHolder = null,
-                    reqToken = '';
-                CacheService.get('blocked-email-' + req.body.user)
-                    .then(function (result) {
-                        if ((result) && (result !== '')) {
-                            throw new Error('Email temporarily blocked at ' + result.at);
-                        } else {
-                            /**
-                             * here is the request and find information for the email, password
-                             */
-                            return Service.request('service.client')
-                                .get('/clients/' + req.param('client_id') + '/accountholders');
-                        }
-                    })
-                    .then(function (result) {
-                        return _.find(JSON.parse(result.body).data, function (obj) {
-                            return (obj.email === req.body.user);
-                        });
-                    })
-                    .then(function (found) {
-                        if (found) {
-                            acctHolder = found;
-                            var hPwd = require('crypto').createHash('md5').update(req.body.password).digest("hex");
-                            if (found.password === hPwd) {
-                                var aToken = intform(tokenGen.next(), 'dec');
-                                var rToken = intform(tokenGen.next(), 'dec');
-                                var cToken = intform(cyphGen.next(), 'dec');
-                                cToken = cToken.substr(cToken.length - 6);
-                                return CacheService.delete('failed-email-' + req.body.user)
-                                    .then(function () {
-                                        return [aToken, cToken, rToken];
-                                    });
-                            } else {
-                                var cnt = 0,
-                                    isBlocked = false;
-                                return CacheService.get('failed-email-' + req.body.user)
-                                    .then(function (data) {
-                                        if ((data) && (data !== '')) {
-                                            cnt = data.count;
-                                        }
-                                        cnt += 1;
-                                        if (cnt >= 3) {
-                                            return CacheService.delete('failed-email-' + req.body.user)
-                                                .then(function () {
-                                                    isBlocked = true;
-                                                    return CacheService
-                                                        .set('blocked-email-' + req.body.user, {at: moment().utc()});
-                                                })
-                                                .then(function () {
-                                                    return CacheService
-                                                        .expireKey('blocked-email-' + req.body.user,
-                                                        sails.config.blade.blockedEmailTimeout);
-                                                });
-                                        } else {
-                                            return CacheService.set('failed-email-' + req.body.user, {count: cnt});
-                                        }
-                                    })
-                                    .then(function () {
-                                        return Authentication.create({
-                                            serviceName: Service.getName(),
-                                            bladeToken: acctHolder.bladeToken,
-                                            email: req.body.user,
-                                            failedPassword: true,
-                                            acctBlocked: isBlocked
+        var auth = null;
+        var authUser = null;
+        var reqToken = '';
+        return authFactory(Service.getName(), req)
+            .then(function(authObj) {
+                auth = authObj;
+                return auth.validAuthParms(req);
+            })
+            .then(function(authObj) {
+                return CacheService.get('blocked-email-' + req.body.email);
+            })
+            .then(function (result) {
+                if ((result) && (result !== '')) {
+                    throw new Error('Email temporarily blocked at ' + result.at);
+                } else {
+                    return auth.lookup(req);
+                }
+            })
+            .then(function (found) {
+                if (found) {
+                    authUser = found;
+                    var hPwd = require('crypto').createHash('md5').update(req.body.password).digest("hex");
+                    if (found.password === hPwd) {
+                        var aToken = intform(tokenGen.next(), 'dec');
+                        var rToken = intform(tokenGen.next(), 'dec');
+                        var cToken = intform(cyphGen.next(), 'dec');
+                        cToken = cToken.substr(cToken.length - 6);
+                        return CacheService.delete('failed-email-' + req.body.email)
+                            .then(function () {
+                                return [aToken, cToken, rToken];
+                            });
+                    } else {
+                        var cnt = 0,
+                            isBlocked = false;
+                        return CacheService.get('failed-email-' + req.body.email)
+                            .then(function (data) {
+                                if ((data) && (data !== '')) {
+                                    cnt = data.count;
+                                }
+                                cnt += 1;
+                                if (cnt >= 3) {
+                                    return CacheService.delete('failed-email-' + req.body.email)
+                                        .then(function () {
+                                            isBlocked = true;
+                                            return CacheService
+                                                .set('blocked-email-' + req.body.email, {at: moment().utc()});
                                         })
-                                    })
-                                    .then(function (newRecord) {
-                                        throw new Error('Credentials invalid.');
-                                    })
-                            }
-                        } else {
-                            throw new Error('Credentials invalid.');
-                        }
-                    })
-                    .then(function (tokens) {
-                        return Authentication.create({
-                            serviceName: Service.getName(),
-                            bladeToken: acctHolder.bladeToken,
-                            email: req.body.user,
-                            authToken: tokens[0],
-                            authCode: tokens[1],
-                            requestToken: tokens[2],
-                            url: req.url
-                        })
-                    })
-                    .then(function (newRecord) {
-                        return CacheService.setTimedKey(newRecord.requestToken, sails.config.blade.twoFactorCodeTimeout)
-                            .then(function(newCode) {
-                                reqToken = newCode;
-                                return CacheService.setTimedKey(newRecord.authCode, sails.config.blade.twoFactorCodeTimeout);
+                                        .then(function () {
+                                            return CacheService
+                                                .expireKey('blocked-email-' + req.body.email,
+                                                sails.config.blade.blockedEmailTimeout);
+                                        });
+                                } else {
+                                    return CacheService.set('failed-email-' + req.body.email, {count: cnt});
+                                }
                             })
+                            .then(function () {
+                                return Authentication.create({
+                                    serviceName: Service.getName(),
+                                    bladeToken: authUser.bladeToken,
+                                    email: req.body.email,
+                                    failedPassword: true,
+                                    acctBlocked: isBlocked
+                                })
+                            })
+                            .then(function (newRecord) {
+                                throw new Error('Credentials invalid.');
+                            })
+                    }
+                } else {
+                    throw new Error('Credentials invalid.');
+                }
+            })
+            .then(function (tokens) {
+                return Authentication.create({
+                    serviceName: Service.getName(),
+                    bladeToken: authUser.bladeToken,
+                    email: req.body.email,
+                    authToken: tokens[0],
+                    authCode: tokens[1],
+                    requestToken: tokens[2],
+                    url: req.url
+                })
+            })
+            .then(function (newRecord) {
+                return CacheService.setTimedKey(newRecord.requestToken, sails.config.blade.twoFactorCodeTimeout)
+                    .then(function(newCode) {
+                        reqToken = newCode;
+                        return CacheService.setTimedKey(newRecord.authCode, sails.config.blade.twoFactorCodeTimeout);
                     })
-                    .then(function (newCode) {
-                        var msg = {
-                            serviceType: acctHolder.twoFactorMethod,
-                            to: acctHolder.mobile,
-                            message: 'Code: ' + newCode
-                        };
-                        if (acctHolder.twoFactorMethod !== 'sms') {
-                            msg['to'] = acctHolder.email;
-                            msg['from'] = 'no-reply@bladepayments.com';
-                            msg['subject'] = 'Confirmation Code';
-                        }
-                        return MessageService.sendMessage(msg);
-                    })
-                    .then(function (results) {
-                        results['requestToken'] = reqToken;
-                        return res.json(results);
-                    })
-                    .catch(function (err) {
-                        return res.badRequest(err);
-                    });
-            } else {
-                return res.badRequest('Missing credentials.');
-            }
-        } else {
-            return res.badRequest('Missing client id.');
-        }
+            })
+            .then(function (newCode) {
+                var msg = {
+                    serviceType: authUser.twoFactorMethod,
+                    to: authUser.mobile,
+                    message: 'Code: ' + newCode
+                };
+                if (authUser.twoFactorMethod !== 'sms') {
+                    msg['to'] = authUser.email;
+                    msg['from'] = 'no-reply@bladepayments.com';
+                    msg['subject'] = 'Confirmation Code';
+                }
+                return MessageService.sendMessage(msg);
+            })
+            .then(function (results) {
+                results['requestToken'] = reqToken;
+                return res.ok(results);
+            })
+            .catch(function(err) {
+                return res.badRequest(err);
+            });
     },
 
     resolveAuthentication: function (req, res) {  // caller should be on authPass, see below and above
         var aCode = req.param('code');
-        var rToken = req.headers.Authorization;
+        var rToken = req.headers.authorization;
         if (aCode) {
-            CachService.getTimedKey(rToken, 0)
+            CacheService.getTimedKey(rToken, 0)
                 .then(function(result) {
-                    if ((results) && (results !== '')) {
+                    if ((result) && (result !== '')) {
                         return CacheService.getTimedKey(aCode, 0);
                     } else {
-                        throw new Error('Code is invalid.');
+                        throw new Error('Request token is invalid.');
                     }
                 })
                 .then(function (results) {
@@ -176,62 +169,56 @@ module.exports = {
     },
 
     startPasswordReset: function (req, res) {  // post, no authPass
-        if (req.param('client_id')) {
-            if (req.body.email) {
-                var acctHolder = null;
-                Service.request('service.client').get('/clients/' + req.param('client_id') + '/accountholders')
-                    .then(function (result) {
-                        return _.find(JSON.parse(result.body).data, function (obj) {
-                            return (obj.email === req.body.email);
-                        });
-                    })
-                    .then(function (found) {
-                        if (found) {
-                            acctHolder = found;
-                            var aToken = intform(tokenGen.next(), 'dec');
-                            var cToken = intform(cyphGen.next(), 'dec');
-                            cToken = cToken.substr(cToken.length - 6);
-                            return [aToken, cToken];
-                        } else {
-                            throw new Error('Email not on file for this client.');
-                        }
-                    })
-                    .then(function (tokens) {
-                        return Authentication.create({
-                            serviceName: Service.getName(),
-                            bladeToken: acctHolder.bladeToken,
-                            clientID: req.param('client_id'),
-                            email: req.body.email,
-                            mobile: acctHolder.mobile,
-                            authToken: tokens[0],
-                            authCode: tokens[1],
-                            url: req.body.changeUrl
-                        });
-                    })
-                    .then(function (newRecord) {
-                        return CacheService.setTimedKey(newRecord.authToken, sails.config.blade.inactivityTimeout);
-                    })
-                    .then(function (newKey) {
-                        return MessageService.sendMessage({
-                            serverType: 'mail',
-                            to: acctHolder.email,
-                            message: req.body.changeUrl + '/?rcode=' + newKey,
-                            from: 'no-reply@bladepayments.com',
-                            subject: 'Change Password'
-                        });
-                    })
-                    .then(function (results) {
-                        return res.json(results);
-                    })
-                    .catch(function (err) {
-                        return res.badRequest(err);
-                    });
-            } else {
-                return res.badRequest('Missing email to find.');
-            }
-        } else {
-            return res.badRequest('Missing client id.');
-        }
+        var authUser = null;
+        var auth = null;
+        return authFactory(Service.getName(), req)
+            .then(function(authObj) {
+                return authObj.validPassParms(req);
+            })
+            .then(function(authObj) {
+                auth = authObj;
+                return auth.lookup(req);
+            })
+            .then(function (found) {
+                if (found) {
+                    authUser = found;
+                    var aToken = intform(tokenGen.next(), 'dec');
+                    var cToken = intform(cyphGen.next(), 'dec');
+                    cToken = cToken.substr(cToken.length - 6);
+                    return [aToken, cToken];
+                } else {
+                    throw new Error('Email not on file for this client.');
+                }
+            })
+            .then(function (tokens) {
+                return Authentication.create({
+                    serviceName: Service.getName(),
+                    bladeToken: authUser.bladeToken,
+                    email: req.body.email,
+                    mobile: authUser.mobile,
+                    authToken: tokens[0],
+                    authCode: tokens[1],
+                    url: req.body.changeUrl
+                });
+            })
+            .then(function (newRecord) {
+                return CacheService.setTimedKey(newRecord.authToken, sails.config.blade.inactivityTimeout);
+            })
+            .then(function (newKey) {
+                return MessageService.sendMessage({
+                    serverType: 'mail',
+                    to: authUser.email,
+                    message: req.body.changeUrl + '/?rcode=' + newKey,
+                    from: 'no-reply@bladepayments.com',
+                    subject: 'Change Password'
+                });
+            })
+            .then(function (results) {
+                return res.ok(results);
+            })
+            .catch(function(err) {
+                return res.badRequest(err);
+            });
     },
 
     sendPasswordCode: function (req, res) {  // get, uses authPass
@@ -248,7 +235,7 @@ module.exports = {
                 }
             })
             .then(function (results) {
-                return res.json(results);
+                return res.ok(results);
             })
             .catch(function (err) {
                 return res.badRequest(err);
@@ -256,61 +243,63 @@ module.exports = {
     },
 
     resolvePasswordChange: function (req, res) { // put/modify,  uses authPass
-        if (req.param('code')) {
-            var authRec = null;
-            CacheService.getTimedKey(req.param('code'), 0)
-                .then(function(results) {
-                    if ((results) && (results !== '')) {
-                        return Authentication.findOne({authToken: req.headers.Authentication});
-                    } else {
-                        throw new Error("Code is invalid.");
-                    }
-                })
-                .then(function (authRecord) {
-                    if (authRecord) {
-                        authRec = authRecord;
-                        var vPwd = require('crypto').createHash('md5').update(req.body.password).digest("hex");
-                        return Service.request('service.client')
-                            .put('/clients/' + authRecord.clientID + '/accountHolders/' + authRecord.bladeToken,
-                            {password: vPwd});
-                    } else {
-                        throw new Error('Authentication record not found.');
-                    }
-                })
-                .then(function (result) {
-                    if (result.hasOwnProperty('data')) {
-                        var aToken = intform(tokenGen.next(), 'dec');
-                        var cToken = intform(cyphGen.next(), 'dec');
-                        cToken = cToken.substr(cToken.length - 6);
-                        return [aToken, cToken];
-                    } else {
-                        throw new Error('Writing password to account holder failed.');
-                    }
-                })
-                .then(function (tokens) {
-                    return Authentication.create({
-                        serviceName: Service.getName(),
-                        bladeToken: authRec.bladeToken,
-                        email: authRec.email,
-                        authToken: tokens[0],
-                        authCode: tokens[1]
-                    });
-                })
-                .then(function (newAuth) {
-                    return CacheService.setTimedKey(newAuth.authToken, sails.config.blade.inactivityTimeout);
-                })
-                .then(function (newKey) {
-                    return res.json({authToken: newKey});
-                })
-                .then(function () {
-                    return CacheService.delete(authRec.authToken);
-                })
-                .catch(function (err) {
-                    return res.badRequest(err);
-                })
-        } else {
-            return res.badRequest('Missing code.');
-        }
+        var auth = null;
+        var authRec = null;
+        return authFactory(Service.getName(), req)
+            .then(function(authObj) {
+                return authObj.validPassResolve(req);
+            })
+            .then(function(authObj) {
+                auth = authObj;
+                return CacheService.getTimedKey(req.param('code'), 0);
+            })
+            .then(function(results) {
+                if ((results) && (results !== '')) {
+                    return Authentication.findOne({authToken: req.headers.Authentication});
+                } else {
+                    throw new Error("Code is invalid.");
+                }
+            })
+            .then(function (authRecord) {
+                if (authRecord) {
+                    authRec = authRecord;
+                    var vPwd = require('crypto').createHash('md5').update(req.body.password).digest("hex");
+                    return auth.setPassword(authRec.bladeToken, vPwd);
+                } else {
+                    throw new Error('Authentication record not found.');
+                }
+            })
+            .then(function (result) {
+                if (result) {
+                    var aToken = intform(tokenGen.next(), 'dec');
+                    var cToken = intform(cyphGen.next(), 'dec');
+                    cToken = cToken.substr(cToken.length - 6);
+                    return [aToken, cToken];
+                } else {
+                    throw new Error('Writing password to account holder failed.');
+                }
+            })
+            .then(function (tokens) {
+                return Authentication.create({
+                    serviceName: Service.getName(),
+                    bladeToken: authRec.bladeToken,
+                    email: authRec.email,
+                    authToken: tokens[0],
+                    authCode: tokens[1]
+                });
+            })
+            .then(function (newAuth) {
+                return CacheService.setTimedKey(newAuth.authToken, sails.config.blade.inactivityTimeout);
+            })
+            .then(function (newKey) {
+                return res.ok({authToken: newKey});
+            })
+            .then(function () {
+                return CacheService.delete(authRec.authToken);
+            })
+            .catch(function (err) {
+                return res.badRequest(err);
+            });
     }
 
 };
