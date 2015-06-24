@@ -120,7 +120,7 @@ module.exports = {
                 };
                 if (authUser.twoFactorMethod !== 'sms') {
                     msg['to'] = authUser.email;
-                    msg['from'] = 'no-reply@bladepayments.com';
+                    msg['from'] = 'contact@certainplotservices.com';
                     msg['subject'] = 'Confirmation Code';
                 }
                 return MessageService.sendMessage(msg);
