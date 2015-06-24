@@ -26,11 +26,7 @@ module.exports = {
                 return Service.request('service.core').post('/sendMessage', sMsg);
             })
             .then(function (results) {
-                if (results.status !== 200) {
-                    throw new Error('Core Service message failure.');
-                } else {
-                    return JSON.parse(results.body);
-                }
+                return results;
             });
     }
 };
