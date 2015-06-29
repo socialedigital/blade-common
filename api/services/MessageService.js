@@ -16,9 +16,10 @@ module.exports = {
             .then(function (newKey) {
                 sMsg.messageKey = newKey;
                 Connection.addHandler(newKey, function (messageKey) {
-                    CacheService.hashDelete(sMsg.serviceType, messageKey).then(function () {
-                        Connection.removeHandler(messageKey);
-                    });
+                    CacheService.hashDelete(sMsg.serviceType, messageKey)
+                        .then(function () {
+                            Connection.removeHandler(messageKey);
+                        });
                 });
                 return CacheService.hashSet(sMsg.serviceType, sMsg.messageKey, JSON.stringify(sMsg));
             })
