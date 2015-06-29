@@ -12,13 +12,13 @@ module.exports = function(req, res, next) {
                 if ((data) && (data !== '')) {
                     return next();
                 } else {
-                    return res.forbidden('You shall not pass.');
+                    return res.unauthorized('You shall not pass.');
                 }
             })
             .catch(function(err) {
-                return res.forbidden('You shall not pass.');
+                return res.unauthorized('You shall not pass.');
             });
     } else {
-        return res.forbidden('You shall not pass.');
+        return res.badRequest('You shall not pass.');
     }
 };
