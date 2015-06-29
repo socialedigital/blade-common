@@ -23,7 +23,7 @@ module.exports = function (sails) {
             responses.initialize(function(err) {
                 if (err) {
                     return cb(err);
-                };
+                }
                 sails.log.info('Loading Blade Controllers, Models, and Services');
                 loader.injectAll({
                     controllers: __dirname + '/api/controllers',
@@ -33,8 +33,14 @@ module.exports = function (sails) {
                     if (err) {
                         return cb(err);
                     }
+
                     //initialize discovery
-                    discovery.initialize(sails)
+                    discovery.initialize(sails);
+
+                    if (sails.config.authentication) {
+                        sails.on('router:after', sails.config.authentication.bindRoutes);
+                    }
+
                     return cb();
                 });
             })

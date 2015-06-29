@@ -23,10 +23,12 @@ module.exports = {
             type: 'string'
         },
         authToken: {
-            type: 'string'
+            type: 'string',
+            index: true
         },
         requestToken: {
-            type: 'string'
+            type: 'string',
+            index: true
         },
         acctBlocked: {
             type: 'boolean'
