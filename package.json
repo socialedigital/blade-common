@@ -23,6 +23,7 @@
     "prometheus-client": "^0.1.0",
     "redis": "^0.12.1",
     "sails-build-dictionary": "^0.10.1",
+    "sails-disk": "^0.10.8",
     "sails-redis": "^0.10.3",
     "sails-util": "^0.10.4",
     "sails-util-mvcsloader": "^0.1.7"
