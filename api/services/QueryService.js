@@ -14,10 +14,7 @@ module.exports = {
         var url = request._parsedUrl;
         var parameters = request.allParams();
         var primaryKey = model.primaryKey;
-        var paramKey;
-        if (options) {
-            paramKey = (options.parmKey) ? paramKey : null;
-        }
+        var paramKey = options && options.pkParamName ? options.pkParamName : undefined;
         //todo: what if the model doesn't have a primary key? (pkAuto is false and no primary key defined)
         return new Promise(function (resolve, reject) {
             try {
@@ -28,15 +25,15 @@ module.exports = {
                     key = parameters[primaryKey];
                 }
                 if (key) {
-                    model.findOne(key)
-                        .then(function (modelItem) {
-                            if (modelItem) {
-                                resolve(modelItem);
-                            }
-                            else {
-                                resolve(undefined);
-                            }
-                        })
+                    model.findOne(key).populateAll()
+                    .then(function (modelItem) {
+                        if (modelItem) {
+                            resolve(modelItem);
+                        }
+                        else {
+                            resolve({});
+                        }
+                    })
                 }
                 else {
                     var result = {
@@ -57,6 +54,7 @@ module.exports = {
                     }
                     var criteria = {};
                     if (where) criteria.where = where;
+                    sails.log.verbose(criteria);
                     criteria.limit = parameters['limit'] || defaultPageSize;
                     result.limit = criteria.limit;
                     if (parameters['skip']) {
@@ -71,7 +69,7 @@ module.exports = {
                     model.count(where)
                         .then(function (count) {
                             result.total = count;
-                            return model.find(criteria);
+                            return model.find(criteria).populateAll();
                         }).then(function (results) {
                             if (results.length > 0) {
                                 result.data = results;
@@ -113,7 +111,7 @@ module.exports = {
                                 resolve(result);
                             }
                             else {
-                                resolve(undefined);
+                                resolve(result);
                             }
                         })
                 }

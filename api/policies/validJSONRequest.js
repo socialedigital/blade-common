@@ -14,7 +14,7 @@ module.exports = function validJSONRequest (req, res, next) {
     var requestContentType = contentType.parse(req);
 
     if (requestContentType.parameters['charset']) {
-        if (requestContentType.parameters.charset != 'UTF-8') {
+        if (requestContentType.parameters.charset.toLowerCase() != 'utf-8') {
             return res.unsupportedMediaType({
                 name: 'Unsupported Character Encoding',
                 mesasge: "'" + requestContentType.parameters.charset + "' is an usupported character encoding.",

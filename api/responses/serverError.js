@@ -10,7 +10,7 @@ var ServiceError = require('../services/errors/ServiceError.js');
 
 module.exports = function (errors) {
     var response = new Response(this.req, this.res, 500);
-    if (errors && !(errors instanceof ServiceError)) {
+    if (errors && (!(errors instanceof ServiceError) && !(errors instanceof Error))) {
         errors = new ServiceError(errors);
     }
     response.addErrors(errors);
