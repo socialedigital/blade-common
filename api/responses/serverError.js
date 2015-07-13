@@ -8,12 +8,12 @@
 var Response = require('../../lib/response.js');
 var ServiceError = require('../services/errors/ServiceError.js');
 
-module.exports = function (errors) {
+module.exports = function (error) {
     var response = new Response(this.req, this.res, 500);
-    if (errors && (!(errors instanceof ServiceError) && !(errors instanceof Error))) {
-        errors = new ServiceError(errors);
+    if (error && !(error instanceof ServiceError) && !(error instanceof Error)) {
+        error = new ServiceError(error);
     }
-    response.addErrors(errors);
+    response.addErrors(error);
     if (process.env.NODE_ENV == 'production') {
         response.addErrors('Internal Server Error');
     }

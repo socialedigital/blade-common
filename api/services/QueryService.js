@@ -31,7 +31,7 @@ module.exports = {
                             resolve(modelItem);
                         }
                         else {
-                            resolve({});
+                            reject(new NotFound('QueryService'));
                         }
                     })
                 }
@@ -111,7 +111,7 @@ module.exports = {
                                 resolve(result);
                             }
                             else {
-                                resolve(result);
+                                reject(new NotFound('QueryService'));
                             }
                         })
                 }
