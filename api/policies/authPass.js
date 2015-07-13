@@ -1,15 +1,9 @@
-
+var _ = require('lodash');
 module.exports = function(req, res, next) {
-    // get auth token from req?
-    // lookup auth token in redis
-    // if found rewrite timer
-    // write authentication record
-    // return next()
-
-    if ((req.headers.authorization) && (req.headers.authorization !== '')) {
+    if (!_.isEmpty(req.headers.authorization)) {
         return CacheService.getTimedKey(req.headers.authorization, sails.config.blade.inactivityTimeout)
             .then(function(data) {
-                if ((data) && (data !== '')) {
+                if (!_.isEmpty(data)) {
                     return next();
                 } else {
                     return res.unauthorized('You shall not pass.');
