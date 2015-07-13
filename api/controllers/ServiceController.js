@@ -28,14 +28,39 @@ module.exports = {
                 Service.addInfo('routes', routes);
             }
 
+            if (!sails.config.service.interfaces) {
+                var interfaces = {};
+                _.each(sails.models, function (model) {
+                    if (model.expose) {
+                        var exposed = model.expose;
+                        var modelName = model.globalId;
+                        exposed.attributes = model.attributes;
+                        interfaces[modelName] = exposed;
+                    }
+                });
+                Service.addInfo('interfaces', interfaces);
+            }
+
             var info = sails.config.service;
             info.started = Service.getStartTime() + ' (' + Service.getElapsedTime() + ')';
             sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 200});
-            return res.status(200).json(sails.config.service);
+            res.ok(sails.config.service);
         }
         else {
-            sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 404});
-            return res.status(404).send();
+            //sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 404});
+            //return res.status(404).send();
+            res.notFound();
+        }
+    },
+
+    interfaces: function (req, res) {
+        if (Service.getType() == 'service') {
+            res.ok(sails.models['cardaccount']);
+        }
+        else {
+            //sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 400});
+            //return res.status(404).send();
+            res.notFound();
         }
     },
 
@@ -43,11 +68,12 @@ module.exports = {
         if (Service.getType() == 'service') {
             var metricsFunction = sails.config.metrics.client.metricsFunc();
             sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 200});
-            return metricsFunction(req, res);
+            metricsFunction(req, res);
         }
         else {
-            sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 400});
-            return res.status(404).send();
+            //sails.config.metrics.httpResponseCounter.increment({method: req.method, url: req.url, code: 400});
+            //return res.status(404).send();
+            res.notFound();
         }
     }
 };

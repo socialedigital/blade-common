@@ -71,6 +71,7 @@ module.exports.http = {
         },
 
         requestLogger: function (req, res, next) {
+            //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
             var fromService = '';
             if (req.headers['x-blade-service']) {
                 fromService = '[from: ' + req.headers['x-blade-service'] + ']';

@@ -8,7 +8,10 @@
 
 var Response = require('../../lib/response.js');
 
-module.exports = function () {
+module.exports = function (object) {
     var response = new Response(this.req, this.res, 404);
+    if (object && !(object instanceof NotFound)) {
+        response.addObject(object);
+    }
     response.send('Sent (404 NOT FOUND)');
 };

@@ -10,5 +10,5 @@ var Response = require('../../lib/response.js');
 
 module.exports = function () {
     var response = new Response(this.req, this.res, 401);
-    this.response.send('Sent (401 UNAUTHORIZED)');
+    response.send('Sent (401 UNAUTHORIZED)');
 };
