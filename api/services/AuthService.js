@@ -43,7 +43,7 @@ module.exports = {
                 return CacheService.get('blocked-email-' + req.body.email);
             })// good parsm, check blocked
             .then(function (result) {
-                if ((result) && (result !== '')) {
+                if ( !_.isEmpty(result) ) {
                     throw new Error('Email temporarily blocked at ' + result.at);
                 } else {
                     return auth.lookup(req);
@@ -63,7 +63,7 @@ module.exports = {
                             isBlocked = false;
                         return CacheService.get('failed-email-' + req.body.email)
                             .then(function (data) {
-                                if ((data) && (data !== '')) {
+                                if (!_.isEmpty(data)) {
                                     cnt = data.count;
                                 }
                                 cnt += 1;
@@ -151,14 +151,14 @@ module.exports = {
         var rToken = req.headers.authorization;
         CacheService.getTimedKey(rToken, 0)// find token for auth
             .then(function(result) {
-                if ((result) && (result !== '')) {
+                if (!_.isEmpty(result)) {
                     return CacheService.getTimedKey(aCode, 0);
                 } else {
                     throw new Error('Request token is invalid.');
                 }
             })//if good, find code parm
             .then(function (results) {
-                if ((results) && (results !== '')) {
+                if (!_.isEmpty(results)) {
                     return Authentication.findOne({requestToken: rToken})
                 } else {
                     throw new Error('Code is invalid.');
@@ -268,7 +268,7 @@ module.exports = {
                 return CacheService.getTimedKey(req.param('code'), 0);
             })
             .then(function(results) {
-                if ((results) && (results !== '')) {
+                if (!_.isEmpty(results)) {
                     return Authentication.findOne({authToken: req.headers.Authentication});
                 } else {
                     throw new Error("Code is invalid.");

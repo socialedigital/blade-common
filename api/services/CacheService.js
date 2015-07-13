@@ -1,4 +1,6 @@
 var moment = require('moment');
+var _ = require('lodash');
+var Promise = require('bluebird');
 /**
  * CacheService.js - provides cache read/write, and publish/subscribe through redis
  * @type {{set: Function, get: Function, hashSet: Function, hashGet: Function, hashKeys: Function}}
@@ -217,14 +219,14 @@ module.exports = {
             })
             .then(function(data) {
                 retdata = data;
-                if ((retdata !== '') && (timeout > 0)) {
+                if ((!_.isEmpty(retdata)) && (timeout > 0)) {
                     return cli.setAsync(key, moment().utc());
                 } else {
                     return cli.delAsync(key);
                 }
             })
             .then(function() {
-                if ((retdata !== '') && (timeout > 0)) {
+                if ((!_.isEmpty(retdata)) && (timeout > 0)) {
                     return cli.expireAsync(key, timeout);
                 } else {
                     Promise.resolve();
