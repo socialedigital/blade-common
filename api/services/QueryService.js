@@ -46,7 +46,8 @@ var formatResponse = function(request, queryResult, criteria){
     //previous link
     var offset = skip;
     if (offset > 0) {
-        offset -= limit;
+        if(limit >= skip) offset -= skip;
+        else offset -= limit;
         if (offset >= 0) {
             query = [];
             if (where) query.push('where=' + where);
