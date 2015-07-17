@@ -38,16 +38,19 @@ var formatResponse = function(request, queryResult, criteria){
         var criteria = queryCriteria(request.allParams())
     }
     var url = request._parsedUrl;
+    if(criteria.where) var where = JSON.stringify(criteria.where);
+    var skip = parseInt(criteria.skip || 0, 10);
+    var limit = parseInt(criteria.limit);
     //construct links
     var query;
     //previous link
-    var offset = parseInt(criteria.skip || 0, 10);
+    var offset = skip;
     if (offset > 0) {
-        offset -= queryResult.data.length;
+        offset -= limit;
         if (offset >= 0) {
             query = [];
-            if (criteria.where) query.push('where=' + JSON.stringify(criteria.where));
-            query.push('limit=' + criteria.limit);
+            if (where) query.push('where=' + where);
+            query.push('limit=' + limit);
             if (offset > 0) {
                 query.push('skip=' + offset);
             }
@@ -59,19 +62,43 @@ var formatResponse = function(request, queryResult, criteria){
     }
 
     //next link
-    offset = criteria.skip || 0;
-    offset = parseInt(offset, 10);
-    offset += parseInt(criteria.limit, 10);
+    offset = skip;
+    offset += limit;
     if (offset <= queryResult.total) {
         query = [];
-        if (criteria.where) query.push('where=' + JSON.stringify(criteria.where));
-        query.push('limit=' + criteria.limit);
+        if (where) query.push('where=' + where);
+        query.push('limit=' + limit);
         query.push('skip=' + offset);
         if (!queryResult.links) {
             queryResult.links = {};
         }
         queryResult.links.next = url.pathname + '?' + query.join('&');
     }
+
+    //first link
+    query = [];
+    if (where) query.push('where=' + where);
+    query.push('limit=' + limit);
+    if (!queryResult.links) {
+        queryResult.links = {};
+    }
+    queryResult.links.first = url.pathname + '?' + query.join('&');
+
+    //last link
+    query = [];
+    var lastPage;
+    var remainder = queryResult.total % limit;
+    if(remainder === 0) lastPage = queryResult.total - limit;
+    else lastPage = queryResult.total - remainder;
+
+    if (where) query.push('where=' + where);
+    query.push('limit=' + limit);
+    query.push('skip=' + lastPage);
+    if (!queryResult.links) {
+        queryResult.links = {};
+    }
+    queryResult.links.last = url.pathname + '?' + query.join('&');
+
     return queryResult;
 }
 
