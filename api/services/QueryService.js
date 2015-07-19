@@ -30,6 +30,9 @@ var queryCriteria = function(parameters){
     if (parameters['sort']) {
         criteria.sort = parameters['sort'];
     }
+    if(parameters['select']) {
+        criteria.select = parameters['select'].split(',');
+    }
     return criteria;
 }
 
@@ -41,6 +44,10 @@ var formatResponse = function(request, queryResult, criteria){
     if(criteria.where) var where = JSON.stringify(criteria.where);
     var skip = parseInt(criteria.skip || 0, 10);
     var limit = parseInt(criteria.limit);
+    if(criteria.select){
+        var select = criteria.select.join(',');
+    }
+    var sort = criteria.sort;
     //construct links
     var query;
     //previous link
@@ -54,6 +61,12 @@ var formatResponse = function(request, queryResult, criteria){
             query.push('limit=' + limit);
             if (offset > 0) {
                 query.push('skip=' + offset);
+            }
+            if (select){
+                query.push('select=' + select);
+            }
+            if (sort){
+                query.push('sort=' + sort);
             }
             if (!queryResult.links) {
                 queryResult.links = {};
@@ -70,6 +83,12 @@ var formatResponse = function(request, queryResult, criteria){
         if (where) query.push('where=' + where);
         query.push('limit=' + limit);
         query.push('skip=' + offset);
+        if (select){
+                query.push('select=' + select)
+        }
+        if (sort){
+            query.push('sort=' + sort);
+        }
         if (!queryResult.links) {
             queryResult.links = {};
         }
@@ -77,28 +96,44 @@ var formatResponse = function(request, queryResult, criteria){
     }
 
     //first link
-    query = [];
-    if (where) query.push('where=' + where);
-    query.push('limit=' + limit);
-    if (!queryResult.links) {
-        queryResult.links = {};
+    if(queryResult.total > 1){
+        query = [];
+        if (where) query.push('where=' + where);
+        query.push('limit=' + limit);
+        if (select){
+            query.push('select=' + select)
+        }
+        if (sort){
+            query.push('sort=' + sort);
+        }
+        if (!queryResult.links) {
+            queryResult.links = {};
+        }
+        queryResult.links.first = url.pathname + '?' + query.join('&');
     }
-    queryResult.links.first = url.pathname + '?' + query.join('&');
 
     //last link
-    query = [];
-    var lastPage;
-    var remainder = queryResult.total % limit;
-    if(remainder === 0) lastPage = queryResult.total - limit;
-    else lastPage = queryResult.total - remainder;
+    if(queryResult.total > 1){
+        query = [];
+        var lastPage;
+        var remainder = queryResult.total % limit;
+        if(remainder === 0) lastPage = queryResult.total - limit;
+        else lastPage = queryResult.total - remainder;
 
-    if (where) query.push('where=' + where);
-    query.push('limit=' + limit);
-    query.push('skip=' + lastPage);
-    if (!queryResult.links) {
-        queryResult.links = {};
+        if (where) query.push('where=' + where);
+        query.push('limit=' + limit);
+        query.push('skip=' + lastPage);
+        if (select){
+            query.push('select=' + select)
+        }
+        if (sort){
+            query.push('sort=' + sort);
+        }
+        if (!queryResult.links) {
+            queryResult.links = {};
+        }
+        queryResult.links.last = url.pathname + '?' + query.join('&');
     }
-    queryResult.links.last = url.pathname + '?' + query.join('&');
 
     return queryResult;
 }
@@ -144,6 +179,10 @@ var find = Promise.method(function (model, request, options) {
                     else {
                         throw new NotFound('QueryService');
                     }
+                })
+                .catch(function(err){
+                    if(err.name === "NOT FOUND") throw err
+                    throw new Error("Invalid Query Criteria")
                 })
         }
     }
