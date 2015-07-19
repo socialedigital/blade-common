@@ -31,7 +31,7 @@ var queryCriteria = function(parameters){
         criteria.sort = parameters['sort'];
     }
     if(parameters['select']) {
-        criteria.select = parameters['select'].split(',');
+        criteria.select = parameters['select'].replace(/ /g,'').split(',');
     }
     return criteria;
 }
