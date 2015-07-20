@@ -23,7 +23,12 @@ var queryCriteria = function(parameters){
         }
     }
     var criteria = {};
-    if (where) criteria.where = where;
+    if (where){
+        criteria.where = where;
+    }
+    else{
+        criteria.where = {};
+    }
     criteria.limit = parameters['limit'] || defaultPageSize;
     if (parameters['skip']) {
         criteria.skip = parameters['skip'];
@@ -49,15 +54,21 @@ var formatResponse = function(request, queryResult, criteria){
     if(!criteria){
         var criteria = queryCriteria(request.allParams())
     }
+    if(!queryResult.data && !queryResult.total && queryResult.length > 1){
+        var newResult = {};
+        newResult.data = queryResult;
+        newResult.total = queryResult.length;
+        queryResult = newResult;
+    }
     var url = request._parsedUrl;
-    if(criteria.where) var where = JSON.stringify(criteria.where);
+    if(criteria.where && criteria.where > 0) var where = JSON.stringify(criteria.where);
     var skip = parseInt(criteria.skip || 0, 10);
     var limit = parseInt(criteria.limit);
     if(criteria.select){
         var select = criteria.select.join(',');
     }
     if(criteria.populate){
-        if(typeof criteria.populate === 'Array'){
+        if(criteria.populate instanceof Array){
             var populate = criteria.populate.join(',');
         } else {
             var populate = criteria.populate;
@@ -191,11 +202,25 @@ var find = Promise.method(function (model, request, options) {
         }
         else {
             var criteria = queryCriteria(parameters);
-            sails.log(criteria)
             var result = {
                 data: [],
                 total: 0
             };
+            var getBy = options && options.getBy ? options.getBy : undefined;
+            if(getBy){
+                sails.log(getBy)
+                if(getBy instanceof Array){
+                    for(var i in getBy){
+                        if(parameters[getBy[i]]){
+                            criteria.where[getBy[i]] = parameters[getBy[i]]
+                        }
+                    }
+                }
+                else{
+                    criteria.where[getBy] = parameters[getBy]
+                }
+            }
+            sails.log(criteria)
             return model.count(criteria.where)
                 .then(function (count) {
                     result.total = count;
@@ -218,7 +243,6 @@ var find = Promise.method(function (model, request, options) {
                     }
                 })
                 .catch(function(err){
-                    sails.log(err)
                     if(err.name == "NOT FOUND") throw err
                     throw new Error("Invalid Query Criteria")
                 })
