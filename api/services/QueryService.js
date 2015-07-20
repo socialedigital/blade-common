@@ -6,6 +6,7 @@
 
 var Promise = require('bluebird');
 var queryString = require('querystring');
+var _ = require('lodash');
 
 var defaultPageSize = 10;       //todo: this should be configurable
 
@@ -30,8 +31,16 @@ var queryCriteria = function(parameters){
     if (parameters['sort']) {
         criteria.sort = parameters['sort'];
     }
-    if(parameters['select']) {
+    if (parameters['select']) {
         criteria.select = parameters['select'].replace(/ /g,'').split(',');
+    }
+    if (parameters['populate']) {
+        if(parameters['populate'] === 'all'){
+            criteria.populate = 'all';
+        }
+        else {
+            criteria.populate = parameters['populate'].replace(/ /g,'').split(',');
+        }
     }
     return criteria;
 }
@@ -46,6 +55,13 @@ var formatResponse = function(request, queryResult, criteria){
     var limit = parseInt(criteria.limit);
     if(criteria.select){
         var select = criteria.select.join(',');
+    }
+    if(criteria.populate){
+        if(typeof criteria.populate === 'Array'){
+            var populate = criteria.populate.join(',');
+        } else {
+            var populate = criteria.populate;
+        }
     }
     var sort = criteria.sort;
     //construct links
@@ -68,6 +84,9 @@ var formatResponse = function(request, queryResult, criteria){
             if (sort){
                 query.push('sort=' + sort);
             }
+            if (populate){
+                query.push('populate=' + populate)
+            }
             if (!queryResult.links) {
                 queryResult.links = {};
             }
@@ -89,6 +108,9 @@ var formatResponse = function(request, queryResult, criteria){
         if (sort){
             query.push('sort=' + sort);
         }
+        if (populate){
+            query.push('populate=' + populate)
+        }
         if (!queryResult.links) {
             queryResult.links = {};
         }
@@ -96,7 +118,7 @@ var formatResponse = function(request, queryResult, criteria){
     }
 
     //first link
-    if(queryResult.total > 1){
+    if(queryResult.total > 1 && limit < queryResult.total){
         query = [];
         if (where) query.push('where=' + where);
         query.push('limit=' + limit);
@@ -106,6 +128,9 @@ var formatResponse = function(request, queryResult, criteria){
         if (sort){
             query.push('sort=' + sort);
         }
+        if (populate){
+            query.push('populate=' + populate)
+        }
         if (!queryResult.links) {
             queryResult.links = {};
         }
@@ -113,7 +138,7 @@ var formatResponse = function(request, queryResult, criteria){
     }
 
     //last link
-    if(queryResult.total > 1){
+    if(queryResult.total > 1 && limit < queryResult.total){
         query = [];
         var lastPage;
         var remainder = queryResult.total % limit;
@@ -128,6 +153,9 @@ var formatResponse = function(request, queryResult, criteria){
         }
         if (sort){
             query.push('sort=' + sort);
+        }
+        if (populate){
+            query.push('populate=' + populate)
         }
         if (!queryResult.links) {
             queryResult.links = {};
@@ -151,7 +179,7 @@ var find = Promise.method(function (model, request, options) {
             key = parameters[primaryKey];
         }
         if (key) {
-            return model.findOne(key).populateAll()
+            return model.findOne(key)
             .then(function (modelItem) {
                 if (modelItem) {
                     return modelItem;
@@ -163,6 +191,7 @@ var find = Promise.method(function (model, request, options) {
         }
         else {
             var criteria = queryCriteria(parameters);
+            sails.log(criteria)
             var result = {
                 data: [],
                 total: 0
@@ -170,7 +199,15 @@ var find = Promise.method(function (model, request, options) {
             return model.count(criteria.where)
                 .then(function (count) {
                     result.total = count;
-                    return model.find(criteria).populateAll();
+                    if(criteria.populate === 'all'){
+                        return model.find(criteria).populateAll()
+                    }
+                    else if(criteria.populate){
+                        return _.reduce(criteria.populate, function(query, key){ return query.populate(key) }, model.find(criteria))
+                    }
+                    else {
+                        return model.find(criteria)
+                    }
                 }).then(function (results) {
                     if (results.length > 0) {
                         result.data = results;
@@ -181,7 +218,8 @@ var find = Promise.method(function (model, request, options) {
                     }
                 })
                 .catch(function(err){
-                    if(err.name === "NOT FOUND") throw err
+                    sails.log(err)
+                    if(err.name == "NOT FOUND") throw err
                     throw new Error("Invalid Query Criteria")
                 })
         }
