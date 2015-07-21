@@ -299,4 +299,52 @@ The blade-common pckage extends the Sails response object with several responses
 ####500 Internal Server Error
 
 
+##Query Service
+
+To return one result from the query service, matching the primary key by the matching parameter in the request:
+
+`QueryService.find(model, req, {pkParamName: "primaryKeyName"})`
+
+All following options return a collection and pagination links where they apply, even if only 1 result is found.
+
+To return a collection of results querying by any field(s), where the model field matches the parameter in the request:
+
+`QueryService.find(model, req, {getBy: "field1"})`
+
+`QueryService.find(model, req, {getBy: ["field1", "field2", ..]})`
+
+To map the model field to a parameter in the request that is named differently:
+
+`QueryService.find(model, req, {getBy: {id: "client_id"} })`
+
+and to mix and match fields that match the request and don't:
+
+`QueryService.find(model, req, {getBy: {id: "client_id", accountId: true} })`
+
+
+Additionally, the following fields are available in the URL query string to get specific data from routes that utilize the QueryService:
+
+where
+
+`/retreivemodels?where={"somefield":"somevalue"}`
+
+limit and skip - 10 and 0 by default
+
+`/retreivemodels?limit=20&skip=20`
+
+sort
+
+`/retrivemodels?where={"type":"foo"}&sort=date DESC`
+
+select - retrieves only specified fields, uses a comma delimited string
+
+`/retrievemodels?select=field1,field2`
+
+populate - populates specified relationship fields, uses a comma delimited string. the query service does not populate by default and returns the only the related model's primary key.
+
+`/retrievemodels?populate=relationship1,relationship2`
+
+can also just pass "all" to populate all relationship fields
+
+`/retrievemodels?populate=all`
 
