@@ -11,6 +11,9 @@ var Response = require('../../lib/response.js');
 
 module.exports = function(options) {
     var response = new Response(this.req, this.res, 200);
+    if(options){
+        options = QueryService.formatResponse(this.req, options);
+    }
     response.applyOptions(options);
     response.send('Sent (200 OK)');
 };

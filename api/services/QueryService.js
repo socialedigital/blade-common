@@ -6,119 +6,269 @@
 
 var Promise = require('bluebird');
 var queryString = require('querystring');
+var _ = require('lodash');
 
 var defaultPageSize = 10;       //todo: this should be configurable
 
-module.exports = {
-    find: function (model, request, options) {
-        var url = request._parsedUrl;
-        var parameters = request.allParams();
-        var primaryKey = model.primaryKey;
-        var paramKey = options && options.pkParamName ? options.pkParamName : undefined;
-        //todo: what if the model doesn't have a primary key? (pkAuto is false and no primary key defined)
-        return new Promise(function (resolve, reject) {
-            try {
-                var key = null;
-                if (paramKey) {
-                    key = parameters[paramKey];
-                } else {
-                    key = parameters[primaryKey];
-                }
-                if (key) {
-                    model.findOne(key).populateAll()
-                    .then(function (modelItem) {
-                        if (modelItem) {
-                            resolve(modelItem);
-                        }
-                        else {
-                            reject(new NotFound('QueryService'));
-                        }
-                    })
+var queryCriteria = function(parameters){
+    var where = parameters['where'];
+    if (typeof where === 'string') {
+        try {
+            where = queryString.unescape(where);
+            where = JSON.parse(where);
+        }
+        catch (exception) {
+            throw(new Error('Unable to parse "where" parameter in URL [' + exception.name + ': ' + exception.message + ']'));
+            return;
+        }
+    }
+    var criteria = {};
+    if (where){
+        criteria.where = where;
+    }
+    else{
+        criteria.where = {};
+    }
+    criteria.limit = parameters['limit'] || defaultPageSize;
+    if (parameters['skip']) {
+        criteria.skip = parameters['skip'];
+    }
+    if (parameters['sort']) {
+        criteria.sort = parameters['sort'];
+    }
+    if (parameters['select']) {
+        criteria.select = parameters['select'].replace(/ /g,'').split(',');
+    }
+    if (parameters['populate']) {
+        criteria.populate = parameters['populate'].replace(/ /g,'').split(',');
+        if(_.includes(criteria.populate, 'all')){
+            criteria.populate = ['all'];
+        }
+    }
+    return criteria;
+}
+
+var formatResponse = function(request, queryResult, criteria){
+    if((!queryResult.data || !queryResult.total) && queryResult.length > 1){ //throw here
+        throw new Error("JSON Response for a collection must have 'data' and 'total' fields")
+    }
+    if(!criteria){
+        var criteria = queryCriteria(request.allParams())
+    }
+    var url = request._parsedUrl;
+    if(criteria.where && Object.keys(criteria.where).length > 0){
+        var where = JSON.stringify(criteria.where);
+    }
+    var skip = parseInt(criteria.skip || 0, 10);
+    var limit = parseInt(criteria.limit || defaultPageSize, 10);
+    if(criteria.select){
+        var select = criteria.select.join(',');
+    }
+    if(criteria.populate){
+        var populate = criteria.populate.join(',');
+    }
+    var sort = criteria.sort;
+    //construct links
+    var query;
+    //previous link
+    var offset = skip;
+    if (offset > 0) {
+        if(limit >= skip) offset -= skip;
+        else offset -= limit;
+        if (offset >= 0) {
+            query = [];
+            if (where) query.push('where=' + where);
+            query.push('limit=' + limit);
+            if (offset > 0) {
+                query.push('skip=' + offset);
+            }
+            if (select){
+                query.push('select=' + select);
+            }
+            if (sort){
+                query.push('sort=' + sort);
+            }
+            if (populate){
+                query.push('populate=' + populate)
+            }
+            if (!queryResult.links) {
+                queryResult.links = {};
+            }
+            queryResult.links.prev = url.pathname + '?' + query.join('&');
+        }
+    }
+
+    //next link
+    offset = skip;
+    offset += limit;
+    if (offset <= queryResult.total) {
+        query = [];
+        if (where) query.push('where=' + where);
+        query.push('limit=' + limit);
+        query.push('skip=' + offset);
+        if (select){
+                query.push('select=' + select)
+        }
+        if (sort){
+            query.push('sort=' + sort);
+        }
+        if (populate){
+            query.push('populate=' + populate)
+        }
+        if (!queryResult.links) {
+            queryResult.links = {};
+        }
+        queryResult.links.next = url.pathname + '?' + query.join('&');
+    }
+
+    //first link
+    if(queryResult.total > 1 && limit < queryResult.total){
+        query = [];
+        if (where) query.push('where=' + where);
+        query.push('limit=' + limit);
+        if (select){
+            query.push('select=' + select)
+        }
+        if (sort){
+            query.push('sort=' + sort);
+        }
+        if (populate){
+            query.push('populate=' + populate)
+        }
+        if (!queryResult.links) {
+            queryResult.links = {};
+        }
+        queryResult.links.first = url.pathname + '?' + query.join('&');
+    }
+
+    //last link
+    if(queryResult.total > 1 && limit < queryResult.total){
+        query = [];
+        var lastPage;
+        var remainder = queryResult.total % limit;
+        if(remainder === 0) lastPage = queryResult.total - limit;
+        else lastPage = queryResult.total - remainder;
+        if (where) query.push('where=' + where);
+        query.push('limit=' + limit);
+        query.push('skip=' + lastPage);
+        if (select){
+            query.push('select=' + select)
+        }
+        if (sort){
+            query.push('sort=' + sort);
+        }
+        if (populate){
+            query.push('populate=' + populate)
+        }
+        if (!queryResult.links) {
+            queryResult.links = {};
+        }
+        queryResult.links.last = url.pathname + '?' + query.join('&');
+    }
+
+    return queryResult;
+}
+
+var find = Promise.method(function (model, request, options) {
+    var parameters = request.allParams();
+    var primaryKey = model.primaryKey;
+    var paramKey = options && options.pkParamName ? options.pkParamName : undefined;
+    //todo: what if the model doesn't have a primary key? (pkAuto is false and no primary key defined)
+    try {
+        var key = null;
+        if (paramKey) {
+            key = parameters[paramKey];
+        } else {
+            key = parameters[primaryKey];
+        }
+        if (key) {
+            return model.findOne(key)
+            .then(function (modelItem) {
+                if (modelItem) {
+                    return modelItem;
                 }
                 else {
-                    var result = {
-                        data: [],
-                        links: {},
-                        total: 0,
-                    };
-                    var where = parameters['where'];
-                    if (_.isString(where)) {
-                        try {
-                            where = queryString.unescape(where);
-                            where = JSON.parse(where);
+                    throw new NotFound('QueryService');
+                }
+            })
+        }
+        else {
+            var criteria = queryCriteria(parameters);
+            var result = {
+                data: [],
+                total: 0
+            };
+            var getBy = options && options.getBy ? options.getBy : undefined;
+            if(getBy){
+                criteria = parseGetBy(getBy, parameters, criteria);
+            }
+            return model.count(criteria.where)
+                .then(function (count) {
+                    result.total = count;
+                    var populate = criteria.populate;
+                    criteria.populate = null; //"deleting" so it is not passed into the model.find
+                    if(populate){
+                        if(populate[0] === 'all'){
+                            return model.find(criteria).populateAll()
+                        } 
+                        else {
+                            return _.reduce(populate, function(query, key){ return query.populate(key) }, model.find(criteria))
                         }
-                        catch (exception) {
-                            reject(new Error('Unable to parse "where" parameter in URL [' + exception.name + ': ' + exception.message + ']'));
-                            return;
-                        }
                     }
-                    var criteria = {};
-                    if (where) criteria.where = where;
-                    sails.log.verbose(criteria);
-                    criteria.limit = parameters['limit'] || defaultPageSize;
-                    result.limit = criteria.limit;
-                    if (parameters['skip']) {
-                        criteria.skip = parameters['skip'];
-                        result.offset = criteria.skip;
+                    else {
+                        return model.find(criteria)
                     }
-                    if (parameters['sort']) {
-                        criteria.sort = parameters['sort'];
-                        result.sort = criteria.sort;
+                }).then(function (results) {
+                    if (results.length > 0) {
+                        result.data = results;
+                        return result;
                     }
+                    else {
+                        throw new NotFound('QueryService');
+                    }
+                })
+                .catch(function(err){
+                    //waterline throws a catastrophic error that cannot be caught without catch here
+                    if(err.name == "NOT FOUND") throw err
+                    throw new Error("Invalid Query Criteria") 
+                })
+        }
+    }
+    catch (exception) {
+        throw exception;
+    }
+})
 
-                    model.count(where)
-                        .then(function (count) {
-                            result.total = count;
-                            return model.find(criteria).populateAll();
-                        }).then(function (results) {
-                            if (results.length > 0) {
-                                result.data = results;
-                                //construct links
-
-                                var query;
-                                //previous link
-                                var offset = parseInt(criteria.skip || 0, 10);
-                                if (offset > 0) {
-                                    offset -= results.length;
-                                    if (offset >= 0) {
-                                        query = [];
-                                        if (criteria.where) query.push('where=' + JSON.stringify(criteria.where));
-                                        query.push('limit=' + criteria.limit);
-                                        if (offset > 0) {
-                                            query.push('skip=' + offset);
-                                        }
-                                        if (!result.links) {
-                                            result.links = {};
-                                        }
-                                        result.links.prev = url.pathname + '?' + query.join('&');
-                                    }
-                                }
-
-                                //next link
-                                offset = criteria.skip || 0;
-                                offset = parseInt(offset, 10);
-                                offset += parseInt(criteria.limit, 10);
-                                if (offset <= result.total) {
-                                    query = [];
-                                    if (criteria.where) query.push('where=' + JSON.stringify(criteria.where));
-                                    query.push('limit=' + criteria.limit);
-                                    query.push('skip=' + offset);
-                                    if (!result.links) {
-                                        result.links = {};
-                                    }
-                                    result.links.next = url.pathname + '?' + query.join('&');
-                                }
-                                resolve(result);
-                            }
-                            else {
-                                reject(new NotFound('QueryService'));
-                            }
-                        })
+var parseGetBy = function(getBy, parameters, criteria){
+    if(_.isArray(getBy)){
+        for(var i in getBy){
+            var key = getBy[i];
+            if(parameters[key]){
+                criteria.where[key] = parameters[key];
+            }
+        }
+    }
+    else if(_.isObject(getBy)){
+        for(var key in getBy){
+            var urlVariable = getBy[key];
+            if(typeof urlVariable == 'string'){
+                if(parameters[urlVariable]){
+                    criteria.where[key] = parameters[urlVariable];
                 }
             }
-            catch (exception) {
-                reject(exception);
+            else {
+                criteria.where[key] = parameters[key];
             }
-        })
+        }
     }
+    else if(_.isString(getBy)){
+        criteria.where[getBy] = parameters[getBy];
+    }
+    return criteria;
+}
+
+module.exports = {
+    "find": find,
+    "criteria": queryCriteria,
+    "formatResponse": formatResponse
 }
