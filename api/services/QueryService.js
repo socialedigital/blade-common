@@ -40,39 +40,32 @@ var queryCriteria = function(parameters){
         criteria.select = parameters['select'].replace(/ /g,'').split(',');
     }
     if (parameters['populate']) {
-        if(parameters['populate'] === 'all'){
-            criteria.populate = 'all';
-        }
-        else {
-            criteria.populate = parameters['populate'].replace(/ /g,'').split(',');
+        criteria.populate = parameters['populate'].replace(/ /g,'').split(',');
+        if(_.includes(criteria.populate, 'all')){
+            criteria.populate = ['all'];
         }
     }
     return criteria;
 }
 
 var formatResponse = function(request, queryResult, criteria){
+    if((!queryResult.data || !queryResult.total) && queryResult.length > 1){ //throw here
+        throw new Error("JSON Response for a collection must have 'data' and 'total' fields")
+    }
     if(!criteria){
         var criteria = queryCriteria(request.allParams())
     }
-    if(!queryResult.data && !queryResult.total && queryResult.length > 1){
-        var newResult = {};
-        newResult.data = queryResult;
-        newResult.total = queryResult.length;
-        queryResult = newResult;
-    }
     var url = request._parsedUrl;
-    if(criteria.where && criteria.where > 0) var where = JSON.stringify(criteria.where);
+    if(criteria.where && Object.keys(criteria.where).length > 0){
+        var where = JSON.stringify(criteria.where);
+    }
     var skip = parseInt(criteria.skip || 0, 10);
-    var limit = parseInt(criteria.limit);
+    var limit = parseInt(criteria.limit || defaultPageSize, 10);
     if(criteria.select){
         var select = criteria.select.join(',');
     }
     if(criteria.populate){
-        if(criteria.populate instanceof Array){
-            var populate = criteria.populate.join(',');
-        } else {
-            var populate = criteria.populate;
-        }
+        var populate = criteria.populate.join(',');
     }
     var sort = criteria.sort;
     //construct links
@@ -155,7 +148,6 @@ var formatResponse = function(request, queryResult, criteria){
         var remainder = queryResult.total % limit;
         if(remainder === 0) lastPage = queryResult.total - limit;
         else lastPage = queryResult.total - remainder;
-
         if (where) query.push('where=' + where);
         query.push('limit=' + limit);
         query.push('skip=' + lastPage);
@@ -208,27 +200,20 @@ var find = Promise.method(function (model, request, options) {
             };
             var getBy = options && options.getBy ? options.getBy : undefined;
             if(getBy){
-                sails.log(getBy)
-                if(getBy instanceof Array){
-                    for(var i in getBy){
-                        if(parameters[getBy[i]]){
-                            criteria.where[getBy[i]] = parameters[getBy[i]]
-                        }
-                    }
-                }
-                else{
-                    criteria.where[getBy] = parameters[getBy]
-                }
+                criteria = parseGetBy(getBy, parameters, criteria);
             }
-            sails.log(criteria)
             return model.count(criteria.where)
                 .then(function (count) {
                     result.total = count;
-                    if(criteria.populate === 'all'){
-                        return model.find(criteria).populateAll()
-                    }
-                    else if(criteria.populate){
-                        return _.reduce(criteria.populate, function(query, key){ return query.populate(key) }, model.find(criteria))
+                    var populate = criteria.populate;
+                    criteria.populate = null; //"deleting" so it is not passed into the model.find
+                    if(populate){
+                        if(populate[0] === 'all'){
+                            return model.find(criteria).populateAll()
+                        } 
+                        else {
+                            return _.reduce(populate, function(query, key){ return query.populate(key) }, model.find(criteria))
+                        }
                     }
                     else {
                         return model.find(criteria)
@@ -243,8 +228,9 @@ var find = Promise.method(function (model, request, options) {
                     }
                 })
                 .catch(function(err){
+                    //waterline throws a catastrophic error that cannot be caught without catch here
                     if(err.name == "NOT FOUND") throw err
-                    throw new Error("Invalid Query Criteria")
+                    throw new Error("Invalid Query Criteria") 
                 })
         }
     }
@@ -252,6 +238,34 @@ var find = Promise.method(function (model, request, options) {
         throw exception;
     }
 })
+
+var parseGetBy = function(getBy, parameters, criteria){
+    if(_.isArray(getBy)){
+        for(var i in getBy){
+            var key = getBy[i];
+            if(parameters[key]){
+                criteria.where[key] = parameters[key];
+            }
+        }
+    }
+    else if(_.isObject(getBy)){
+        for(var key in getBy){
+            var urlVariable = getBy[key];
+            if(typeof urlVariable == 'string'){
+                if(parameters[urlVariable]){
+                    criteria.where[key] = parameters[urlVariable];
+                }
+            }
+            else {
+                criteria.where[key] = parameters[key];
+            }
+        }
+    }
+    else if(_isString(getBy)){
+        criteria.where[getBy] = parameters[getBy];
+    }
+    return criteria;
+}
 
 module.exports = {
     "find": find,
