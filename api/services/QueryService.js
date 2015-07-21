@@ -202,6 +202,7 @@ var find = Promise.method(function (model, request, options) {
             if(getBy){
                 criteria = parseGetBy(getBy, parameters, criteria);
             }
+            sails.log(criteria)
             return model.count(criteria.where)
                 .then(function (count) {
                     result.total = count;
@@ -262,7 +263,9 @@ var parseGetBy = function(getBy, parameters, criteria){
         }
     }
     else if(_.isString(getBy)){
-        criteria.where[getBy] = parameters[getBy];
+        if(parameters[getBy]){
+            criteria.where[getBy] = parameters[getBy];
+        }
     }
     return criteria;
 }
