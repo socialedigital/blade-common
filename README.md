@@ -317,10 +317,11 @@ To map the model field to a parameter in the request that is named differently:
 
 `QueryService.find(model, req, {getBy: {id: "client_id"} })`
 
-and to mix and match fields that match the request and don't:
+and to mix and match fields that match the request and don't match the request:
 
 `QueryService.find(model, req, {getBy: {id: "client_id", accountId: true} })`
 
+All getBy fields are optional - if the key is not in the request parameters, they are not added to the criteria.
 
 Additionally, the following fields are available in the URL query string to get specific data from routes that utilize the QueryService:
 

@@ -261,7 +261,7 @@ var parseGetBy = function(getBy, parameters, criteria){
             }
         }
     }
-    else if(_isString(getBy)){
+    else if(_.isString(getBy)){
         criteria.where[getBy] = parameters[getBy];
     }
     return criteria;
