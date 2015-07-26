@@ -30,9 +30,7 @@ var queryCriteria = function(parameters){
         criteria.where = {};
     }
     criteria.limit = parameters['limit'] || defaultPageSize;
-    if (parameters['skip']) {
-        criteria.skip = parameters['skip'];
-    }
+    criteria.skip = parameters['skip'] || 0;
     if (parameters['sort']) {
         criteria.sort = parameters['sort'];
     }
@@ -183,7 +181,12 @@ var find = Promise.method(function (model, request, options) {
             key = parameters[primaryKey];
         }
         if (key) {
-            return populateQuery(model.findOne(key), criteria.populate)
+            var findOneCriteria = {}
+            findOneCriteria[primaryKey] = key;
+            if(criteria.select){
+                findOneCriteria.select = criteria.select;
+            }
+            return populateQuery(model.findOne(findOneCriteria), criteria.populate)
             .then(function (modelItem) {
                 if (modelItem) {
                     return modelItem;
