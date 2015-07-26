@@ -29,7 +29,7 @@
     "sails-util-mvcsloader": "^0.1.7"
   },
   "devDependencies": {
-    "chai": "2.2.0",
+    "chai": "^3.2.0",
     "mocha": "^2.2.4",
     "superagent": "1.1.0",
     "supertest": "^0.15.0"
