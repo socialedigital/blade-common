@@ -1,6 +1,8 @@
 var expect = require('chai').expect;
 var path = require("path");
 var QueryService = require(path.normalize(__dirname + "/../../api/services/QueryService"));
+var Promise = require("bluebird");
+
 var mockRequestObject = function(criteria){
     this.__parsedUrl = "/test/";
     this.mockParams = criteria;
@@ -101,12 +103,23 @@ describe("The Query Service", function () {
     });
 
     describe("QueryService.find", function () {
-        //dummy data is using currency model, fixture creation in bootstrap.test.js
+        //dummy data is using currency model, fixture creation here
+        before(function(done){
+           Promise.all([
+            Currency.create({"code": "BTC", "symbol": "BTC", "name": "Bitcoin", "decimal_digits": 10}),
+            Currency.create({"code": "LTC", "symbol": "LTC", "name": "Litecoin", "decimal_digits": 10}),
+            Currency.create({"code": "PPC", "symbol": "PPC", "name": "Peercoin", "decimal_digits": 10}),
+            Currency.create({"code": "DOG", "symbol": "DOGE", "name": "Dogecoin", "decimal_digits": 10})
+            ]).then(function(results){
+                done()
+            })
+        })
         it("should find a record when the primary key is provided", function (done) {
             var req = new mockRequestObject({"code": "BTC"})
-            QueryService.find(Currency, req, {"pkParamName": "code"})
+            QueryService.find(Currency, req, {pkParamName: "code"})
             .then(function(results){
-                expect(results.length).to.be.equal(1);
+                expect(results).to.exist
+                expect(results.name).to.equal("Bitcoin")
                 done();
             })
             .catch(function(err){
@@ -116,9 +129,3 @@ describe("The Query Service", function () {
     })
 })
 
-// Promise.join([
-// Currency.create({"code": "BTC", "symbol": "BTC", "name": "Bitcoin", "decimal_digits": 10}),
-// Currency.create({"code": "LTC", "symbol": "LTC", "name": "Litecoin", "decimal_digits": 10}),
-// Currency.create({"code": "PPC", "symbol": "PPC", "name": "Peercoin", "decimal_digits": 10}),
-// Currency.create({"code": "DOG", "symbol": "DOGE", "name": "Dogecoin", "decimal_digits": 10})
-// ])

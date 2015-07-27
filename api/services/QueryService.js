@@ -6,6 +6,7 @@
 
 var Promise = require('bluebird');
 var queryString = require('querystring');
+
 var _ = require('lodash');
 
 var defaultPageSize = 10;       //todo: this should be configurable
@@ -105,7 +106,7 @@ var formatResponse = function(request, queryResult, criteria){
         query.push('limit=' + limit);
         query.push('skip=' + offset);
         if (select){
-                query.push('select=' + select)
+            query.push('select=' + select)
         }
         if (sort){
             query.push('sort=' + sort);
@@ -181,7 +182,7 @@ var find = Promise.method(function (model, request, options) {
             key = parameters[primaryKey];
         }
         if (key) {
-            var findOneCriteria = {}
+            var findOneCriteria = {};
             findOneCriteria[primaryKey] = key;
             if(criteria.select){
                 findOneCriteria.select = criteria.select;

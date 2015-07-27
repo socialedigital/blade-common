@@ -1,7 +1,5 @@
 var Sails = require('sails').Sails;
 
- describe('Basic tests ::', function() {
-
      // Var to hold a running sails app instance
      var sails;
 
@@ -40,10 +38,3 @@ var Sails = require('sails').Sails;
          // Otherwise just return
          return done();
      });
-
-     // Test that Sails can lift with the hook in place
-     it ('sails does not crash', function() {
-         return true;
-     });
-
- });
