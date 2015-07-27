@@ -173,6 +173,7 @@ var find = Promise.method(function (model, request, options) {
     var parameters = request.allParams();
     var primaryKey = model.primaryKey;
     var paramKey = options && options.pkParamName ? options.pkParamName : undefined;
+    var criteria = queryCriteria(parameters);
     //todo: what if the model doesn't have a primary key? (pkAuto is false and no primary key defined)
     try {
         var key = null;
@@ -182,7 +183,7 @@ var find = Promise.method(function (model, request, options) {
             key = parameters[primaryKey];
         }
         if (key) {
-            return model.findOne(key)
+            return populateQuery(model.findOne(key), criteria.populate)
             .then(function (modelItem) {
                 if (modelItem) {
                     return modelItem;
@@ -193,7 +194,6 @@ var find = Promise.method(function (model, request, options) {
             })
         }
         else {
-            var criteria = queryCriteria(parameters);
             var result = {
                 data: [],
                 total: 0
@@ -206,18 +206,8 @@ var find = Promise.method(function (model, request, options) {
                 .then(function (count) {
                     result.total = count;
                     var populate = criteria.populate;
-                    criteria.populate = null; //"deleting" so it is not passed into the model.find
-                    if(populate){
-                        if(populate[0] === 'all'){
-                            return model.find(criteria).populateAll()
-                        } 
-                        else {
-                            return _.reduce(populate, function(query, key){ return query.populate(key) }, model.find(criteria))
-                        }
-                    }
-                    else {
-                        return model.find(criteria)
-                    }
+                    criteria.populate = null;
+                    return populateQuery(model.find(criteria), populate)
                 }).then(function (results) {
                     if (results.length > 0) {
                         result.data = results;
@@ -238,6 +228,20 @@ var find = Promise.method(function (model, request, options) {
         throw exception;
     }
 })
+
+var populateQuery = function(modelFind, populateOptions){
+    if(!populateOptions){
+        return modelFind
+    } else {
+        if(populateOptions[0] === 'all'){ //if all is in with other arguments, queryCriteria removes them and leaves only all.
+            return modelFind.populateAll()
+        }
+        else{
+            //chain any number of .populate calls, .populate only accepts one argument
+            return _.reduce(populateOptions, function(query, relation){ return query.populate(relation) }, modelFind)
+        }
+    }
+}
 
 var parseGetBy = function(getBy, parameters, criteria){
     if(_.isArray(getBy)){
@@ -262,7 +266,9 @@ var parseGetBy = function(getBy, parameters, criteria){
         }
     }
     else if(_.isString(getBy)){
-        criteria.where[getBy] = parameters[getBy];
+        if(parameters[getBy]){
+            criteria.where[getBy] = parameters[getBy];
+        }
     }
     return criteria;
 }
