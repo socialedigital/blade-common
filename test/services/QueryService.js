@@ -1,6 +1,5 @@
 var expect = require('chai').expect;
 var path = require("path");
-var QueryService = require(path.normalize(__dirname + "/../../api/services/QueryService"));
 var Promise = require("bluebird");
 
 var mockRequestObject = function(criteria){
