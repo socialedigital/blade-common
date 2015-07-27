@@ -1,44 +1,49 @@
-var sails = require('sails');
-var Promise = require('bluebird');
+var Sails = require('sails').Sails;
 
-before(function (done) {
-    var configs = {
-        log        : {
-            level: 'info'
-        },
-        connections: {
-            memory: {
-                adapter: 'sails-memory'
-            }
-        },
-        models     : {
-            connection: 'memory',
-            migrate: 'safe'
-        },
-        hooks: {
-            grunt: false
-        },
-    };
+ describe('Basic tests ::', function() {
 
-    sails.load(configs, function(err, sails) {
-        if (err) {
-            return done(err);
-        }
-        //dummy data
-        Promise.join([
-            Currency.create({"code": "BTC", "symbol": "BTC", "name": "Bitcoin", "decimal_digits": 10}),
-            Currency.create({"code": "LTC", "symbol": "LTC", "name": "Litecoin", "decimal_digits": 10}),
-            Currency.create({"code": "PPC", "symbol": "PPC", "name": "Peercoin", "decimal_digits": 10}),
-            Currency.create({"code": "DOG", "symbol": "DOGE", "name": "Dogecoin", "decimal_digits": 10})
-            ])
-        .then(function(results){
-            done();
-        })
-    });
-});
+     // Var to hold a running sails app instance
+     var sails;
 
-// Global after hook
-after(function (done) {
-    console.log(); // Skip a line before displaying Sails lowering logs
-    Sails.lower(done);
-});
+     // Before running any tests, attempt to lift Sails
+     before(function (done) {
+
+         // Hook will timeout in 10 seconds
+         this.timeout(11000);
+
+         // Attempt to lift sails
+         Sails().lift({
+           hooks: {
+             // Load the hook
+             "blade-common": require('../'),
+             // Skip grunt (unless your hook uses it)
+             "grunt": false
+           },
+           log: {level: "info"},
+           models:{
+            migrate: "safe"
+           }
+         },function (err, _sails) {
+           if (err) return done(err);
+           sails = _sails;
+           return done();
+         });
+     });
+
+     // After tests are complete, lower Sails
+     after(function (done) {
+
+         // Lower Sails (if it successfully lifted)
+         if (sails) {
+             return sails.lower(done);
+         }
+         // Otherwise just return
+         return done();
+     });
+
+     // Test that Sails can lift with the hook in place
+     it ('sails does not crash', function() {
+         return true;
+     });
+
+ });
