@@ -1,6 +1,13 @@
 var expect = require('chai').expect;
 var path = require("path");
 var QueryService = require(path.normalize(__dirname + "/../../api/services/QueryService"));
+var mockRequestObject = function(criteria){
+    this.__parsedUrl = "/test/";
+    this.mockParams = criteria;
+}
+mockRequestObject.prototype.allParams = function(){
+    return this.mockParams;
+}
 
 describe("The Query Service", function () {
 
@@ -93,4 +100,18 @@ describe("The Query Service", function () {
         });
     });
 
+    describe("QueryService.find", function () {
+        //dummy data is using currency model, fixture creation in bootstrap.test.js
+        it("should find a record when the primary key is provided", function (done) {
+            var req = new mockRequestObject({"code": "BTC"})
+            QueryService.find(Currency, req, {"pkParamName": "code"})
+            .then(function(results){
+                expect(results.length).to.be.equal(1);
+                done();
+            })
+            .catch(function(err){
+                done(err)
+            })
+        });
+    })
 })
