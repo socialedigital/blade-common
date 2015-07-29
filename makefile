@@ -10,6 +10,6 @@ endif
 NODE_MODULES := ./node_modules/.bin/
 
 test:
-	@NODE_ENV=test$(call FixPath, $(NODE_MODULES))istanbul cover _mocha -- -R spec -b --recursive
+	$(call FixPath, $(NODE_MODULES))istanbul cover _mocha -- -R spec -b --recursive
 
 .PHONY: test

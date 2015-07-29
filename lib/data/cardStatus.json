@@ -7,7 +7,7 @@
   {
     "code": "ACT",
     "name": "Active",
-    "description": "The card is active and is able to use for normal txs."
+    "description": "The card is active and is able to use for normal transactions."
   },
   {
     "code": "SUS",
