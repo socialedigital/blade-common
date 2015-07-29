@@ -18,9 +18,12 @@ var Sails = require('sails').Sails;
              "grunt": false
            },
            log: {level: "info"},
-           models:{
-            migrate: "safe"
-           }
+           connections: {
+            memory: {
+                adapter: 'sails-memory'
+            }
+          },
+            models:{migrate: "drop", connection: "memory"},
          },function (err, _sails) {
            if (err) return done(err);
            sails = _sails;

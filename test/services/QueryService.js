@@ -101,7 +101,7 @@ describe("The Query Service", function () {
         });
     });
 
-    describe("QueryService.find", function () {
+    describe("QueryService.findOne", function () {
         //dummy data is using currency model, fixture creation here
         before(function(done){
            Promise.all([
@@ -115,8 +115,9 @@ describe("The Query Service", function () {
         })
         it("should find a record when the primary key is provided", function (done) {
             var req = new mockRequestObject({"code": "BTC"})
-            QueryService.find(Currency, req, {pkParamName: "code"})
+            QueryService.findOne(Currency, req, {pkParamName: "code"})
             .then(function(results){
+                sails.log("RESULTS",results)
                 expect(results).to.exist
                 expect(results.name).to.equal("Bitcoin")
                 done();

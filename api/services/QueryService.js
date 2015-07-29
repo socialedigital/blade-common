@@ -185,6 +185,7 @@ var findOne = function (model, request, options){
     } else if(getBy){
         criteria = parseGetBy(getBy, parameters, criteria);
     }
+    sails.log(criteria.where)
     return model.count(criteria.where)
     .then(function (count){
         if(count > 1){
@@ -192,8 +193,10 @@ var findOne = function (model, request, options){
         }
         return dbQuery(model, criteria)
     })
-    .then(function (result) {
-        return result;
+    .then(function (results) {
+        if(results[0]){
+            return results[0];
+        }
     })
 }
 
