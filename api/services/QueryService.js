@@ -168,12 +168,12 @@ var formatResponse = function(request, queryResult, criteria){
     return queryResult;
 }
 
-var findOne = Promise.method(function (model, request, options){
+var findOne = function (model, request, options){
     var parameters = request.allParams();
+    var criteria = queryCriteria(parameters);
     var primaryKey = model.primaryKey;
     var paramKey = options && options.pkParamName ? options.pkParamName : undefined;
     var getBy = options && options.getBy ? options.getBy : undefined;
-    var criteria = queryCriteria(parameters);
     var key = null;
     if (paramKey) {
         key = parameters[paramKey];
@@ -185,25 +185,19 @@ var findOne = Promise.method(function (model, request, options){
     } else if(getBy){
         criteria = parseGetBy(getBy, parameters, criteria);
     }
-    var populate = criteria.populate;
-    criteria.populate = null;
-    return populateQuery(model.findOne(criteria), populate)
-    .then(function (modelItem) {
-        if (modelItem) {
-            return modelItem;
+    return model.count(criteria.where)
+    .then(function (count){
+        if(count > 1){
+            throw new Error("findOne error - your query criteria should be specific and only return one record.")
         }
-        else {
-            throw new NotFound('QueryService');
-        }
+        return dbQuery(model, criteria)
     })
-    .catch(function(err){
-        if(err.name == "NOT FOUND") throw err
-        console.log(err)
-        throw new Error("Invalid Query Criteria")
+    .then(function (result) {
+        return result;
     })
-})
+}
 
-var find = Promise.method(function (model, request, options) {
+var find = function (model, request, options) {
     var parameters = request.allParams();
     var criteria = queryCriteria(parameters);
     var getBy = options && options.getBy ? options.getBy : undefined;
@@ -217,13 +211,22 @@ var find = Promise.method(function (model, request, options) {
     return model.count(criteria.where)
         .then(function (count) {
             result.total = count;
-            var populate = criteria.populate;
-            criteria.populate = null;
-            return populateQuery(model.find(criteria), populate)
-        }).then(function (results) {
+            return dbQuery(model, criteria)
+        })
+        .then(function(results){
+            result.data = results;
+            return result;
+        })
+            
+}
+
+var dbQuery = function (model, criteria){
+    var populate = criteria.populate;
+    criteria.populate = null;
+    return populateQuery(model.find(criteria), populate)
+        .then(function (results) {
             if (results.length > 0) {
-                result.data = results;
-                return result;
+                return results;
             }
             else {
                 throw new NotFound('QueryService');
@@ -232,9 +235,10 @@ var find = Promise.method(function (model, request, options) {
         .catch(function(err){
             //waterline throws a catastrophic error that cannot be caught without catch here
             if(err.name == "NOT FOUND") throw err
+            console.log(err)
             throw new Error("Invalid Query Criteria") 
         })
-})
+}
 
 var populateQuery = function(modelFind, populateOptions){
     if(!populateOptions){
