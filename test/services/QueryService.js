@@ -117,9 +117,44 @@ describe("The Query Service", function () {
             var req = new mockRequestObject({"code": "BTC"})
             QueryService.findOne(Currency, req, {pkParamName: "code"})
             .then(function(results){
-                sails.log("RESULTS",results)
                 expect(results).to.exist
                 expect(results.name).to.equal("Bitcoin")
+                done();
+            })
+            .catch(function(err){
+                done(err)
+            })
+        });
+        it("should find a record when the primary key is provided in the request, but not in the findOne options", function (done) {
+            var req = new mockRequestObject({"code": "BTC"})
+            QueryService.findOne(Currency, req)
+            .then(function(results){
+                expect(results).to.exist
+                expect(results.name).to.equal("Bitcoin")
+                done();
+            })
+            .catch(function(err){
+                done(err)
+            })
+        });
+        it("should find a record when getBy matching the request params is provided and result is unique", function (done) {
+            var req = new mockRequestObject({"name": "Bitcoin"})
+            QueryService.findOne(Currency, req, {getBy: "name"})
+            .then(function(results){
+                expect(results).to.exist
+                expect(results.code).to.equal("BTC")
+                done();
+            })
+            .catch(function(err){
+                done(err)
+            })
+        });
+        it("should find a record when getBy object matches the request params provided and result is unique", function (done) {
+            var req = new mockRequestObject({"cryptoCurrency": "Bitcoin"})
+            QueryService.findOne(Currency, req, {getBy: {"name": "cryptoCurrency"}})
+            .then(function(results){
+                expect(results).to.exist
+                expect(results.code).to.equal("BTC")
                 done();
             })
             .catch(function(err){
