@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var path = require("path");
 var Promise = require("bluebird");
 
-var mockRequestObject = function(criteria){
+var mockRequestObject = function(criteria){ //takes an object literal representing GET params
     this.__parsedUrl = "/test/";
     this.mockParams = criteria;
 }
@@ -11,7 +11,17 @@ mockRequestObject.prototype.allParams = function(){
 }
 
 describe("The Query Service", function () {
-
+    //dummy data is using currency model, fixture creation here
+    before(function(done){
+       Promise.all([
+        Currency.create({"code": "BTC", "symbol": "BTC", "name": "Bitcoin", "decimal_digits": 10}),
+        Currency.create({"code": "LTC", "symbol": "LTC", "name": "Litecoin", "decimal_digits": 10}),
+        Currency.create({"code": "PPC", "symbol": "PPC", "name": "Peercoin", "decimal_digits": 10}),
+        Currency.create({"code": "DOG", "symbol": "DOGE", "name": "Dogecoin", "decimal_digits": 10})
+        ]).then(function(results){
+            done()
+        })
+    })
     describe("QueryService.criteria", function () {
 
         it("should return a 'where' parameter when provided", function (done) {
@@ -102,17 +112,6 @@ describe("The Query Service", function () {
     });
 
     describe("QueryService.findOne", function () {
-        //dummy data is using currency model, fixture creation here
-        before(function(done){
-           Promise.all([
-            Currency.create({"code": "BTC", "symbol": "BTC", "name": "Bitcoin", "decimal_digits": 10}),
-            Currency.create({"code": "LTC", "symbol": "LTC", "name": "Litecoin", "decimal_digits": 10}),
-            Currency.create({"code": "PPC", "symbol": "PPC", "name": "Peercoin", "decimal_digits": 10}),
-            Currency.create({"code": "DOG", "symbol": "DOGE", "name": "Dogecoin", "decimal_digits": 10})
-            ]).then(function(results){
-                done()
-            })
-        })
         it("should find a record when the primary key is provided", function (done) {
             var req = new mockRequestObject({"code": "BTC"})
             QueryService.findOne(Currency, req, {pkParamName: "code"})
@@ -159,6 +158,110 @@ describe("The Query Service", function () {
             })
             .catch(function(err){
                 done(err)
+            })
+        });
+        it("should throw an error when more than one result can be returned", function (done) {
+            var req = new mockRequestObject({"decimal_digits": 10})
+            QueryService.findOne(Currency, req, {getBy: "decimal_digits"})
+            .then(function(results){
+                done("Should throw error when more than one result can be returned");
+            })
+            .catch(function(err){
+                expect(err).to.exist
+                done()
+            })
+        });
+        it("should throw an error when no result is found", function (done) {
+            var req = new mockRequestObject({"code": "GREG"})
+            QueryService.findOne(Currency, req)
+            .then(function(results){
+                done("Should throw not found error");
+            })
+            .catch(function(err){
+                expect(err).to.exist
+                done()
+            })
+        });
+        it("should throw a not found when key is provided and record exists but WHERE criteria does not match", function (done) {
+            var req = new mockRequestObject({"code": "BTC", "where":{"name":"Barcoin"}})
+            QueryService.findOne(Currency, req)
+            .then(function(results){
+                done("Should throw not found error");
+            })
+            .catch(function(err){
+                expect(err).to.exist
+                done()
+            })
+        });
+    })
+    describe("QueryService.find", function () {
+        it("should return one page of records with no criteria", function (done) {
+            var req = new mockRequestObject({})
+            QueryService.find(Currency, req)
+            .then(function(results){
+                expect(results).to.exist
+                expect(results.data).to.exist
+                expect(results.data.length).to.equal(4)
+                expect(results.total).to.exist
+                expect(results.total).to.equal(4)
+                done();
+            })
+            .catch(function(err){
+                done(err)
+            })
+        });
+        it("should find records using WHERE criteria", function (done) {
+            var req = new mockRequestObject({"where":{"name":"Bitcoin"}})
+            QueryService.findOne(Currency, req)
+            .then(function(results){
+                expect(results).to.exist
+                expect(results.code).to.equal("BTC")
+                done();
+            })
+            .catch(function(err){
+                done(err)
+            })
+        });
+        it("should return a collection even when only one record is found", function (done) {
+            var req = new mockRequestObject({"code": "BTC"})
+            QueryService.find(Currency, req, {getBy: "code"})
+            .then(function(results){
+                expect(results).to.exist
+                expect(results.data).to.exist
+                expect(results.data.length).to.equal(1)
+                expect(results.total).to.exist
+                expect(results.total).to.equal(1)
+                done();
+            })
+            .catch(function(err){
+                done(err)
+            })
+        });
+        it("should find records when getBy partially matches the incoming GET params", function (done) {
+            var req = new mockRequestObject({"name": "Bitcoin", "foo":"bar"})
+            QueryService.find(Currency, req, {getBy: ["name", "code"]})
+            .then(function(results){
+                expect(results).to.exist
+                expect(results.data).to.exist
+                expect(results.data.length).to.equal(1)
+                expect(results.total).to.exist
+                expect(results.total).to.equal(1)
+                done();
+            })
+            .catch(function(err){
+                done(err)
+            })
+        });
+
+        it("should throw an error when no result is found", function (done) {
+            var req = new mockRequestObject({"code": "GREG"})
+            QueryService.find(Currency, req, {getBy: "code"})
+            .then(function(results){
+                done("Should throw not found error");
+            })
+            .catch(function(err){
+                expect(err).to.exist
+                done()
             })
         });
     })

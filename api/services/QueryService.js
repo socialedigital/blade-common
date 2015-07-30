@@ -49,7 +49,7 @@ var queryCriteria = function(parameters){
 
 var formatResponse = function(request, queryResult, criteria){
     if((!queryResult.data || !queryResult.total) && queryResult.length > 1){ //throw here
-        throw new Error("JSON Response for a collection must have 'data' and 'total' fields")
+        throw new Error("JSON Response with a collection must have 'data' and 'total' fields")
     }
     if(!criteria){
         var criteria = queryCriteria(request.allParams())
@@ -185,11 +185,13 @@ var findOne = function (model, request, options){
     } else if(getBy){
         criteria = parseGetBy(getBy, parameters, criteria);
     }
-    sails.log(criteria.where)
     return model.count(criteria.where)
     .then(function (count){
         if(count > 1){
-            throw new Error("findOne error - your query criteria should be specific and only return one record.")
+            throw new Error("findOne error - your query criteria should be specific and only return one record.");
+        }
+        if(count < 1){
+            throw new NotFound('QueryService');
         }
         return dbQuery(model, criteria)
     })
@@ -213,6 +215,9 @@ var find = function (model, request, options) {
     };
     return model.count(criteria.where)
         .then(function (count) {
+            if(count < 1){
+                throw new NotFound('QueryService');
+            }
             result.total = count;
             return dbQuery(model, criteria)
         })
