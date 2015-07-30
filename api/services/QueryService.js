@@ -6,6 +6,7 @@
 
 var Promise = require('bluebird');
 var queryString = require('querystring');
+
 var _ = require('lodash');
 
 var defaultPageSize = 10;       //todo: this should be configurable
@@ -30,9 +31,7 @@ var queryCriteria = function(parameters){
         criteria.where = {};
     }
     criteria.limit = parameters['limit'] || defaultPageSize;
-    if (parameters['skip']) {
-        criteria.skip = parameters['skip'];
-    }
+    criteria.skip = parameters['skip'] || 0;
     if (parameters['sort']) {
         criteria.sort = parameters['sort'];
     }
@@ -50,7 +49,7 @@ var queryCriteria = function(parameters){
 
 var formatResponse = function(request, queryResult, criteria){
     if((!queryResult.data || !queryResult.total) && queryResult.length > 1){ //throw here
-        throw new Error("JSON Response for a collection must have 'data' and 'total' fields")
+        throw new Error("JSON Response with a collection must have 'data' and 'total' fields")
     }
     if(!criteria){
         var criteria = queryCriteria(request.allParams())
@@ -107,7 +106,7 @@ var formatResponse = function(request, queryResult, criteria){
         query.push('limit=' + limit);
         query.push('skip=' + offset);
         if (select){
-                query.push('select=' + select)
+            query.push('select=' + select)
         }
         if (sort){
             query.push('sort=' + sort);
@@ -169,65 +168,85 @@ var formatResponse = function(request, queryResult, criteria){
     return queryResult;
 }
 
-var find = Promise.method(function (model, request, options) {
+var findOne = function (model, request, options){
     var parameters = request.allParams();
+    var criteria = queryCriteria(parameters);
     var primaryKey = model.primaryKey;
     var paramKey = options && options.pkParamName ? options.pkParamName : undefined;
+    var getBy = options && options.getBy ? options.getBy : undefined;
+    var key = null;
+    if (paramKey) {
+        key = parameters[paramKey];
+    } else {
+        key = parameters[primaryKey];
+    }
+    if (key) {
+        criteria.where[primaryKey] = key;
+    } else if(getBy){
+        criteria = parseGetBy(getBy, parameters, criteria);
+    }
+    return model.count(criteria.where)
+    .then(function (count){
+        if(count > 1){
+            throw new Error("findOne error - your query criteria should be specific and only return one record.");
+        }
+        if(count < 1){
+            throw new NotFound('QueryService');
+        }
+        return dbQuery(model, criteria)
+    })
+    .then(function (results) {
+        if(results[0]){
+            return results[0];
+        }
+    })
+}
+
+var find = function (model, request, options) {
+    var parameters = request.allParams();
     var criteria = queryCriteria(parameters);
-    //todo: what if the model doesn't have a primary key? (pkAuto is false and no primary key defined)
-    try {
-        var key = null;
-        if (paramKey) {
-            key = parameters[paramKey];
-        } else {
-            key = parameters[primaryKey];
-        }
-        if (key) {
-            return populateQuery(model.findOne(key), criteria.populate)
-            .then(function (modelItem) {
-                if (modelItem) {
-                    return modelItem;
-                }
-                else {
-                    throw new NotFound('QueryService');
-                }
-            })
-        }
-        else {
-            var result = {
-                data: [],
-                total: 0
-            };
-            var getBy = options && options.getBy ? options.getBy : undefined;
-            if(getBy){
-                criteria = parseGetBy(getBy, parameters, criteria);
+    var getBy = options && options.getBy ? options.getBy : undefined;
+    if(getBy){
+        criteria = parseGetBy(getBy, parameters, criteria);
+    }
+    var result = {
+        data: [],
+        total: 0
+    };
+    return model.count(criteria.where)
+        .then(function (count) {
+            if(count < 1){
+                throw new NotFound('QueryService');
             }
-            return model.count(criteria.where)
-                .then(function (count) {
-                    result.total = count;
-                    var populate = criteria.populate;
-                    criteria.populate = null;
-                    return populateQuery(model.find(criteria), populate)
-                }).then(function (results) {
-                    if (results.length > 0) {
-                        result.data = results;
-                        return result;
-                    }
-                    else {
-                        throw new NotFound('QueryService');
-                    }
-                })
-                .catch(function(err){
-                    //waterline throws a catastrophic error that cannot be caught without catch here
-                    if(err.name == "NOT FOUND") throw err
-                    throw new Error("Invalid Query Criteria") 
-                })
-        }
-    }
-    catch (exception) {
-        throw exception;
-    }
-})
+            result.total = count;
+            return dbQuery(model, criteria)
+        })
+        .then(function(results){
+            result.data = results;
+            return result;
+        })
+            
+}
+
+var dbQuery = function (model, criteria){
+    var populate = criteria.populate;
+    criteria.populate = null;
+    return populateQuery(model.find(criteria), populate)
+        .then(function (results) {
+            if (results.length > 0) {
+                return results;
+            }
+            else {
+                throw new NotFound('QueryService');
+            }
+        })
+        .catch(function(err){
+            //waterline throws a catastrophic error that cannot be caught without catch here
+            if(err.name == "NOT FOUND") throw err
+            console.log(err)
+            throw new Error("Invalid Query Criteria") 
+        })
+}
 
 var populateQuery = function(modelFind, populateOptions){
     if(!populateOptions){
@@ -275,6 +294,7 @@ var parseGetBy = function(getBy, parameters, criteria){
 
 module.exports = {
     "find": find,
+    "findOne": findOne,
     "criteria": queryCriteria,
     "formatResponse": formatResponse
 }
