@@ -303,9 +303,11 @@ The blade-common pckage extends the Sails response object with several responses
 
 To return one result from the query service, matching the primary key by the matching parameter in the request:
 
-`QueryService.find(model, req, {pkParamName: "primaryKeyName"})`
+`QueryService.findOne(model, req, {pkParamName: "primaryKeyName"})`
 
-All following options return a collection and pagination links where they apply, even if only 1 result is found.
+Or if the request parameter key matches the primary key id of the model, you can simply call:
+
+`QueryService.findOne(model, req)`
 
 To return a collection of results querying by any field(s), where the model field matches the parameter in the request:
 
