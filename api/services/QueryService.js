@@ -100,7 +100,7 @@ var formatResponse = function(request, queryResult, criteria){
     //next link
     offset = skip;
     offset += limit;
-    if (offset <= queryResult.total) {
+    if (offset < queryResult.total) {
         query = [];
         if (where) query.push('where=' + where);
         query.push('limit=' + limit);
