@@ -13,7 +13,7 @@ var Sails = require('sails').Sails;
          Sails().lift({
            hooks: {
              // Load the hook
-             "blade-common": require('../'),
+             //"blade-common": require('../'), --> it would appear that this is not necessary for the hook to load during testing
              // Skip grunt (unless your hook uses it)
              "grunt": false
            },
