@@ -20,10 +20,39 @@ module.exports = {
                             result[verb].push(parts[1]);
                             break;
                     }
+
+                    ///////////////////////////////////////////////////////////////////////////////////
+                    // added by brian - 7/28/2015 - fashions a "funcs" entry with an object tree of the
+                    // controller functions by <controllername>.<functionname> with the routes that
+                    // use that function
+                    ///////////////////////////////////////////////////////////////////////////////////
+                    if ((!_.isEmpty(rawRoutes)) &&
+                        (!_.isEmpty(rawRoutes[route])) &&
+                        (typeof rawRoutes[route] === 'string') ) {
+                        var funcSp = rawRoutes[route].split('.');
+                        var cName = funcSp[0];
+                        var fName = funcSp[1];
+                        if (!result.funcs.hasOwnProperty(cName)) {
+                            result.funcs[cName] = {};
+                        }
+                        if (result.funcs[cName].hasOwnProperty(fName)) {
+                            if (_.isArray(result.funcs[cName][fName])) {
+                                result.funcs[cName][fName].push(route);
+                            } else {
+                                result.funcs[cName][fName] = [ result.funcs[cName][fName], route ];
+                            }
+                        } else {
+                            result.funcs[cName][fName] = route;
+                        }
+                    }
+                    ///////////////////////////////////////////////////////////////////////////////////
+
                     return result;
-                }, {get: [], post: [], put: [], delete: []});
+                }, {get: [], post: [], put: [], delete: [], funcs: {}});
                 _.each(routes, function (route) {
-                    route.sort();
+                    if (_.isArray(route)) {
+                        route.sort();
+                    }
                 });
                 Service.addInfo('routes', routes);
             }
