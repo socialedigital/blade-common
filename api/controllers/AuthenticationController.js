@@ -14,5 +14,11 @@ module.exports = {
     },
     pwdChange: function (req, res) {
         AuthService.resolvePasswordChange(req, res);
+    },
+    simpleAuth: function(req, res) {
+        AuthService.simpleAuthenticate(req, res);
+    },
+    logout: function(req, res) {
+        AuthService.removeAuth(req, res);
     }
 };

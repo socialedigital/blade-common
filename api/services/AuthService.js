@@ -25,6 +25,74 @@ function authCheck() {
 
 module.exports = {
 
+    simpleAuthenticate: function (req, res) {
+        // headers.authorization includes client token
+        // body includes user/pass for auth
+        // return new timed token
+        var auth = null;
+        var authUser = null;
+        return authCheck()
+            .then(function(authObj) {
+                auth = authObj;
+                if ((!req.body.hasOwnProperty('email')) ||
+                    (!req.body.hasOwnProperty('password'))) {
+                    throw new Error('Authentication credentials incorrect.');
+                } else {
+                    return auth;
+                }
+            })
+            .then(function(authObj) {
+                return auth.lookup(req);
+            })
+            .then(function(found) {
+                if (found) {
+                    authUser = found;
+                    var hPwd = require('crypto').createHash('md5').update(req.body.password).digest("hex");
+                    if (found.password === hPwd) {
+                        return createTokenSet();
+                    } else {
+                        throw new Error('Authentication password incorrect.');
+                    }
+                } else {
+                    throw new Error('Authentication password incorrect.');
+                }
+            })
+            .then(function(tokens) {
+                return Authentication.create({
+                    serviceName: Service.getName(),
+                    bladeToken: authUser.bladeToken,
+                    email: req.body.email,
+                    authToken: tokens[0],
+                    authCode: tokens[1],
+                    requestToken: tokens[2],
+                    url: req.url
+                })
+            })
+            .then(function (newRecord) {
+                return CacheService
+                    .setTimedKey(newRecord.authToken, sails.config.blade.inactivityTimeout, newRecord);
+            })
+            .then(function(newKey) {
+                res.json({authToken: newKey});
+            })
+            .catch(function(err) {
+                res.badRequest(new BadRequest("Authentication Resolve",err));
+            });
+    },
+
+    removeAuth: function(req, res) {
+        // headers.authorization includes session token
+        // remove from cache
+        return CacheService
+            .getTimedKey(req.headers.authorization, 0)
+            .then(function(result) {
+                res.ok();
+            })
+            .catch(function(err) {
+                res.badRequest(new BadRequest("Authentication Logout",err));
+            });
+    },
+
     startAuthentication: function (req, res) {
         var auth = null;
         var authUser = null;
@@ -112,10 +180,10 @@ module.exports = {
                 })
             })// all good, use tokens in auth record
             .then(function (newRecord) {
-                return CacheService.setTimedKey(newRecord.requestToken, sails.config.blade.twoFactorCodeTimeout)
+                return CacheService.setTimedKey(newRecord.requestToken, sails.config.blade.twoFactorCodeTimeout, newRecord)
                     .then(function(newCode) {
                         reqToken = newCode;
-                        return CacheService.setTimedKey(newRecord.authCode, sails.config.blade.twoFactorCodeTimeout);
+                        return CacheService.setTimedKey(newRecord.authCode, sails.config.blade.twoFactorCodeTimeout, newRecord);
                     })
             })// set timed keys on 6-digit and authToken
             .then(function (newCode) {
@@ -133,16 +201,16 @@ module.exports = {
             })// send 6-digit to user
             .then(function (results) {
                 results['requestToken'] = reqToken;
-                return res.ok(results);
+                res.ok(results);
             })// return request token for header.authorization auth resolve call below
             .catch(ServiceError, function(err) {
-                return res.serverError(err);
+                res.serverError(err);
             })
             .catch(BadRequest, function(err) {
-                return res.badRequest(new BadRequest("Authentication Start", err));
+                res.badRequest(new BadRequest("Authentication Start", err));
             })
             .catch(function(err) {
-                return res.serverError(err);
+                res.serverError(err);
             });
     },
 
@@ -166,13 +234,13 @@ module.exports = {
             })// if good, find auth record
             .then(function (authRecord) {
                 return CacheService
-                    .setTimedKey(authRecord.authToken, sails.config.blade.inactivityTimeout);
+                    .setTimedKey(authRecord.authToken, sails.config.blade.inactivityTimeout, authRecord);
             })// set the timed key for the access token
             .then(function (newKey) {
-                return res.json({authToken: newKey});
+                res.json({authToken: newKey});
             })// return new access token to user for subsequent calls in header.authorization
             .catch(function (err) {
-                return res.badRequest(new BadRequest("Authentication Resolve",err));
+                res.badRequest(new BadRequest("Authentication Resolve",err));
             });
     },
 
@@ -212,7 +280,7 @@ module.exports = {
                 });
             })
             .then(function (newRecord) {
-                return CacheService.setTimedKey(newRecord.authToken, sails.config.blade.inactivityTimeout);
+                return CacheService.setTimedKey(newRecord.authToken, sails.config.blade.inactivityTimeout, newRecord);
             })
             .then(function (newKey) {
                 return MessageService.sendMessage({
@@ -224,10 +292,10 @@ module.exports = {
                 });
             })
             .then(function (results) {
-                return res.ok(results);
+                res.ok(results);
             })
             .catch(function(err) {
-                return res.badRequest(new BadRequest("Password Change start", err));
+                res.badRequest(new BadRequest("Password Change start", err));
             });
     },
 
@@ -245,10 +313,10 @@ module.exports = {
                 }
             })
             .then(function (results) {
-                return res.ok(results);
+                res.ok(results);
             })
             .catch(function (err) {
-                return res.badRequest(new BadRequest("Password Change code", err));
+                res.badRequest(new BadRequest("Password Change code", err));
             })
     },
 
@@ -269,7 +337,7 @@ module.exports = {
             })
             .then(function(results) {
                 if (!_.isEmpty(results)) {
-                    return Authentication.findOne({authToken: req.headers.Authentication});
+                    return Authentication.findOne({authToken: req.headers.authorization});
                 } else {
                     throw new Error("Code is invalid.");
                 }
@@ -300,16 +368,16 @@ module.exports = {
                 });
             })
             .then(function (newAuth) {
-                return CacheService.setTimedKey(newAuth.authToken, sails.config.blade.inactivityTimeout);
+                return CacheService.setTimedKey(newAuth.authToken, sails.config.blade.inactivityTimeout, newAuth);
             })
             .then(function (newKey) {
-                return res.ok({authToken: newKey});
+                res.ok({authToken: newKey});
             })
             .then(function () {
                 return CacheService.delete(authRec.authToken);
             })
             .catch(function (err) {
-                return res.badRequest(new BadRequest("Change Password resolve", err));
+                res.badRequest(new BadRequest("Change Password resolve", err));
             });
     }
 

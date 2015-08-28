@@ -22,6 +22,12 @@ module.exports = {
             .then(function (results) {
                 cli.end();
                 return results;
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
     /**
@@ -39,6 +45,12 @@ module.exports = {
             .then(function (results) {
                 cli.end();
                 return JSON.parse(results);
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
     /**
@@ -56,6 +68,12 @@ module.exports = {
             .then(function (results) {
                 cli.end();
                 return results;
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
 
@@ -74,6 +92,12 @@ module.exports = {
             .then(function() {
                 cli.end();
                 return key;
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
 
@@ -94,6 +118,12 @@ module.exports = {
             .then(function (results) {
                 cli.end();
                 return results;
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
     /**
@@ -112,6 +142,12 @@ module.exports = {
             .then(function (results) {
                 cli.end();
                 return JSON.parse(results);
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
     /**
@@ -129,6 +165,12 @@ module.exports = {
             .then(function (results) {
                 cli.end();
                 return results;
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
     /**
@@ -147,6 +189,12 @@ module.exports = {
             .then(function (results) {
                 cli.end();
                 return results;
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
     /**
@@ -165,6 +213,12 @@ module.exports = {
             .then(function (results) {
                 cli.end();
                 return results;
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
     /**
@@ -182,19 +236,27 @@ module.exports = {
             .then(function (results) {
                 cli.end();
                 return JSON.parse(results);
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
     /**
      * setTimedKey - set up a timed secret code for sending to logged in
      * @param key
      * @param timeout - ttl for the key
+     * @param object - value to store (optional)
      */
-    setTimedKey: function(key, timeout) {
+    setTimedKey: function(key, timeout, object) {
         var cli = null;
         return Connection.getClient()
             .then(function(client) {
                 cli = client;
-                return cli.setAsync(key, moment().utc());
+                var aVal = _.merge({}, object);
+                return cli.setAsync(key, JSON.stringify(aVal));
             })
             .then(function() {
                 return cli.expireAsync(key, timeout);
@@ -202,6 +264,12 @@ module.exports = {
             .then(function() {
                 cli.end();
                 return key;
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     },
     /**
@@ -210,17 +278,17 @@ module.exports = {
      * @param timeout
      */
     getTimedKey: function(key, timeout) {
-        var cli = null,
-            retdata = null;
+        var cli = null;
+        var retdata = null;
         return Connection.getClient()
             .then(function(client) {
                 cli = client;
                 return cli.getAsync(key);
             })
             .then(function(data) {
-                retdata = data;
+                retdata = JSON.parse(data);
                 if ((!_.isEmpty(retdata)) && (timeout > 0)) {
-                    return cli.setAsync(key, moment().utc());
+                    return cli.setAsync(key, data);
                 } else {
                     return cli.delAsync(key);
                 }
@@ -235,6 +303,12 @@ module.exports = {
             .then(function() {
                 cli.end();
                 return retdata;
+            })
+            .catch(function(err) {
+                if (cli) {
+                    cli.end();
+                }
+                throw err;
             });
     }
 };
