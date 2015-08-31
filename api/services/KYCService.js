@@ -1,6 +1,5 @@
 var fs = require('fs');
 var _ = require('lodash');
-var async = require('async');
 var Writable = require('stream').Writable;
 var Promise = require('bluebird');
 var path = require('path');
@@ -23,45 +22,39 @@ var validTypes = {
     "application/pdf": true
 }
 
+
 var upload = Promise.promisify(function(req, clientId, bladeToken, cb){
     var data = [];
-    var uploadedFileCount = 0;
-    req.file('image').upload(documentReceiverStream(), function(err, files){
+    req.file('image').upload(
+    documentReceiverStream(function(err, uploadData){
+      if(err){
+        return cb(err);
+      }
+      data.push(uploadData);
+    }), 
+    function(err, files){
         if (err){
             return cb("UPLOAD: ", err);
         }
             
         if (files.length < 1) return cb(Error("Must send atleast 1 image"));
 
-        _.forEach(files, function(file){
-            var fileName = file.fd;
-            var filePath = uploadDir + fileName;
-            checkFile(filePath, function(err, mimeType){
-                if(err){
-                    clearFiles(files);
-                    return cb("FILETYPE: " + err);
-                }
-                s3upload(fileName, filePath, mimeType, function(err, uploadData){
-                    if(err){
-                        clearFiles(files);
-                        return cb("S3: ", err);
-                    }
-                    uploadedFileCount += 1;
-                    data.push(uploadData);
-                    if(uploadedFileCount === files.length){
-                        clearFiles(files);
-                        Service.request('service.image')
-                        .post('/images/clients/' + clientId + '/accountholders/' + bladeToken, {imagedocs: data})
-                        .then(function(response){
-                          return cb(undefined, response.json);
-                        })
-                        .catch(function(err){
-                          return cb(err);
-                        })
-                    }
-                })
-            })
-        })
+        try{
+          Service.request('service.images')
+          .post('/images/clients/' + clientId + '/accountholders/' + bladeToken, {imagedocs: data})
+          .then(function(response){
+            return cb(undefined, response.json);
+          })
+          .catch(function(err){
+            awsDeleteFiles(files)
+            return cb(err)
+          })
+        }
+        catch(err){
+          //queue image service data creation if it is down? or delete s3 data and force user to try again?
+          awsDeleteFiles(files)
+          return cb(err)
+        }
     })
 })
 
@@ -78,10 +71,20 @@ var s3upload = function(fileName, filePath, mimeType, cb){
   })
 }
 
-var clearFiles = function(files){
+var s3delete = function(filename){
+  var params = {Bucket: 'imagedocs', Key: filename};
+  s3.deleteObject(params, function(err, data){
+
+  })
+}
+
+var awsDeleteFiles = function(files){
+  var params = {Bucket: 'imagedocs', Delete: {Objects:[]}};
   _.forEach(files, function(file){
-    var filePath = uploadDir + file.fd;
-    fs.unlink(filePath, function(err){})
+    params.Delete.Objects.push({Key: file.fd})
+  })
+  s3.deleteObjects(params, function(err, data){
+
   })
 }
 
@@ -98,7 +101,7 @@ var checkFile = function(filePath, cb){
   })
 }
 
-var documentReceiverStream = function() {
+var documentReceiverStream = function(cb) {
   var defaults = {
     dirname: uploadDir,
     saveAs: function(file){
@@ -114,13 +117,14 @@ var documentReceiverStream = function() {
   // into this receiver.  (filename === `file.filename`).
   documentReceiver._write = function onFile(file, encoding, done) {
     if(!(file.headers['content-type'] in validTypes)){
-        return done(file.filename + " is invalid type, must be " + Object.keys(validTypes).join(', '));
+        cb(file.filename + " is invalid type, must be " + Object.keys(validTypes).join(', '))
+        return done(true);
     }
     var newFilename = defaults.saveAs(file);
     var fileSavePath = defaults.dirname + newFilename;
     var outputs = fs.createWriteStream(fileSavePath, encoding);
 
-    streams[file.filename] = {length: 0};
+    streams[file.filename] = {length: 0, fd: file.fd, uploadedToS3: false};
     file.pipe(outputs);
 
     // Garbage-collect the bytes that were already written for this file.
@@ -137,7 +141,8 @@ var documentReceiverStream = function() {
         file.removeListener('data', gotData);
         file.unpipe(outputs);
         outputs.removeListener('finish', successfullyWroteFile)
-        done(streams[file.filename].error);
+        cb(streams[file.filename].error);
+        done(true)
       }
     })
 
@@ -145,20 +150,38 @@ var documentReceiverStream = function() {
       sails.log.error('READ error on file ' + file.filename, '::', err);
       outputs.end()
       gc(err);
+      if(streams[file.filename].uploadedToS3 === true){
+        s3delete(file.fd);
+      }
     });
 
     outputs.on('error', function failedToWriteFile (err) {
       sails.log.error('failed to write file', file.filename, 'with encoding', encoding, ': done =', done);
-      done("write error")
+      cb("write error")
+      done(true)
       gc(err);
+      if(streams[file.filename].uploadedToS3 === true){
+        s3delete(file.fd);
+      }
     });
 
     function successfullyWroteFile () {
-        done(undefined, {
-          name: file.filename,
-          size: file.size,
-          localName: newFilename
+      checkFile(fileSavePath, function(err, mimeType){
+        if(err){
+          cb(file.filename + " is invalid type, must be " + Object.keys(validTypes).join(', '))
+          return done(true);
+        }
+        s3upload(file.fd, fileSavePath, mimeType, function(err, uploadData){
+          if(err){
+            cb("S3: " + err)
+            return done(true);
+          }
+          streams[file.filename].uploadedToS3 = true;
+          gc()
+          cb(undefined, uploadData);
+          done(undefined, true)
         })
+      })
     }
 
     outputs.on('finish', successfullyWroteFile)
