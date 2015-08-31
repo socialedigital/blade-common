@@ -351,3 +351,35 @@ can also just pass "all" to populate all relationship fields
 
 `/retrievemodels?populate=all`
 
+##KYC Service
+
+The KYC Service takes multipart file upload requests, validates them, and streams them to our Amazon S3 Bucket. It then calls the Images Service to create and store the KYC document metadata.
+
+To use this facility, you will need:
+
+An `aws.json` file located in `/lib/data`. This JSON document should look like this:
+
+```
+{ 
+    "accessKeyId": "myaccesskey", 
+    "secretAccessKey": "myaccesssecret", 
+    "region": "bucketregion",
+    "sslEnabled": true
+}
+```
+
+You will also need to define a directory for files to upload locally first for validation. You can define this in `/config/uploadDirectory.js`
+
+Standard Boilerplate for using the KYCService in your route:
+
+```
+KYCService.upload(req, "client_id", "blade_token")
+    .then(function(data){
+        return res.created(data)
+    })
+    .catch(function(err){
+        res.header('Connection', 'close');
+        return res.badRequest(err)
+    })
+```
+
