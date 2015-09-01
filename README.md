@@ -357,16 +357,9 @@ The KYC Service takes multipart file upload requests, validates them, and stream
 
 To use this facility, you will need:
 
-An `aws.json` file located in `/lib/data`. This JSON document should look like this:
+Your AWS Access Key and AWS Secret Access Key.
 
-```
-{ 
-    "accessKeyId": "myaccesskey", 
-    "secretAccessKey": "myaccesssecret", 
-    "region": "bucketregion",
-    "sslEnabled": true
-}
-```
+These are supplied to the KYC service through the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 
 You will also need to define a directory for files to upload locally first for validation. You can define this in `/config/uploadDirectory.js`
 
