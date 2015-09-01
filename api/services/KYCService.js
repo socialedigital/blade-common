@@ -9,7 +9,6 @@ var Magic = mmm.Magic;
 var magic = new Magic(mmm.MAGIC_MIME_TYPE);
 
 var AWS = require('aws-sdk');
-AWS.config.loadFromPath(path.normalize(__dirname + "/../../lib/data/aws.json"))
 AWS.config.logger = process.stdout;
 var s3 = new AWS.S3();
 
@@ -124,7 +123,7 @@ var documentReceiverStream = function(cb) {
     var fileSavePath = defaults.dirname + newFilename;
     var outputs = fs.createWriteStream(fileSavePath, encoding);
 
-    streams[file.filename] = {length: 0, fd: file.fd, uploadedToS3: false};
+    streams[file.filename] = {length: 0, fd: file.fd, uploadedToS3: false, error: null};
     file.pipe(outputs);
 
     // Garbage-collect the bytes that were already written for this file.
