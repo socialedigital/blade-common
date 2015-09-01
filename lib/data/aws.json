@@ -1,0 +1,6 @@
+{ 
+    "accessKeyId": "accessKey", 
+    "secretAccessKey": "secretkey", 
+    "region": "eu-west-1",
+    "sslEnabled": true
+}
