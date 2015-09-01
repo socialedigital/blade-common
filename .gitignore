@@ -51,4 +51,5 @@ nbproject
 .node_history
 coverage
 .tmp
+aws.json
 
