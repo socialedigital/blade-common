@@ -3,12 +3,6 @@ var _ = require("lodash");
 
 
 module.exports = function(req, res, options, routeCall){
-    // var responses = {
-    //     "GET": res.ok,
-    //     "POST": res.created,
-    //     "PUT": res.accepted,
-    //     "DELETE": res.accepted
-    // }
     var reqVerb = req.method;
 
     if(options.where){
@@ -35,12 +29,8 @@ module.exports = function(req, res, options, routeCall){
         if(reqVerb === "GET"){
             results.uri = req.originalUrl;
         }
-        // responses[reqVerb](results);
         return results;
     })
-    // .catch(function(err){
-    //     console.log("ERR:", err)
-    // })
     
 }
 
@@ -76,8 +66,7 @@ var stripObject = function(obj, stripParams){
 var sanitizeWhere = function(where, defaults){
     var newWhere = {};
     try{
-        where = JSON.parse(where); //need to try catch
-    } catch(err){
+        where = JSON.parse(where);
         return where;
     }
 
