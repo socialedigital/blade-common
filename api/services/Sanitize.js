@@ -67,6 +67,8 @@ var sanitizeWhere = function(where, defaults){
     var newWhere = {};
     try{
         where = JSON.parse(where);
+    }
+    catch(err){
         return where;
     }
 
