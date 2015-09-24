@@ -4,7 +4,6 @@
  * @module      :: Policy
  * @description :: Makes sure that the incoming request has the correct JSON or JSONP content-type.
  *                 Also verifies that the encoding on the request is
- *                 In the case of JSONP, it checks the request parameters for the required JSONP 'callback' name.
  *
  */
 
