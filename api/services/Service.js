@@ -210,57 +210,57 @@ function ServiceObject(obj) {
     };
 
     var info = discovery.getService(obj.name);
-    if (info.interfaces) {
-        //create a method for each interface name in the list
-        _.each(info.interfaces, function(interfaceObject, name) {
-            var attributes;
-            var methodInfo = {};
-            _.each(interfaceObject, function(item, key) {
-                if (key == 'attributes') {
-                    attributes = item;
-                }
-                else {
-                    methodInfo[key] = item;
-                }
-            });
-            _.each(methodInfo, function(info, methodName) {
-                var isCollection;
-                var actions = {};
-                _.each(info, function(action, key) {
-                    if (key == 'collection') {
-                        isCollection = action;
-                    }
-                    else {
-                        actions[key] = action;
-                    }
-                });
-                _.each(actions, function(action, actionName) {
-                    var route;
-                    var parameters = {};
-                    _.each(action, function(parameter, parameterName) {
-                        if (parameterName == 'route') {
-                            route = parameter;
-                        }
-                        else {
-                            parameters[parameterName] = parameter;
-                        }
-                    });
-                    switch(actionName) {
-                        case 'get':
-                            if (isCollection) {
-                                self[methodName] = collectionGetMethod(properName, obj.name, methodName, route, parameters, attributes);
-                            }
-                            else {
-                                self[methodName] = singleGetMethod(properName, obj.name, methodName, route, parameters, attributes);
-                            }
-                            break;
-                        default:
-                            throw new Error('Unknown action "' + actionName + '"');
-                    }
-                })
-            });
-        });
-    }
+    //if (info.interfaces) {
+    //    //create a method for each interface name in the list
+    //    _.each(info.interfaces, function(interfaceObject, name) {
+    //        var attributes;
+    //        var methodInfo = {};
+    //        _.each(interfaceObject, function(item, key) {
+    //            if (key == 'attributes') {
+    //                attributes = item;
+    //            }
+    //            else {
+    //                methodInfo[key] = item;
+    //            }
+    //        });
+    //        _.each(methodInfo, function(info, methodName) {
+    //            var isCollection;
+    //            var actions = {};
+    //            _.each(info, function(action, key) {
+    //                if (key == 'collection') {
+    //                    isCollection = action;
+    //                }
+    //                else {
+    //                    actions[key] = action;
+    //                }
+    //            });
+    //            _.each(actions, function(action, actionName) {
+    //                var route;
+    //                var parameters = {};
+    //                _.each(action, function(parameter, parameterName) {
+    //                    if (parameterName == 'route') {
+    //                        route = parameter;
+    //                    }
+    //                    else {
+    //                        parameters[parameterName] = parameter;
+    //                    }
+    //                });
+    //                switch(actionName) {
+    //                    case 'get':
+    //                        if (isCollection) {
+    //                            self[methodName] = collectionGetMethod(properName, obj.name, methodName, route, parameters, attributes);
+    //                        }
+    //                        else {
+    //                            self[methodName] = singleGetMethod(properName, obj.name, methodName, route, parameters, attributes);
+    //                        }
+    //                        break;
+    //                    default:
+    //                        throw new Error('Unknown action "' + actionName + '"');
+    //                }
+    //            })
+    //        });
+    //    });
+    //}
 
     discovery[properName] = self;
 }
