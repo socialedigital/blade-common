@@ -44,6 +44,13 @@ module.exports = {
         },
         url: {
             type: 'string'
+        },
+        authMethod: {
+            type: 'string',
+            enum: ['sms', 'mail', 'authy', 'clef', 'google']
+        },
+        externalAuthCode: {
+            type: 'string'
         }
     }
 };

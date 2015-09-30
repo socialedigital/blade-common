@@ -4,6 +4,8 @@ var fs = bluebird.promisifyAll(require('fs'));
 var moment = require('moment');
 var intform = require('biguint-format');
 var FlakeId = require('flake-idgen');
+
+var authy = require('authy')('41f3fe0a27e1c9cba05c30933811a2b8');//test api key
 var tokenGen = new FlakeId();
 var cyphGen = new FlakeId();
 
@@ -23,27 +25,26 @@ function authCheck() {
     }
 }
 
+function authValid(req) {
+    return authCheck()
+        .then(function(authObj) {
+            if ((!req.body.hasOwnProperty('email')) ||
+                (!req.body.hasOwnProperty('password'))) {
+                throw new Error('Authentication credentials incorrect.');
+            } else {
+                return authObj.lookup(req);
+            }
+        })
+        .catch(function(err) {
+            throw new Error('Authentication not possible.');
+        });
+}
+
 module.exports = {
 
     simpleAuthenticate: function (req, res) {
-        // headers.authorization includes client token
-        // body includes user/pass for auth
-        // return new timed token
-        var auth = null;
         var authUser = null;
-        return authCheck()
-            .then(function(authObj) {
-                auth = authObj;
-                if ((!req.body.hasOwnProperty('email')) ||
-                    (!req.body.hasOwnProperty('password'))) {
-                    throw new Error('Authentication credentials incorrect.');
-                } else {
-                    return auth;
-                }
-            })
-            .then(function(authObj) {
-                return auth.lookup(req);
-            })
+        return authValid(req)
             .then(function(found) {
                 if (found) {
                     authUser = found;
@@ -54,13 +55,13 @@ module.exports = {
                         throw new Error('Authentication password incorrect.');
                     }
                 } else {
-                    throw new Error('Authentication password incorrect.');
+                    throw new Error('Authentication email not found.');
                 }
             })
             .then(function(tokens) {
                 return Authentication.create({
                     serviceName: Service.getName(),
-                    bladeToken: authUser.bladeToken,
+                    userToken: authUser.userToken,
                     email: req.body.email,
                     authToken: tokens[0],
                     authCode: tokens[1],
@@ -81,8 +82,6 @@ module.exports = {
     },
 
     removeAuth: function(req, res) {
-        // headers.authorization includes session token
-        // remove from cache
         return CacheService
             .getTimedKey(req.headers.authorization, 0)
             .then(function(result) {
@@ -94,27 +93,14 @@ module.exports = {
     },
 
     startAuthentication: function (req, res) {
-        var auth = null;
         var authUser = null;
         var reqToken = '';
-        return authCheck()
-            .then(function(authObj) {
-                auth = authObj;
-                if ((!req.body.hasOwnProperty('email')) ||
-                    (!req.body.hasOwnProperty('password'))) {
-                    throw new Error('Authentication credentials incorrect.');
-                } else {
-                    return auth;
-                }
-            })// set "auth" var, check parms
-            .then(function(authObj) {
-                return CacheService.get('blocked-email-' + req.body.email);
-            })// good parsm, check blocked
+        return CacheService.get('blocked-email-' + req.body.email)
             .then(function (result) {
                 if ( !_.isEmpty(result) ) {
                     throw new Error('Email temporarily blocked at ' + result.at);
                 } else {
-                    return auth.lookup(req);
+                    return authValid(req);
                 }
             })//not blocked, find user by email ('lookup' subroutine in service's authentication object)
             .then(function (found) {
@@ -154,7 +140,7 @@ module.exports = {
                             .then(function () {
                                 return Authentication.create({
                                     serviceName: Service.getName(),
-                                    bladeToken: authUser.bladeToken,
+                                    userToken: authUser.userToken,
                                     email: req.body.email,
                                     failedPassword: true,
                                     acctBlocked: isBlocked
@@ -171,7 +157,7 @@ module.exports = {
             .then(function (tokens) {
                 return Authentication.create({
                     serviceName: Service.getName(),
-                    bladeToken: authUser.bladeToken,
+                    userToken: authUser.userToken,
                     email: req.body.email,
                     authToken: tokens[0],
                     authCode: tokens[1],
@@ -215,19 +201,17 @@ module.exports = {
     },
 
     resolveAuthentication: function (req, res) {  // caller should be on authPass, see below and above
-        var aCode = req.param('code');
-        var rToken = req.headers.authorization;
-        CacheService.getTimedKey(rToken, 0)// find token for auth
+        return CacheService.getTimedKey(req.headers.authorization, 0)// find token for auth
             .then(function(result) {
                 if (!_.isEmpty(result)) {
-                    return CacheService.getTimedKey(aCode, 0);
+                    return CacheService.getTimedKey(req.param('code'), 0);
                 } else {
                     throw new Error('Request token is invalid.');
                 }
             })//if good, find code parm
             .then(function (results) {
                 if (!_.isEmpty(results)) {
-                    return Authentication.findOne({requestToken: rToken})
+                    return Authentication.findOne({requestToken: req.headers.authorization})
                 } else {
                     throw new Error('Code is invalid.');
                 }
@@ -246,32 +230,19 @@ module.exports = {
 
     startPasswordReset: function (req, res) {  // post, no authPass
         var authUser = null;
-        var auth = null;
-        return authCheck()
-            .then(function(authObj) {
-                if ((!req.body.hasOwnProperty('email')) ||
-                    (!req.body.hasOwnProperty('changeUrl'))) {
-                    throw new Error('Authentication credentials incorrect.');
-                } else {
-                    return authObj;
-                }
-            })
-            .then(function(authObj) {
-                auth = authObj;
-                return auth.lookup(req);
-            })
+        return authValid(req)
             .then(function (found) {
                 if (found) {
                     authUser = found;
                     return createTokenSet();
                 } else {
-                    throw new Error('Email not on file for this client.');
+                    throw new Error('Email not on file.');
                 }
             })
             .then(function (tokens) {
                 return Authentication.create({
                     serviceName: Service.getName(),
-                    bladeToken: authUser.bladeToken,
+                    userToken: authUser.userToken,
                     email: req.body.email,
                     mobile: authUser.mobile,
                     authToken: tokens[0],
@@ -300,7 +271,7 @@ module.exports = {
     },
 
     sendPasswordCode: function (req, res) {  // get, uses authPass
-        Authentication.findOne({authToken: req.headers.authorization})
+        return Authentication.findOne({authToken: req.headers.authorization})
             .then(function (authRecord) {
                 if (authRecord) {
                     return MessageService.sendMessage({
@@ -321,64 +292,205 @@ module.exports = {
     },
 
     resolvePasswordChange: function (req, res) { // put/modify,  uses authPass
-        var auth = null;
         var authRec = null;
-        return authCheck()
-            .then(function(authObj) {
-                if (!req.body.hasOwnProperty('password')) {
-                    throw new Error('Authentication credentials incorrect.');
+        return (req.body.hasOwnProperty('password'))
+               ? CacheService.getTimedKey(req.param('code'), 0)
+                .then(function(results) {
+                    if (!_.isEmpty(results)) {
+                        return Authentication.findOne({authToken: req.headers.authorization});
+                    } else {
+                        throw new Error("Code is invalid.");
+                    }
+                })
+                .then(function (authRecord) {
+                    if (authRecord) {
+                        authRec = authRecord;
+                        var vPwd = require('crypto').createHash('md5').update(req.body.password).digest("hex");
+                        return authCheck()
+                            .then(function(authObj) {
+                                return authObj.setPassword(authRec.userToken, vPwd);
+                            });
+                    } else {
+                        throw new Error('Authentication record not found.');
+                    }
+                })
+                .then(function (result) {
+                    if (result) {
+                        return createTokenSet();
+                    } else {
+                        throw new Error('Writing password to account holder failed.');
+                    }
+                })
+                .then(function (tokens) {
+                    return Authentication.create({
+                        serviceName: Service.getName(),
+                        userToken: authRec.userToken,
+                        email: authRec.email,
+                        authToken: tokens[0],
+                        authCode: tokens[1]
+                    });
+                })
+                .then(function (newAuth) {
+                    return CacheService.setTimedKey(newAuth.authToken, sails.config.blade.inactivityTimeout, newAuth);
+                })
+                .then(function (newKey) {
+                    res.ok({authToken: newKey});
+                })
+                .then(function () {
+                    return CacheService.delete(authRec.authToken);
+                })
+                .catch(function (err) {
+                    res.badRequest(new BadRequest("Change Password resolve", err));
+                })
+            : res.badRequest(new BadRequest("Change Password resolve", "Missing new password."));
+    },
+
+    startAuthy: function(req, res) {
+        //Here are the credentials for Authy
+        //Api Key for Production
+        //    d8af4dad00d9e9b117f1928e24358771
+        //
+        //Api Key for Testing
+        //    41f3fe0a27e1c9cba05c30933811a2b8
+        // expects email
+        // auth.lookup on file
+        // send sms to user mobile
+        // return ?
+        var authUser = null;
+        return authValid(req)
+            .then(function(found) {
+                if (found) {
+                    authUser = found;
+                    if (authUser.authID > 0) {
+                        return authUser;
+                    } else {
+                        // register and save new user id
+                        authy.register_user(email, phone, function(err, res) {
+                            if (err) {
+                                throw new Error('Could not register user with Authy.');
+                            } else {
+                                return authCheck()
+                                    .then(function(authObj) {
+                                        return authObj.setExternalID(authUser.userToken, 'authyID', res.user.id);
+                                    })
+                                    .catch(function(err) {
+                                        throw new Error('Could not set Authy user ID.');
+                                    });
+                            }
+                        });
+                    }
                 } else {
-                    return authObj;
+                    throw new Error("Email not on file.");
                 }
             })
-            .then(function(authObj) {
-                auth = authObj;
-                return CacheService.getTimedKey(req.param('code'), 0);
-            })
-            .then(function(results) {
-                if (!_.isEmpty(results)) {
-                    return Authentication.findOne({authToken: req.headers.authorization});
-                } else {
-                    throw new Error("Code is invalid.");
-                }
-            })
-            .then(function (authRecord) {
-                if (authRecord) {
-                    authRec = authRecord;
-                    var vPwd = require('crypto').createHash('md5').update(req.body.password).digest("hex");
-                    return auth.setPassword(authRec.bladeToken, vPwd);
-                } else {
-                    throw new Error('Authentication record not found.');
-                }
-            })
-            .then(function (result) {
-                if (result) {
-                    return createTokenSet();
-                } else {
-                    throw new Error('Writing password to account holder failed.');
-                }
-            })
-            .then(function (tokens) {
-                return Authentication.create({
-                    serviceName: Service.getName(),
-                    bladeToken: authRec.bladeToken,
-                    email: authRec.email,
-                    authToken: tokens[0],
-                    authCode: tokens[1]
+            .then(function() {
+                authy.request_sms(userID, function(err, res) {
+                    if (err) {
+                        throw new Error('Authy SMS request failed.');
+                    } else {
+                        sails.log.info(res);
+                        return res;
+                    }
                 });
             })
-            .then(function (newAuth) {
-                return CacheService.setTimedKey(newAuth.authToken, sails.config.blade.inactivityTimeout, newAuth);
-            })
-            .then(function (newKey) {
-                res.ok({authToken: newKey});
-            })
-            .then(function () {
-                return CacheService.delete(authRec.authToken);
-            })
-            .catch(function (err) {
-                res.badRequest(new BadRequest("Change Password resolve", err));
-            });
-    }
+            .then(function() {
 
+            })
+            .catch(function(err) {
+                res.badRequest(err);
+            });
+    },
+
+    resolveAuthy: function(req, res) {
+        // get code
+        // authy verify
+        //
+        var authUser = null;
+        return
+    },
+
+    startClef: function(req, res) {
+        // Blade credentials
+        //Application ID: e94bd38d1a2089b95246bafbb9a871fb
+        //Application Secret: 6aba67deeaacbc185a766fd298239549
+        //That's for CLEF
+        var prm = req.allParams();
+        var authUser = null;
+        var clefUser = null;
+        var clefToken = null;
+        return request({
+            method: 'POST',
+            url: 'https://clef.io/api/v1/authorize',
+            headers: {'content-type': 'application/json'},
+            body: {
+                code: prm.code,
+                app_id: '67645dc3c99a84adc0173a7e48b99db4',
+                app_secret: '488e54b49a659304932a6370593fb0ce'
+            },
+            json: true
+        })
+            .spread(function(content, body) {
+                clefToken = body.access_token;
+                return request({
+                    method: 'GET',
+                    url: 'http://clef.io/api/v1/info?access_token=' + clefToken,
+                    headers: {'content-type': 'application/json'},
+                    json: true
+                });
+            })
+            .spread(function(content, body) {
+                if (body.success) {
+                    clefUser = body.info;
+                    return authValid({ body: { email: clefUser.email, password: '1' } });
+                } else {
+                    throw new Error('Access token invalid.');
+                }
+            })
+            .then(function(found) {
+                if (found) {
+                    authUser = found;
+                    // if clefID empty, update and save
+                    if (_.isEmpty(authUser.clefID)) {
+                        return authCheck()
+                            .then(function(authObj) {
+                                return authObj.setExternalID(authUser.userToken, 'clefID', clefUser.id );
+                            })
+                            .catch(function(err) {
+                                throw new Error('Could not set clef ID.');
+                            })
+                    } else {
+                        return createTokenSet();
+                    }
+                } else {
+                    throw new Error('Email not found.');
+                }
+            })
+            .then(function(tokens) {
+                return Authentication.create({
+                    serviceName: Service.getName(),
+                    userToken: authUser.userToken,
+                    email: req.body.email,
+                    authToken: tokens[0],
+                    authCode: tokens[1],
+                    requestToken: tokens[2],
+                    url: req.url,
+                    authMethod: 'clef',
+                    externalAuthCode: clefToken
+                });
+            })
+            .then(function(authRecord) {
+                return CacheService
+                    .setTimedKey(authRecord.authToken, sails.config.blade.inactivityTimeout, authRecord);
+            })
+            .then(function(newKey) {
+                res.json({authToken: newKey});
+            })
+            .catch(function(err) {
+                res.badRequest(err);
+            });
+    },
+
+    resolveClef: function(req, res) {
+        // might be needed later for logout from phone (outsider call)
+    }
 };
