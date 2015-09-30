@@ -20,5 +20,17 @@ module.exports = {
     },
     logout: function(req, res) {
         AuthService.removeAuth(req, res);
+    },
+    startAuthy: function(req, res) {
+        AuthService.startAuthy(req, res);
+    },
+    resolveAuthy: function(req, res) {
+        AuthService.resolveAuthy(req, res);
+    },
+    startClef: function(req, res) {
+        AuthService.startClef(req, res);
+    },
+    resolveClef: function(req, res) {
+        AuthService.resolveClef(req, res);
     }
 };
