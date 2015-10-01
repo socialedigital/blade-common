@@ -1,7 +1,7 @@
 var Promise = require("bluebird");
 var _ = require("lodash");
 
-var getDefaults = {
+var queryDefaults = {
     where: {
         "isDeleted": false
     },
@@ -24,7 +24,7 @@ var mapFields = function(map, data){
                 if(_.isPlainObject(mappedKey)){
                     if(noData){
                         mapField = _.get(mappedKey, "__fieldName", key);
-                        result[mapField] = {};
+                        result[mapField] = undefined; //originally was set to empty object - causes validation errors on PUT
                     }
                 } else {
                     if(noData){
@@ -43,7 +43,9 @@ var mapFields = function(map, data){
 module.exports = function(req, res, routeCall, options){
     var serverResponse = {
         "POST": res.created,
-        "GET": res.ok
+        "GET": res.ok,
+        "PUT": res.accepted,
+        "DELETE": res.accepted
     }
     var reqVerb = req.method;
     var opts = options || {};
@@ -56,10 +58,14 @@ module.exports = function(req, res, routeCall, options){
             req.body = mapFields(_.get(opts, "map.in", {}), req.body)
         }
         else if(reqVerb === "GET"){
-            var defaults = getDefaults; //maybe need to clone here
+            var defaults = queryDefaults; //maybe need to clone here
             if(opts.override){
                 if(opts.override.where){
-                    defaults.where = _.merge(defaults.where, opts.override.where);
+                    defaults.where = _.merge(defaults.where, opts.override.where, function(a,b,k,obj){
+                        if(b === undefined){
+                            obj[k] = undefined;
+                        }
+                    });
                 }
                 if(opts.override.populate){
                     defaults.populate = opts.override.populate; //must be array
@@ -68,18 +74,19 @@ module.exports = function(req, res, routeCall, options){
                     defaults.select = opts.override.select; //must be array
                 }
             }
-            req.query.where = sanitizeWhere(req.query.where, defaults.where);
+            // req.query.where = sanitizeWhere(req.query.where, defaults.where);
+            req.query.where = JSON.stringify(defaults.where);
 
             if(defaults.populate.length > 0){
                 req.query.populate = sanitizeArrays(req.query.populate, defaults.populate);
             } else if(req.query.populate){
-                req.query.populate = null;
+                req.query.populate = undefined;
             }
 
             if(defaults.select.length > 0){
                 req.query.select = sanitizeArrays(req.query.select, defaults.select);
             } else if(req.query.select){
-                req.query.select = null;
+                req.query.select = undefined;
             }
         }
 
@@ -97,15 +104,21 @@ module.exports = function(req, res, routeCall, options){
                 results.uri = req.originalUrl;
             }
             if(reqVerb === "POST"){
-                return res.created(results, options.resourceUrl)
+                return res.created(results, options.resourceUrl);
             } else {
                 return serverResponse[reqVerb](results);
             }
 
         })
         .catch(function(err){
-            var statusCode = _.get(err, "response.status", 500);
-            return res.send(statusCode, err)
+
+            console.log("ERR", err)
+            var statusCode = _.get(err, "response.status", undefined);
+            if(!statusCode){
+                statusCode = _.get(err, "service.response.status", 500);
+            }
+            //optional callback to process error here, otherwise defaults
+            return res.send(statusCode, err);
         })
     }
     catch(err){
