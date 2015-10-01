@@ -1,6 +1,7 @@
 
 var _ = require('lodash');
 var Promise = require('bluebird');
+var qs = require('querystring');
 
 function addServiceFunctions(name, target, info) {
     if ((info.hasOwnProperty('routes')) && (info.routes.hasOwnProperty('funcs'))) {
@@ -37,42 +38,49 @@ function funcCaller(req, res, options) {
     _.forEach(rteArr, matchRoute, matchData);
 
     if (matchData.match) {
-        var pq = req.originalUrl.split('?');
-        if (pq.length > 1) {
-            matchData.reqRoute += '?' + pq[1];
+        // var pq = req.originalUrl.split('?');
+        // if (pq.length > 1) {
+        if(req.query){
+            matchData.reqRoute += "?" + qs.stringify(req.query);
+            // matchData.reqRoute += '?' + pq[1];
         }
-        Service.request(this.fullName)[matchData.verb](matchData.reqRoute, req.body)
-            .then(function (results) {
-                switch (matchData.verb) {
-                    case 'post':
-                        res.created(results);
-                        break;
-                    case 'put':
-                        res.accepted(results);
-                        break;
-                    case 'get':
-                        if (!_.isEmpty(results.links)) {
-                            _.forEach(results.links, function(links, member) {
-                                var isp = results.links[member].split('?');
-                                results.links[member] = (isp.length > 1) ? pq[0] + '?' + isp[1] : pq[0];
-                            })
-                        }
-                        if (!_.isEmpty(results.uri)) {
-                            var usp = results.uri.split('?');
-                            results.uri = (usp.length > 1) ? pq[0] + '?' + usp[1] : pq[0] ;
-                        }
-                        res.ok(results);
-                        break;
-                    case 'delete':
-                        res.accepted(results);
-                        break;
-                }
-            })
-            .catch(function (err) {
-                res.negotiate(err);
-            });
+        return Service.request(this.fullName)[matchData.verb](matchData.reqRoute, req.body)
+            // .then(function (results) {
+            //     // switch (matchData.verb) {
+            //     //     // case 'post':
+            //     //     //     res.created(results);
+            //     //     //     break;
+            //     //     // case 'put':
+            //     //     //     res.accepted(results);
+            //     //     //     break;
+            //     //     case 'get':
+            //     //         if (!_.isEmpty(results.links)) {
+            //     //             _.forEach(results.links, function(links, member) {
+            //     //                 var isp = results.links[member].split('?');
+            //     //                 results.links[member] = (isp.length > 1) ? pq[0] + '?' + isp[1] : pq[0];
+            //     //             })
+            //     //         }
+            //     //         if (!_.isEmpty(results.uri)) {
+            //     //             var usp = results.uri.split('?');
+            //     //             results.uri = (usp.length > 1) ? pq[0] + '?' + usp[1] : pq[0] ;
+            //     //         }
+            //     //         return results;
+            //     //         break;
+            //     //     // case 'delete':
+            //     //     //     res.accepted(results);
+            //     //     //     break;
+            //     //     default:
+            //     //         return results;
+            //     //         break;
+            //     // }
+            //     return results;
+            // })
+            // .catch(function (err) {
+            //     res.negotiate(err);
+            // });
     } else {
-        res.badRequest('Service wrapper cannot find route with correct parameters.');
+        // res.badRequest('Service wrapper cannot find route with correct parameters.');
+        throw 'Service wrapper cannot find route with correct parameters.';
     }
 }
 

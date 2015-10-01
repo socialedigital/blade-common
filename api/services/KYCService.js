@@ -39,7 +39,7 @@ var upload = Promise.promisify(function(req, clientId, bladeToken, cb){
         if (files.length < 1) return cb(Error("Must send atleast 1 image"));
 
         try{
-          Service.request('service.images')
+          Service.request('service.image')
           .post('/images/clients/' + clientId + '/accountholders/' + bladeToken, {imagedocs: data})
           .then(function(response){
             return cb(undefined, response.json);
