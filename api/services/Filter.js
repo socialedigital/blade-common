@@ -93,21 +93,22 @@ module.exports = function(req, res, routeCall, options){
         req.inFilter = true;        //this is a short term hack that signals
         routeCall(req, res)
         .then(function(results){
+            var resource = {};
             results = results.json;
             if(results.data){
-                results.data = _.map(results.data, function(item){
+                resource.data = _.map(results.data, function(item){
                     return mapFields(_.get(opts, "map.out", {}), item);
                 })
             } else {
-                results = mapFields(_.get(opts, "map.out", {}), results);
+                resource.data = mapFields(_.get(opts, "map.out", {}), results);
             }
             if(reqVerb === "GET"){
-                results.uri = req.originalUrl;
+                resource.uri = req.originalUrl;
             }
             if(reqVerb === "POST"){
-                return res.created(results, options.resourceUrl);
+                return res.created(resource, options.resourceUrl);
             } else {
-                return serverResponse[reqVerb](results);
+                return serverResponse[reqVerb](resource);
             }
 
         })
