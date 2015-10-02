@@ -90,6 +90,7 @@ module.exports = function(req, res, routeCall, options){
             }
         }
 
+        req.inFilter = true;        //this is a short term hack that signals
         routeCall(req, res)
         .then(function(results){
             results = results.json;
