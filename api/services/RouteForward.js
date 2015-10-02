@@ -3,6 +3,49 @@ var _ = require('lodash');
 var Promise = require('bluebird');
 var qs = require('querystring');
 
+var util = require('util');
+
+function parseRoute(route) {
+    var result = [];
+    var routeMethodPath = route.split(' ');
+    var method = routeMethodPath[0];
+    var routePath = routeMethodPath[1];
+
+    if (_.endsWith(routePath, '?')) {
+        var firstRoute = [];
+        var secondRoute = [];
+        var pathParts = {};
+        var routeParts = routePath.match(/\/:?[A-Za-z0-9_\\??]*/ig);
+        _.each(routeParts, function(routePart, index) {
+            var part = routePart;
+            var isParameter = false;
+            var isOptional = false;
+            if (part[0] == '/') {
+                part = part.slice(1);
+            }
+            if (part[0] == ':') {
+                isParameter = true;
+            }
+            if (part[part.length -1] == '?') {
+                isOptional = true;
+                part = part.slice(0,-1);
+            }
+            secondRoute.push(part);
+            if (!isOptional) {
+                firstRoute.push(part);
+            }
+        });
+        result.push(method + ' /' + firstRoute.join('/'));
+        result.push(method + ' /' + secondRoute.join('/'));
+
+    }
+    else {
+        result.push(route);
+    }
+
+    return result;
+}
+
 function addServiceFunctions(name, target, info) {
     if ((info.hasOwnProperty('routes')) && (info.routes.hasOwnProperty('funcs'))) {
         var sName = name.split('.')[1];
@@ -18,7 +61,25 @@ function addControllerFuncs(funcs, controllerName) {
         this.target[this.sName][controllerName] = {};
     }
     this.controllerName = controllerName;
-    _.forEach(funcs, addFunc, this);
+
+    var modifedFuncs = _.mapValues(funcs, function(routes) {
+        var parsedRoutes = [];
+        if (_.isArray(routes)) {
+            _.forEach(routes, function(route) {
+                _.forEach(parseRoute(route), function(item) {
+                    parsedRoutes.push(item);
+                })
+            })
+        }
+        else {
+            _.forEach(parseRoute(routes), function(item) {
+                parsedRoutes.push(item);
+            })
+        }
+        return parsedRoutes;
+    });
+
+    _.forEach(modifedFuncs, addFunc, this);
 }
 
 function funcCaller(req, res, options) {
@@ -93,6 +154,7 @@ function funcCaller(req, res, options) {
 }
 
 function addFunc(routes, functionName) {
+    this.info.routes.funcs[this.controllerName][this.functionName] = routes;
     if (!this.target[this.sName][this.controllerName].hasOwnProperty(functionName)) {
         this.functionName = functionName;
         this.target[this.sName][this.controllerName][this.functionName] =
