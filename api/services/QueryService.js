@@ -215,9 +215,6 @@ var find = function (model, request, options) {
     };
     return model.count(criteria.where)
         .then(function (count) {
-            if(count < 1){
-                throw new NotFound('QueryService');
-            }
             result.total = count;
             return dbQuery(model, criteria)
         })
@@ -233,12 +230,7 @@ var dbQuery = function (model, criteria){
     criteria.populate = null;
     return populateQuery(model.find(criteria), populate)
         .then(function (results) {
-            if (results.length > 0) {
-                return results;
-            }
-            else {
-                throw new NotFound('QueryService');
-            }
+            return results;
         })
         .catch(function(err){
             //waterline throws a catastrophic error that cannot be caught without catch here
