@@ -1,14 +1,6 @@
 var Promise = require("bluebird");
 var _ = require("lodash");
 
-var queryDefaults = {
-    where: {
-        "isDeleted": false
-    },
-    populate: [],
-    select: []
-}
-
 var mapFields = function(map, data){
     return _.reduce(map, function(result, mappedKey, key){
         var noData = (!data[key]);
@@ -41,6 +33,13 @@ var mapFields = function(map, data){
 
 
 module.exports = function(req, res, routeCall, options){
+    var queryDefaults = {
+        where: {
+            "isDeleted": false
+        },
+        populate: [],
+        select: []
+    }
     var serverResponse = {
         "POST": res.created,
         "GET": res.ok,
@@ -58,7 +57,7 @@ module.exports = function(req, res, routeCall, options){
             req.body = mapFields(_.get(opts, "map.in", {}), req.body)
         }
         else if(reqVerb === "GET"){
-            var defaults = queryDefaults; //maybe need to clone here
+            var defaults = queryDefaults;
             if(opts.override){
                 if(opts.override.where){
                     defaults.where = _.merge(defaults.where, opts.override.where, function(a,b,k,obj){
@@ -95,11 +94,14 @@ module.exports = function(req, res, routeCall, options){
         .then(function(results){
             var resource = {};
             results = results.json;
-            if(results.data){
-                resource.data = _.map(results.data, function(item){
+            if(results.data || _.isArray(results)){
+                if(results.data){
+                    results = results.data;
+                }
+                resource.data = _.map(results, function(item){
                     return mapFields(_.get(opts, "map.out", {}), item);
                 })
-            } else {
+            } else if(_.isPlainObject(results)){
                 resource.data = mapFields(_.get(opts, "map.out", {}), results);
             }
             if(reqVerb === "GET"){
