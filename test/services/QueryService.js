@@ -253,15 +253,19 @@ describe("The Query Service", function () {
             })
         });
 
-        it("should throw an error when no result is found", function (done) {
-            var req = new mockRequestObject({"code": "GREG"})
+        it("should return an empty result when no result is found", function (done) {
+            var req = new mockRequestObject({"code": "INVALID_CURRENCY"})
             QueryService.find(Currency, req, {getBy: "code"})
             .then(function(results){
-                done("Should throw not found error");
+                expect(results).to.exist
+                expect(results.data).to.exist
+                expect(results.data.length).to.equal(0)
+                expect(results.total).to.exist
+                expect(results.total).to.equal(0)
+                done();
             })
             .catch(function(err){
-                expect(err).to.exist
-                done()
+                done(err)
             })
         });
     })
