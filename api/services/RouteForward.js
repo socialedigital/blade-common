@@ -154,9 +154,9 @@ function funcCaller(req, res, options) {
 }
 
 function addFunc(routes, functionName) {
-    this.info.routes.funcs[this.controllerName][this.functionName] = routes;
     if (!this.target[this.sName][this.controllerName].hasOwnProperty(functionName)) {
         this.functionName = functionName;
+        this.info.routes.funcs[this.controllerName][this.functionName] = routes;
         this.target[this.sName][this.controllerName][this.functionName] =
             funcCaller.bind({ fullName: this.fullName,
                 funcRoutes: this.info.routes.funcs[this.controllerName][this.functionName] });
