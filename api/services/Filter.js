@@ -115,20 +115,65 @@ module.exports = function(req, res, routeCall, options){
 
         })
         .catch(function(err){
-
-            console.log("ERR", err)
-            var statusCode = _.get(err, "response.status", undefined);
-            if(!statusCode){
-                statusCode = _.get(err, "service.response.status", 500);
+            var statusCode = getErrorStatus(err);
+            var errorFunction = defaultErrorResponse;
+            if(typeof opts.errors === "function"){
+                errorFunction = opts.errors;
             }
-            //optional callback to process error here, otherwise defaults
-            return res.send(statusCode, err);
+            return errorFunction(err, statusCode, req, res, opts);
         })
     }
     catch(err){
         sails.log.error(err);
         res.serverError();
     }
+}
+
+var getErrorStatus = function(err){
+    var statusCode = _.get(err, "response.status", undefined);
+    if(!statusCode){
+        statusCode = _.get(err, "service.response.status", 500);
+    }
+    return statusCode;
+}
+
+var defaultErrorResponse = function(err, statusCode, req, res, opts){
+    var customErr = {error: "", status: statusCode, fields: undefined};
+    var errorMessages = {
+        400: "Bad Request - Fields sent were incorrect, missing, or did not pass validation",
+        401: "Unauthorized",
+        404: "NOT FOUND: The resource you requested was not found"
+    }
+    customErr.error = errorMessages[statusCode];
+    if(statusCode === 400){
+        var fields = _.get(err, "service.response.json.error.invalidAttributes", undefined);
+        if(fields){
+            var errorMap = mapInvertAndFlatten(_.get(opts, "map.in", {}));
+            customErr.fields = mapFields(errorMap, fields);
+        }
+    } else if(statusCode === 404){
+        customErr.fields = req.allParams();
+    }
+    return res.send(statusCode, customErr);
+}
+
+var mapInvertAndFlatten = function(map){
+    return _.reduce(map, function(results, value, key){
+        if(_.isPlainObject(value)){
+            var fieldName = _.get(value, "__fieldName", undefined);
+            if(fieldName){
+                results[fieldName] = key;
+            } else {
+                results[key] = key;
+            }
+            _.merge(results, mapInvertAndFlatten(value))
+        } else {
+            if(key !== "__fieldName"){
+                results[value] = key;
+            }
+        }
+        return results;
+    }, {})
 }
 
 
