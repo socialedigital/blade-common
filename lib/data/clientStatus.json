@@ -1,5 +1,10 @@
 [
   {
+    "code": "STG",
+    "name": "Staging",
+    "description": "The client is in a staging and testing state."
+  },
+  {
     "code": "ACT",
     "name": "Active",
     "description": "The client is an active client."

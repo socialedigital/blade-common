@@ -168,11 +168,17 @@ function matchRoute(route) {
     var iSp = route.split(' ');
     this.verb = iSp[0].toLowerCase();
     var rSp = iSp[1].split('/');
-    _.forEach(rSp, findRouteMatch, this);
-    if (this.match) {
+    if (this.req.path.trim() === iSp[1].trim()) {  // if we match exactly, dont bother with find routine
         this.reqRoute = iSp[1];
-        _.forEach(rSp, setRouteMatch, this);
+        this.match = true;
         return false;
+    } else {
+        _.forEach(rSp, findRouteMatch, this);
+        if (this.match) {
+            this.reqRoute = iSp[1];
+            _.forEach(rSp, setRouteMatch, this);
+            return false;
+        }
     }
 }
 

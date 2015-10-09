@@ -1,0 +1,5 @@
+[
+  {"code": "BL", "name": "Blade Keeps Balances"},
+  {"code": "BK", "name": "Bank/Processor Keeps Balances"},
+  {"code": "CL", "name": "Client Keeps Balances"}
+]
