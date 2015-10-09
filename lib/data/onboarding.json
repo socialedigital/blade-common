@@ -1,0 +1,5 @@
+[
+  { "code": "PREP", "name": "Prepopulated" },
+  { "code": "ACCT", "name": "Open Registration (white-label UI)" },
+  { "code": "APIO", "name": "Custom Onboarding (API-only)" }
+]
