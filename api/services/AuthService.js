@@ -2,10 +2,20 @@ var _ = require('lodash');
 var bluebird = require('bluebird');
 var fs = bluebird.promisifyAll(require('fs'));
 var moment = require('moment');
+var request = bluebird.promisify(require('request'));
+
 var intform = require('biguint-format');
 var FlakeId = require('flake-idgen');
 
 var authy = require('authy')('41f3fe0a27e1c9cba05c30933811a2b8');//test api key
+
+var clef = require('clef').initialize({
+    appID: '67645dc3c99a84adc0173a7e48b99db4',
+    appSecret: '488e54b49a659304932a6370593fb0ce'
+});
+
+var clefP = bluebird.promisifyAll(clef);
+
 var tokenGen = new FlakeId();
 var cyphGen = new FlakeId();
 
@@ -418,33 +428,12 @@ module.exports = {
         var authUser = null;
         var clefUser = null;
         var clefToken = null;
-        return request({
-            method: 'POST',
-            url: 'https://clef.io/api/v1/authorize',
-            headers: {'content-type': 'application/json'},
-            body: {
-                code: prm.code,
-                app_id: '67645dc3c99a84adc0173a7e48b99db4',
-                app_secret: '488e54b49a659304932a6370593fb0ce'
-            },
-            json: true
-        })
-            .spread(function(content, body) {
-                clefToken = body.access_token;
-                return request({
-                    method: 'GET',
-                    url: 'http://clef.io/api/v1/info?access_token=' + clefToken,
-                    headers: {'content-type': 'application/json'},
-                    json: true
-                });
-            })
-            .spread(function(content, body) {
-                if (body.success) {
-                    clefUser = body.info;
-                    return authValid({ body: { email: clefUser.email, password: '1' } });
-                } else {
-                    throw new Error('Access token invalid.');
-                }
+
+
+        clefP.getLoginInformation({ code: req.query.code })
+            .then(function(userInfo) {
+                clefUser = userInfo;
+                return authValid({ body: { email: clefUser.email, password: '1' } });
             })
             .then(function(found) {
                 if (found) {
@@ -488,7 +477,34 @@ module.exports = {
             .catch(function(err) {
                 res.badRequest(err);
             });
-    },
+
+        /*
+                return request({
+                    method: 'POST',
+                    url: 'https://clef.io/api/v1/authorize',
+                    headers: {'content-type': 'application/json'},
+                    body: {
+                        code: prm.code,
+                        app_id: '67645dc3c99a84adc0173a7e48b99db4',
+                        app_secret: '488e54b49a659304932a6370593fb0ce'
+                    },
+                    json: true
+                })
+                    .spread(function(content, body) {
+                        if (!_.isEmpty(body.success)) {
+                            clefToken = body.access_token;
+                            return request({
+                                method: 'GET',
+                                url: 'http://clef.io/api/v1/info?access_token=' + clefToken,
+                                headers: {'content-type': 'application/json'},
+                                json: true
+                            });
+                        } else {
+                            throw new Error(body.error);
+                        }
+                    })
+        */
+  },
 
     resolveClef: function(req, res) {
         // might be needed later for logout from phone (outsider call)

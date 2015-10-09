@@ -1,0 +1,5 @@
+[
+  {"code": "BL", "name": "Blade Authorizes Request"},
+  {"code": "BK", "name": "Bank/Processor Authorizes Request"},
+  {"code": "CL", "name": "Client Authorizes Request"}
+]
