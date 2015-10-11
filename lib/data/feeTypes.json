@@ -72,10 +72,6 @@
     "name": "The fee amount charged per ATM at abroad/international terminals. (based on card currency)"
   },
   {
-    "code": "posTxDecline",
-    "name": "The fee amount charged per swipe at POS, which is declined."
-  },
-  {
     "code": "fxMargin",
     "name": "The fee amount charged per swipe at POS, which is declined."
   },
