@@ -319,13 +319,17 @@ module.exports = {
      */
     setTimedKey: function (key, timeout, object) {
         if (timeout == 0) {
-            return this.deleteTimedKey(key);
+            return this.deleteTimedKey(key).then(function() {
+                return key;
+            });
         }
         else {
             return Promise.using(getRedisClient(), function (redis) {
                 var keyValue = _.isString(object) ? object : JSON.stringify(object);
                 return redis.setAsync(key, keyValue).then(function () {
-                    return redis.expireAsync(key, timeout);
+                    return redis.expireAsync(key, timeout).then(function() {
+                        return key;
+                    });
                 })
             });
         };
