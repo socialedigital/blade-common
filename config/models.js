@@ -1,5 +1,9 @@
 var path = require('path');
 var Promise = require('bluebird');
+///Users/cvick/work_area/blade/BladePaymentSystem/client-service/node_modules/blade-common/node_modules/sails
+///Users/cvick/work_area/blade/BladePaymentSystem/client-service/node_modules/blade-common/config/models.js
+var WLValidationError = require('../node_modules/sails/node_modules/waterline/lib/waterline/error/WLValidationError.js');
+
 
 module.exports.models = {
 
@@ -46,20 +50,14 @@ module.exports.models = {
         }
     },
 
-    /**
-     * This method checks an error to see if it contains validation
-     * error information for a particular model
-     *
-     */
-
-    isValidationError: function(error) {
-        var validationErrors = [];
-
-        if (error && error instanceof Error) {
-
+    validationError: function(model, invalidAttributes, status, message) {
+        return new WLValidationError({
+            invalidAttributes: invalidAttributes,
+            model: model,
+            status: status,
+            message: message
         }
-
-        return validationErrors;
-    }
+    );
+}
 
 };

@@ -29,23 +29,8 @@ module.exports = {
             var keyValue = _.isString(value) ? value : JSON.stringify(value);
             return redis.setAsync(key, keyValue);
         });
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return client.setAsync(key, JSON.stringify(value));
-        //    })
-        //    .then(function (results) {
-        //        cli.end();
-        //        return results;
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
+
     /**
      * get -
      * @param key
@@ -62,24 +47,8 @@ module.exports = {
             }
             return value;
         });
-
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return client.getAsync(key);
-        //    })
-        //    .then(function (results) {
-        //        cli.end();
-        //        return JSON.parse(results);
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
+
     /**
      * delete -
      * @param key
@@ -89,22 +58,6 @@ module.exports = {
         return Promise.using(getRedisClient(), function (redis) {
             return redis.delAsync(key);
         });
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return client.delAsync(key);
-        //    })
-        //    .then(function (results) {
-        //        cli.end();
-        //        return results;
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
 
     /**
@@ -116,22 +69,6 @@ module.exports = {
         return Promise.using(getRedisClient(), function (redis) {
             return redis.expireAsync(key, seconds);
         });
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function(client) {
-        //        cli = client;
-        //        return cli.expireAsync(key, seconds);
-        //    })
-        //    .then(function() {
-        //        cli.end();
-        //        return key;
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
 
     /**
@@ -146,23 +83,8 @@ module.exports = {
             var fieldValue = _.isString(value) ? value : JSON.stringify(value);
             return redis.hsetAsync(key, field, fieldValue);
         });
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return client.hsetAsync(key, field, JSON.stringify(value));
-        //    })
-        //    .then(function (results) {
-        //        cli.end();
-        //        return results;
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
+
     /**
      * hashGet -
      * @param key
@@ -180,23 +102,8 @@ module.exports = {
             }
             return value;
         });
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return client.hgetAsync(key, field);
-        //    })
-        //    .then(function (results) {
-        //        cli.end();
-        //        return JSON.parse(results);
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
+
     /**
      * hashKeys -
      * @param key
@@ -206,23 +113,8 @@ module.exports = {
         return Promise.using(getRedisClient(), function (redis) {
             return redis.hkeysAsync(key);
         });
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return client.hkeysAsync(key);
-        //    })
-        //    .then(function (results) {
-        //        cli.end();
-        //        return results;
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
+
     /**
      * hashDelete -
      * @param key
@@ -233,23 +125,8 @@ module.exports = {
         return Promise.using(getRedisClient(), function (redis) {
             return redis.hdelAsync(key, field);
         });
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return client.hdelAsync(key, field);
-        //    })
-        //    .then(function (results) {
-        //        cli.end();
-        //        return results;
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
+
     /**
      * enQueue - fifo queueing
      * @param key
@@ -261,23 +138,8 @@ module.exports = {
             var queuedValue = _.isString(object) ? object : JSON.stringify(object);
             return redis.rpushAsync(key, queuedValue);
         });
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return client.rpushAsync(key, JSON.stringify(object));
-        //    })
-        //    .then(function (results) {
-        //        cli.end();
-        //        return results;
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
+
     /**
      * deQueue - get next queue item
      * @param key
@@ -294,23 +156,8 @@ module.exports = {
             }
             return value;
         });
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return client.lpopAsync(key);
-        //    })
-        //    .then(function (results) {
-        //        cli.end();
-        //        return JSON.parse(results);
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
+
     /**
      * setTimedKey - set up a timed secret code for sending to logged in
      * @param key
@@ -333,27 +180,9 @@ module.exports = {
                 })
             });
         };
-        //var cli = null;
-        //return Connection.getClient()
-        //    .then(function(client) {
-        //        cli = client;
-        //        var aVal = _.merge({}, object);
-        //        return cli.setAsync(key, JSON.stringify(aVal));
-        //    })
-        //    .then(function() {
-        //        return cli.expireAsync(key, timeout);
-        //    })
-        //    .then(function() {
-        //        cli.end();
-        //        return key;
-        //    })
-        //    .catch(function(err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
+
     },
+
     /**
      * getTimedKey - get a timer key from root and reset its timeout (act of reading restores timeout)
      * @param key
@@ -377,40 +206,6 @@ module.exports = {
                 return value;
             })
         });
-        //var cli = null;
-        //var retdata = null;
-        //return Connection.getClient()
-        //    .then(function (client) {
-        //        cli = client;
-        //        return cli.getAsync(key);
-        //    })
-        //    .then(function (data) {
-        //        retdata = JSON.parse(data);
-        //        if ((!_.isEmpty(retdata)) && (timeout > 0)) {
-        //            return cli.setAsync(key, data);
-        //        }
-        //        else {
-        //            return cli.delAsync(key);
-        //        }
-        //    })
-        //    .then(function () {
-        //        if ((!_.isEmpty(retdata)) && (timeout > 0)) {
-        //            return cli.expireAsync(key, timeout);
-        //        }
-        //        else {
-        //            Promise.resolve();
-        //        }
-        //    })
-        //    .then(function () {
-        //        cli.end();
-        //        return retdata;
-        //    })
-        //    .catch(function (err) {
-        //        if (cli) {
-        //            cli.end();
-        //        }
-        //        throw err;
-        //    });
     },
 
     /**
