@@ -1,6 +1,6 @@
 var path = require('path');
 var Promise = require('bluebird');
-var WLValidationError = require('./../node_modules/sails/node_modules/waterline/lib/waterline/error/WLValidationError.js');
+var WLValidationError = require('../node_modules/sails/node_modules/waterline/lib/waterline/error/WLValidationError.js');
 
 module.exports.models = {
 
