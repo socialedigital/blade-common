@@ -17,7 +17,7 @@ try {
     //try to find WLValidationError module in the enclosing project's node_modules first.
     //this will succeed if we are running this in a deployed environment,
     //but if we are running locally with a sym-link to the blade-common package, this will fail
-    WLValidationError = require('../../node_modules/sails/node_modules/waterline/lib/waterline/error/WLValidationError.js');
+    WLValidationError = require('../../sails/node_modules/waterline/lib/waterline/error/WLValidationError.js');
 }
 catch(error) {
     if ( error.code === 'MODULE_NOT_FOUND' ) {
