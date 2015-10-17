@@ -10,7 +10,16 @@
 var contentType = require('content-type')
 
 module.exports = function validJSONRequest (req, res, next) {
-    var requestContentType = contentType.parse(req);
+    try {
+        var requestContentType = contentType.parse(req);
+    }
+    catch(exception) {
+        return res.unsupportedMediaType({
+            name: 'Unknown Content-Type',
+            message: "Unable to determine Content-Type",
+            description: "Please use 'application/json'"
+        });
+    }
 
     if (requestContentType.parameters['charset']) {
         if (requestContentType.parameters.charset.toLowerCase() != 'utf-8') {
