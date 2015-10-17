@@ -17,7 +17,7 @@ var Sails = require('sails').Sails;
              // Skip grunt (unless your hook uses it)
              "grunt": false
            },
-           log: {level: "info"},
+           log: {level: "silent"},
            connections: {
             memory: {
                 adapter: 'sails-memory'
