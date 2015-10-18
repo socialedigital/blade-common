@@ -121,7 +121,7 @@ var formatResponse = function(request, queryResult, criteria){
     }
 
     //first link
-    if(queryResult.total > 1 && limit < queryResult.total){
+    if(queryResult.total > 1){
         query = [];
         if (where) query.push('where=' + where);
         query.push('limit=' + limit);
@@ -141,7 +141,7 @@ var formatResponse = function(request, queryResult, criteria){
     }
 
     //last link
-    if(queryResult.total > 1 && limit < queryResult.total){
+    if(queryResult.total > 1){
         query = [];
         var lastPage;
         var remainder = queryResult.total % limit;

@@ -1,0 +1,58 @@
+[
+  {
+    "code": "aliencard",
+    "name": "Alien or Foreign ID Card"
+  },
+  {
+    "code": "bankstate",
+    "name": "Bank Statement"
+  },
+  {
+    "code": "creditcard",
+    "name": "Credit Card Statement/Copy"
+  },
+  {
+    "code": "drivers",
+    "name": "Driver's License"
+  },
+  {
+    "code": "govphotoid",
+    "name": "Government Issued Photo ID"
+  },
+  {
+    "code": "lease",
+    "name": "Lease Documentation"
+  },
+  {
+    "code": "mortgage",
+    "name": "Mortgage Documentation"
+  },
+  {
+    "code": "other",
+    "name": "Other"
+  },
+  {
+    "code": "passport",
+    "name": "Passport"
+  },
+  {
+    "code": "pension",
+    "name": "Pension Documentation"
+  },
+  {
+    "code": "school",
+    "name": "School Card"
+  },
+  {
+    "code": "socialsec",
+    "name": "Social Security Documentation"
+  },
+  {
+    "code": "utility",
+    "name": "Utility Bill"
+  },
+  {
+    "code": "workdoc",
+    "name": "Work Permit/Document"
+  }
+]

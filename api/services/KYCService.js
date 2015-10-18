@@ -176,9 +176,10 @@ var documentReceiverStream = function(cb) {
             return done(true);
           }
           streams[file.filename].uploadedToS3 = true;
-          gc()
+          uploadData.name = file.filename;
+          gc();
           cb(undefined, uploadData);
-          done(undefined, true)
+          done(undefined, true);
         })
       })
     }
