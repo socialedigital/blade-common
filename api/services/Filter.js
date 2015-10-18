@@ -18,6 +18,13 @@ var mapFields = function(map, data){
                         mapField = _.get(mappedKey, "__fieldName", key);
                         result[mapField] = undefined; //originally was set to empty object - causes validation errors on PUT
                     }
+                    else if(_.isArray(data[key])){
+                        mapField = key;
+                        result[mapField] = [];
+                        for(var i in data[key]){
+                            result[mapField].push(mapFields(mappedKey, data[key][i]));
+                        }
+                    }
                 } else {
                     if(noData){
                         result[mapField] = undefined;
@@ -92,17 +99,14 @@ module.exports = function(req, res, routeCall, options){
         req.inFilter = true;        //this is a short term hack that signals
         routeCall(req, res)
         .then(function(results){
-            var resource = {};
             results = results.json;
-            if(results.data || _.isArray(results)){
-                if(results.data){
-                    results = results.data;
-                }
-                resource.data = _.map(results, function(item){
+            var resource = _.omit(results, "data");
+            if(results.data || _.isArray(results.data)){
+                resource.data = _.map(results.data, function(item){
                     return mapFields(_.get(opts, "map.out", {}), item);
                 })
-            } else if(_.isPlainObject(results)){
-                resource.data = mapFields(_.get(opts, "map.out", {}), results);
+            } else if(_.isPlainObject(results.data)){
+                resource.data = mapFields(_.get(opts, "map.out", {}), results.data);
             }
             if(reqVerb === "GET"){
                 resource.uri = req.originalUrl;
@@ -125,7 +129,7 @@ module.exports = function(req, res, routeCall, options){
     }
     catch(err){
         sails.log.error(err);
-        res.serverError();
+        res.send(500, err);
     }
 }
 
