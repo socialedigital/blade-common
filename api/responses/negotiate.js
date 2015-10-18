@@ -15,47 +15,38 @@
  *
  */
 
-module.exports = function (err) {
-console.log(err);
-
-    // Get access to response object (`res`)
-    var res = this.res;
-
-    var statusCode = 500;
-    var body = err;
-
-    try {
-
-        statusCode = err.status || 500;
-
-        // Set the status
-        // (should be taken care of by res.* methods, but this sets a default just in case)
-        res.status(statusCode);
-
-    } catch (e) {
+module.exports = function (error) {
+    //todo: should really check that error is an instance of WLError
+    if (error.originalError) {
+        error = error.originalError;
     }
+
+    var res = this.res;
+    var statusCode = error.status || 500;
+
+    res.status(statusCode);
 
     // Respond using the appropriate custom response
     if (statusCode === 100) {
-        return res.continue(body);
+        return res.continue(error);
     }
     if (statusCode === 401) {
-        return res.unauthorized(body);
+        return res.unauthorized(error);
     }
     if (statusCode === 403) {
-        return res.forbidden(body);
+        return res.forbidden(error);
     }
     if (statusCode === 404) {
-        return res.notFound(body);
+        return res.notFound(error);
     }
     if (statusCode === 415) {
-        return res.unsupportedMediaType(body);
+        return res.unsupportedMediaType(error);
     }
     if (statusCode === 418) {
-        return res.imATeapot(body);
+        return res.imATeapot(error);
     }
     if (statusCode >= 400 && statusCode < 500) {
-        return res.badRequest(body);
+        return res.badRequest(error);
     }
-    return res.serverError(body);
+    return res.serverError(error);
 };

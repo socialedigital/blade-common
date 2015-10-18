@@ -1,0 +1,15 @@
+general:
+  artifacts:
+    - "coverage/lcov-report"
+  branches:
+    only:
+      - master
+      - development
+
+machine:
+  timezone:
+    UTC
+  ruby:
+    version: 2.1.3
+  node:
+    version: 0.12.7
