@@ -192,12 +192,13 @@ module.exports = {
         return Promise.using(getRedisClient(), function (redis) {
             return redis.getAsync(key)
             .then(function(value) {
-                if (timeout == 0) {
-                    this.deleteTimedKey(key);
-                }
-                else {
-                    redis.expireAsync(key, timeout);
-                }
+                //if (timeout == 0) {
+                //    this.deleteTimedKey(key);
+                //}
+                //else {
+                //    redis.expireAsync(key, timeout);
+                //}
+                redis.expireAsync(key, timeout);
                 try {
                     value = JSON.parse(value);
                 } catch (error) {
