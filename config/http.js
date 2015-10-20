@@ -74,9 +74,11 @@ module.exports.http = {
             //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
             var fromService = '';
             if (req.headers['x-blade-service']) {
-                fromService = '[from: ' + req.headers['x-blade-service'] + ']';
+                fromService = ' [' + req.headers['x-blade-service'] + ']';
             }
-            sails.log.verbose("Requested :: :%s:", new Date(), req.method, req.url, fromService);
+            var payload = req.body ? '\npayload: ' + JSON.stringify(req.body) : "";
+            sails.log.verbose("%s: %s %s%s%s", new Date(), req.method, req.url, fromService, payload);
+
             sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
             return next();
         }

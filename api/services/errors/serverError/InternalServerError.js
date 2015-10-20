@@ -5,6 +5,7 @@ function InternalServerError(serviceName, request, response, message) {
     serverError.apply(this, [serviceName, request, response, message]);
     this.service.response.message = 'Internal Server Error';
     this.name = "INTERNAL SERVER ERROR";
+    this.status = 500;
 }
 
 util.inherits(InternalServerError, serverError);

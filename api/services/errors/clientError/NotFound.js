@@ -11,6 +11,7 @@ function NotFound(serviceName, request, response, message) {
         this.service.response.message = 'Not Found';
     }
     this.name = "NOT FOUND";
+    this.status = 404;
 }
 
 util.inherits(NotFound, clientError);
