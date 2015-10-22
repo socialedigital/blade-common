@@ -101,20 +101,14 @@ module.exports = function(req, res, routeCall, options){
         routeCall(req, res)
         .then(function(results){
             results = results.json;
-            if(results.data || _.isArray(results.data)){
-                var resource = _.omit(results, "data");
+            var resource = {};
+            if(results.data && _.isArray(results.data)){
+                resource = _.omit(results, "data");
                 resource.data = _.map(results.data, function(item){
                     return mapFields(_.get(opts, "map.out", {}), item);
                 })
             } else if(!results.data && _.isPlainObject(results)){
-                var resource = {data: null}
-                resource.data = mapFields(_.get(opts, "map.out", {}), results);
-            } else if(results.data && _.isPlainObject(results)){
-                var resource = {data: null};
-                resource.data = mapFields(_.get(opts, "map.out", {}), results.data);
-            }
-            if(reqVerb === "GET"){
-                resource.uri = req.originalUrl;
+                resource = mapFields(_.get(opts, "map.out", {}), results);
             }
             if(reqVerb === "POST"){
                 return res.created(resource, options.resourceUrl);
@@ -160,8 +154,6 @@ var defaultErrorResponse = function(err, statusCode, req, res, opts){
             var errorMap = mapInvertAndFlatten(_.get(opts, "map.in", {}));
             customErr.fields = mapFields(errorMap, fields);
         }
-    } else if(statusCode === 404){
-        customErr.fields = req.allParams();
     }
     return res.send(statusCode, customErr);
 }
