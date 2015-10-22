@@ -3,6 +3,7 @@ var _ = require("lodash");
 
 var mapFields = function(map, data){
     return _.reduce(map, function(result, mappedKey, key){
+        console.log(result)
         var noData = (!data[key]);
         var mapField = mappedKey;
         if(_.isPlainObject(data[key])){
@@ -100,12 +101,16 @@ module.exports = function(req, res, routeCall, options){
         routeCall(req, res)
         .then(function(results){
             results = results.json;
-            var resource = _.omit(results, "data");
             if(results.data || _.isArray(results.data)){
+                var resource = _.omit(results, "data");
                 resource.data = _.map(results.data, function(item){
                     return mapFields(_.get(opts, "map.out", {}), item);
                 })
-            } else if(_.isPlainObject(results.data)){
+            } else if(!results.data && _.isPlainObject(results)){
+                var resource = {data: null}
+                resource.data = mapFields(_.get(opts, "map.out", {}), results);
+            } else if(results.data && _.isPlainObject(results)){
+                var resource = {data: null};
                 resource.data = mapFields(_.get(opts, "map.out", {}), results.data);
             }
             if(reqVerb === "GET"){
