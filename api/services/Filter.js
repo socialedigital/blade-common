@@ -3,7 +3,6 @@ var _ = require("lodash");
 
 var mapFields = function(map, data){
     return _.reduce(map, function(result, mappedKey, key){
-        console.log(result)
         var noData = (!data[key]);
         var mapField = mappedKey;
         if(_.isPlainObject(data[key])){
