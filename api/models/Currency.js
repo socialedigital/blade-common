@@ -4,6 +4,7 @@
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/#!documentation/models
  */
+var accounting = require('accounting');
 
 module.exports = {
 
@@ -31,7 +32,16 @@ module.exports = {
             required: true
         },
         rounding: 'integer',
-        name_plural: 'string'
+        name_plural: 'string',
+
+        //instance methods
+        format: function(amount) {
+            return parseFloat(amount).toFixed(this.decimal_digits);
+        },
+
+        formatMoney: function(amount) {
+            return accounting.formatMoney(parseFloat(amount), this.symbol, this.decimal_digits)
+        }
     },
 
     seedData: __dirname + '/../../lib/data/currencies.json'
