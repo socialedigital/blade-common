@@ -102,7 +102,7 @@ module.exports = function(req, res, routeCall, options){
             results = results.json;
             var resource = {};
             if(results.data && _.isArray(results.data)){
-                resource = _.omit(results, "data");
+                resource.total = results.total;
                 resource.data = _.map(results.data, function(item){
                     return mapFields(_.get(opts, "map.out", {}), item);
                 })
