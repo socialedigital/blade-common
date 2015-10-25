@@ -66,6 +66,7 @@ var formatResponse = function(request, queryResult, criteria){
     if(criteria.populate){
         var populate = criteria.populate.join(',');
     }
+    queryResult.links = {};
     var sort = criteria.sort;
     //construct links
     var query;
