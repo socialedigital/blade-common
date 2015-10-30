@@ -19,7 +19,8 @@ module.exports = {
         region: { type: 'string' },
         sub_region: { type: 'string' },
         region_code: { type: 'string' },
-        sub_region_code: {type: 'string' }
+        sub_region_code: {type: 'string' },
+        country_dialing_code: {type: 'string'}
     },
     seedData: __dirname + '/../../lib/data/countries.json'
 };
