@@ -31,6 +31,12 @@ module.exports.metrics = {
         help     : "The number of http responses sent."
     }),
 
+    httpResponseTime: metricsClient.newGuage({
+        namespace: "http",
+        name     : "http_response_time",
+        help     : "Response Time"
+    }),
+
     serviceCallCounter: metricsClient.newCounter({
         namespace: "blade",
         name     : "service_call_total",
