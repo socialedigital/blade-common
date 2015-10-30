@@ -78,21 +78,26 @@ module.exports.http = {
         },
 
         requestLogger: function (req, res, next) {
-            res.on("finish", function() {
-                var responseTime = res.get('X-Response-Time');
-                //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
+            if (process.env.NODE_ENV != "test") {
                 var fromService = '->';
                 if (req.headers['x-blade-service']) {
                     fromService = ' [' + req.headers['x-blade-service'] + '] ->';
                 }
                 var payload = req.body ? '\n' + fromService + ' ' + JSON.stringify(req.body) : "";
-                console.log("%s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
 
-                sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
-            });
-            res.on("close", function() {
+                res.on("finish", function () {
+                    var responseTime = res.get('X-Response-Time');
+                    //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
+                    console.log("%s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
+                    sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
+                });
 
-            });
+                res.on("close", function () {
+                    //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
+                    console.log("[interrupted] %s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
+                    sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
+                });
+            }
             next();
         }
 
