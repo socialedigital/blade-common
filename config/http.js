@@ -9,6 +9,7 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.http.html
  */
 
+var responseTime = require('response-time');
 var util = require('util');
 
 module.exports.http = {
@@ -33,8 +34,9 @@ module.exports.http = {
          ***************************************************************************/
 
         order: [
-            'poweredByBlade',
+            'responseTimeLogger',
             'startRequestTimer',
+            'poweredByBlade',
             'cookieParser',
             'bodyParser',
             'handleBodyParserError',
@@ -46,6 +48,11 @@ module.exports.http = {
             '404',
             '500'
         ],
+
+        responseTimeLogger: function (req, res, next) {
+            //require('response-time')()(req, res, next);
+            responseTime()(req, res, next);
+        },
 
         poweredByBlade: function (req, res, next) {
             res.header('X-Powered-By', 'Blade Payments Engine <bladepayments.com>');
@@ -71,16 +78,21 @@ module.exports.http = {
         },
 
         requestLogger: function (req, res, next) {
-            //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
-            var fromService = '';
-            if (req.headers['x-blade-service']) {
-                fromService = ' [' + req.headers['x-blade-service'] + ']';
-            }
-            var payload = req.body ? '\npayload: ' + JSON.stringify(req.body) : "";
-            sails.log.verbose("%s: %s %s%s%s", new Date(), req.method, req.url, fromService, payload);
+            res.on("finish", function() {
+                //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
+                var fromService = '->';
+                if (req.headers['x-blade-service']) {
+                    fromService = ' [' + req.headers['x-blade-service'] + '] ->';
+                }
+                var payload = req.body ? '\n' + fromService + ' ' + JSON.stringify(req.body) : "";
+                console.log("%s %s: [%s] %s %s%s", fromService, new Date(), res.get('X-Response-Time'), req.method, req.url, payload);
 
-            sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
-            return next();
+                sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
+            });
+            res.on("close", function() {
+
+            });
+            next();
         }
 
 
