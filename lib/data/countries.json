@@ -8,7 +8,8 @@
     "region": "Asia",
     "sub_region": "Southern Asia",
     "region_code": "142",
-    "sub_region_code": "034"
+    "sub_region_code": "034",
+    "country_dialing_code": "+93"
   },
   {
     "name": "Åland Islands",
@@ -19,7 +20,8 @@
     "sub_region_code": "154",
     "region_code": "150",
     "sub_region": "Northern Europe",
-    "region": "Europe"
+    "region": "Europe",
+    "country_dialing_code": ""
   },
   {
     "name": "Albania",
@@ -30,7 +32,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+355"
   },
   {
     "name": "Algeria",
@@ -41,7 +44,8 @@
     "region": "Africa",
     "sub_region": "Northern Africa",
     "region_code": "002",
-    "sub_region_code": "015"
+    "sub_region_code": "015",
+    "country_dialing_code": "+213"
   },
   {
     "name": "American Samoa",
@@ -52,7 +56,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+1 684"
   },
   {
     "name": "Andorra",
@@ -63,7 +68,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+376"
   },
   {
     "name": "Angola",
@@ -74,7 +80,8 @@
     "region": "Africa",
     "sub_region": "Middle Africa",
     "region_code": "002",
-    "sub_region_code": "017"
+    "sub_region_code": "017",
+    "country_dialing_code": "+244"
   },
   {
     "name": "Anguilla",
@@ -85,7 +92,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 264"
   },
   {
     "name": "Antarctica",
@@ -96,7 +104,8 @@
     "sub_region_code": null,
     "region_code": null,
     "sub_region": null,
-    "region": null
+    "region": null,
+    "country_dialing_code": null
   },
   {
     "name": "Antigua and Barbuda",
@@ -107,7 +116,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1268"
   },
   {
     "name": "Argentina",
@@ -118,7 +128,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+54"
   },
   {
     "name": "Armenia",
@@ -129,7 +140,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+374"
   },
   {
     "name": "Aruba",
@@ -140,7 +152,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+297"
   },
   {
     "name": "Australia",
@@ -151,7 +164,8 @@
     "region": "Oceania",
     "sub_region": "Australia and New Zealand",
     "region_code": "009",
-    "sub_region_code": "053"
+    "sub_region_code": "053",
+    "country_dialing_code": "+61"
   },
   {
     "name": "Austria",
@@ -162,7 +176,8 @@
     "region": "Europe",
     "sub_region": "Western Europe",
     "region_code": "150",
-    "sub_region_code": "155"
+    "sub_region_code": "155",
+    "country_dialing_code": "+43"
   },
   {
     "name": "Azerbaijan",
@@ -173,7 +188,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+994"
   },
   {
     "name": "Bahamas",
@@ -184,7 +200,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 242"
   },
   {
     "name": "Bahrain",
@@ -195,7 +212,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+973"
   },
   {
     "name": "Bangladesh",
@@ -206,7 +224,8 @@
     "region": "Asia",
     "sub_region": "Southern Asia",
     "region_code": "142",
-    "sub_region_code": "034"
+    "sub_region_code": "034",
+    "country_dialing_code": "+880"
   },
   {
     "name": "Barbados",
@@ -217,7 +236,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 246"
   },
   {
     "name": "Belarus",
@@ -228,7 +248,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+375"
   },
   {
     "name": "Belgium",
@@ -239,7 +260,8 @@
     "region": "Europe",
     "sub_region": "Western Europe",
     "region_code": "150",
-    "sub_region_code": "155"
+    "sub_region_code": "155",
+    "country_dialing_code": "+32"
   },
   {
     "name": "Belize",
@@ -250,7 +272,8 @@
     "region": "Americas",
     "sub_region": "Central America",
     "region_code": "019",
-    "sub_region_code": "013"
+    "sub_region_code": "013",
+    "country_dialing_code": "+501"
   },
   {
     "name": "Benin",
@@ -261,7 +284,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+229"
   },
   {
     "name": "Bermuda",
@@ -272,7 +296,8 @@
     "region": "Americas",
     "sub_region": "Northern America",
     "region_code": "019",
-    "sub_region_code": "021"
+    "sub_region_code": "021",
+    "country_dialing_code": "+1 441"
   },
   {
     "name": "Bhutan",
@@ -283,7 +308,8 @@
     "region": "Asia",
     "sub_region": "Southern Asia",
     "region_code": "142",
-    "sub_region_code": "034"
+    "sub_region_code": "034",
+    "country_dialing_code": "+975"
   },
   {
     "name": "Bolivia (Plurinational State of)",
@@ -294,7 +320,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+591"
   },
   {
     "name": "Bonaire, Sint Eustatius and Saba",
@@ -316,7 +343,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+387"
   },
   {
     "name": "Botswana",
@@ -327,7 +355,8 @@
     "region": "Africa",
     "sub_region": "Southern Africa",
     "region_code": "002",
-    "sub_region_code": "018"
+    "sub_region_code": "018",
+    "country_dialing_code": "+267"
   },
   {
     "name": "Bouvet Island",
@@ -349,7 +378,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+55"
   },
   {
     "name": "British Indian Ocean Territory",
@@ -360,7 +390,8 @@
     "sub_region_code": null,
     "region_code": null,
     "sub_region": null,
-    "region": null
+    "region": null,
+    "country_dialing_code": "+246"
   },
   {
     "name": "Brunei Darussalam",
@@ -371,7 +402,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+673"
   },
   {
     "name": "Bulgaria",
@@ -382,7 +414,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+359"
   },
   {
     "name": "Burkina Faso",
@@ -393,7 +426,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+226"
   },
   {
     "name": "Burundi",
@@ -404,7 +438,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+257"
   },
   {
     "name": "Cambodia",
@@ -415,7 +450,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+855"
   },
   {
     "name": "Cameroon",
@@ -426,7 +462,8 @@
     "region": "Africa",
     "sub_region": "Middle Africa",
     "region_code": "002",
-    "sub_region_code": "017"
+    "sub_region_code": "017",
+    "country_dialing_code": "+237"
   },
   {
     "name": "Canada",
@@ -437,7 +474,8 @@
     "region": "Americas",
     "sub_region": "Northern America",
     "region_code": "019",
-    "sub_region_code": "021"
+    "sub_region_code": "021",
+    "country_dialing_code": "+1"
   },
   {
     "name": "Cabo Verde",
@@ -448,7 +486,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+238"
   },
   {
     "name": "Cayman Islands",
@@ -459,7 +498,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+ 345"
   },
   {
     "name": "Central African Republic",
@@ -470,7 +510,8 @@
     "region": "Africa",
     "sub_region": "Middle Africa",
     "region_code": "002",
-    "sub_region_code": "017"
+    "sub_region_code": "017",
+    "country_dialing_code": "+236"
   },
   {
     "name": "Chad",
@@ -481,7 +522,8 @@
     "region": "Africa",
     "sub_region": "Middle Africa",
     "region_code": "002",
-    "sub_region_code": "017"
+    "sub_region_code": "017",
+    "country_dialing_code": "+235"
   },
   {
     "name": "Chile",
@@ -492,7 +534,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+56"
   },
   {
     "name": "China",
@@ -503,7 +546,8 @@
     "region": "Asia",
     "sub_region": "Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "030"
+    "sub_region_code": "030",
+    "country_dialing_code": "+86"
   },
   {
     "name": "Christmas Island",
@@ -514,7 +558,8 @@
     "sub_region_code": null,
     "region_code": null,
     "sub_region": null,
-    "region": null
+    "region": null,
+    "country_dialing_code": "+61"
   },
   {
     "name": "Cocos (Keeling) Islands",
@@ -525,7 +570,8 @@
     "sub_region_code": null,
     "region_code": null,
     "sub_region": null,
-    "region": null
+    "region": null,
+    "country_dialing_code": "+61"
   },
   {
     "name": "Colombia",
@@ -536,7 +582,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+57"
   },
   {
     "name": "Comoros",
@@ -547,7 +594,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+269"
   },
   {
     "name": "Congo",
@@ -558,7 +606,8 @@
     "region": "Africa",
     "sub_region": "Middle Africa",
     "region_code": "002",
-    "sub_region_code": "017"
+    "sub_region_code": "017",
+    "country_dialing_code": "+242"
   },
   {
     "name": "Congo (Democratic Republic of the)",
@@ -569,7 +618,8 @@
     "region": "Africa",
     "sub_region": "Middle Africa",
     "region_code": "002",
-    "sub_region_code": "017"
+    "sub_region_code": "017",
+    "country_dialing_code": "+243"
   },
   {
     "name": "Cook Islands",
@@ -580,7 +630,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+682"
   },
   {
     "name": "Costa Rica",
@@ -591,7 +642,8 @@
     "region": "Americas",
     "sub_region": "Central America",
     "region_code": "019",
-    "sub_region_code": "013"
+    "sub_region_code": "013",
+    "country_dialing_code": "+506"
   },
   {
     "name": "Côte d'Ivoire",
@@ -602,7 +654,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+225"
   },
   {
     "name": "Croatia",
@@ -613,7 +666,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+385"
   },
   {
     "name": "Cuba",
@@ -624,7 +678,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+53"
   },
   {
     "name": "Curaçao",
@@ -646,7 +701,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+537"
   },
   {
     "name": "Czech Republic",
@@ -657,7 +713,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+420"
   },
   {
     "name": "Denmark",
@@ -668,7 +725,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+45"
   },
   {
     "name": "Djibouti",
@@ -679,7 +737,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+253"
   },
   {
     "name": "Dominica",
@@ -690,7 +749,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 767"
   },
   {
     "name": "Dominican Republic",
@@ -701,7 +761,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 849"
   },
   {
     "name": "Ecuador",
@@ -712,7 +773,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+593"
   },
   {
     "name": "Egypt",
@@ -723,7 +785,8 @@
     "region": "Africa",
     "sub_region": "Northern Africa",
     "region_code": "002",
-    "sub_region_code": "015"
+    "sub_region_code": "015",
+    "country_dialing_code": "+20"
   },
   {
     "name": "El Salvador",
@@ -734,7 +797,8 @@
     "region": "Americas",
     "sub_region": "Central America",
     "region_code": "019",
-    "sub_region_code": "013"
+    "sub_region_code": "013",
+    "country_dialing_code": "+503"
   },
   {
     "name": "Equatorial Guinea",
@@ -745,7 +809,8 @@
     "region": "Africa",
     "sub_region": "Middle Africa",
     "region_code": "002",
-    "sub_region_code": "017"
+    "sub_region_code": "017",
+    "country_dialing_code": "+240"
   },
   {
     "name": "Eritrea",
@@ -756,7 +821,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+291"
   },
   {
     "name": "Estonia",
@@ -767,7 +833,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+372"
   },
   {
     "name": "Ethiopia",
@@ -778,7 +845,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+251"
   },
   {
     "name": "Falkland Islands (Malvinas)",
@@ -789,7 +857,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+500"
   },
   {
     "name": "Faroe Islands",
@@ -800,7 +869,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+298"
   },
   {
     "name": "Fiji",
@@ -811,7 +881,8 @@
     "region": "Oceania",
     "sub_region": "Melanesia",
     "region_code": "009",
-    "sub_region_code": "054"
+    "sub_region_code": "054",
+    "country_dialing_code": "+679"
   },
   {
     "name": "Finland",
@@ -822,7 +893,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+358"
   },
   {
     "name": "France",
@@ -833,7 +905,8 @@
     "region": "Europe",
     "sub_region": "Western Europe",
     "region_code": "150",
-    "sub_region_code": "155"
+    "sub_region_code": "155",
+    "country_dialing_code": "+33"
   },
   {
     "name": "French Guiana",
@@ -844,7 +917,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+594"
   },
   {
     "name": "French Polynesia",
@@ -855,7 +929,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+689"
   },
   {
     "name": "French Southern Territories",
@@ -877,7 +952,8 @@
     "region": "Africa",
     "sub_region": "Middle Africa",
     "region_code": "002",
-    "sub_region_code": "017"
+    "sub_region_code": "017",
+    "country_dialing_code": "+241"
   },
   {
     "name": "Gambia",
@@ -888,7 +964,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+220"
   },
   {
     "name": "Georgia",
@@ -899,7 +976,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+995"
   },
   {
     "name": "Germany",
@@ -910,7 +988,8 @@
     "region": "Europe",
     "sub_region": "Western Europe",
     "region_code": "150",
-    "sub_region_code": "155"
+    "sub_region_code": "155",
+    "country_dialing_code": "+49"
   },
   {
     "name": "Ghana",
@@ -921,7 +1000,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+233"
   },
   {
     "name": "Gibraltar",
@@ -932,7 +1012,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+350"
   },
   {
     "name": "Greece",
@@ -943,7 +1024,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+30"
   },
   {
     "name": "Greenland",
@@ -954,7 +1036,8 @@
     "region": "Americas",
     "sub_region": "Northern America",
     "region_code": "019",
-    "sub_region_code": "021"
+    "sub_region_code": "021",
+    "country_dialing_code": "+299"
   },
   {
     "name": "Grenada",
@@ -965,7 +1048,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 473"
   },
   {
     "name": "Guadeloupe",
@@ -976,7 +1060,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+590"
   },
   {
     "name": "Guam",
@@ -987,7 +1072,8 @@
     "region": "Oceania",
     "sub_region": "Micronesia",
     "region_code": "009",
-    "sub_region_code": "057"
+    "sub_region_code": "057",
+    "country_dialing_code": "+1 671"
   },
   {
     "name": "Guatemala",
@@ -998,7 +1084,8 @@
     "region": "Americas",
     "sub_region": "Central America",
     "region_code": "019",
-    "sub_region_code": "013"
+    "sub_region_code": "013",
+    "country_dialing_code": "+502"
   },
   {
     "name": "Guernsey",
@@ -1009,7 +1096,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+44"
   },
   {
     "name": "Guinea",
@@ -1020,7 +1108,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+224"
   },
   {
     "name": "Guinea_Bissau",
@@ -1031,7 +1120,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+245"
   },
   {
     "name": "Guyana",
@@ -1042,7 +1132,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+595"
   },
   {
     "name": "Haiti",
@@ -1053,7 +1144,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+509"
   },
   {
     "name": "Heard Island and McDonald Islands",
@@ -1075,7 +1167,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+379"
   },
   {
     "name": "Honduras",
@@ -1086,7 +1179,8 @@
     "region": "Americas",
     "sub_region": "Central America",
     "region_code": "019",
-    "sub_region_code": "013"
+    "sub_region_code": "013",
+    "country_dialing_code": "+504"
   },
   {
     "name": "Hong Kong",
@@ -1097,7 +1191,8 @@
     "region": "Asia",
     "sub_region": "Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "030"
+    "sub_region_code": "030",
+    "country_dialing_code": "+852"
   },
   {
     "name": "Hungary",
@@ -1108,7 +1203,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+36"
   },
   {
     "name": "Iceland",
@@ -1119,7 +1215,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+354"
   },
   {
     "name": "India",
@@ -1130,7 +1227,8 @@
     "region": "Asia",
     "sub_region": "Southern Asia",
     "region_code": "142",
-    "sub_region_code": "034"
+    "sub_region_code": "034",
+    "country_dialing_code": "+91"
   },
   {
     "name": "Indonesia",
@@ -1141,7 +1239,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+62"
   },
   {
     "name": "Iran (Islamic Republic of)",
@@ -1152,7 +1251,8 @@
     "region": "Asia",
     "sub_region": "Southern Asia",
     "region_code": "142",
-    "sub_region_code": "034"
+    "sub_region_code": "034",
+    "country_dialing_code": "+98"
   },
   {
     "name": "Iraq",
@@ -1163,7 +1263,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+964"
   },
   {
     "name": "Ireland",
@@ -1174,7 +1275,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+353"
   },
   {
     "name": "Isle of Man",
@@ -1185,7 +1287,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+44"
   },
   {
     "name": "Israel",
@@ -1196,7 +1299,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+972"
   },
   {
     "name": "Italy",
@@ -1207,7 +1311,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+39"
   },
   {
     "name": "Jamaica",
@@ -1218,7 +1323,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 876"
   },
   {
     "name": "Japan",
@@ -1229,7 +1335,8 @@
     "region": "Asia",
     "sub_region": "Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "030"
+    "sub_region_code": "030",
+    "country_dialing_code": "+81"
   },
   {
     "name": "Jersey",
@@ -1240,7 +1347,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+44"
   },
   {
     "name": "Jordan",
@@ -1251,7 +1359,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+962"
   },
   {
     "name": "Kazakhstan",
@@ -1262,7 +1371,8 @@
     "region": "Asia",
     "sub_region": "Central Asia",
     "region_code": "142",
-    "sub_region_code": "143"
+    "sub_region_code": "143",
+    "country_dialing_code": "+7 7"
   },
   {
     "name": "Kenya",
@@ -1273,7 +1383,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+254"
   },
   {
     "name": "Kiribati",
@@ -1284,7 +1395,8 @@
     "region": "Oceania",
     "sub_region": "Micronesia",
     "region_code": "009",
-    "sub_region_code": "057"
+    "sub_region_code": "057",
+    "country_dialing_code": "+686"
   },
   {
     "name": "Korea (Democratic People's Republic of)",
@@ -1295,7 +1407,8 @@
     "region": "Asia",
     "sub_region": "Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "030"
+    "sub_region_code": "030",
+    "country_dialing_code": "+850"
   },
   {
     "name": "Korea (Republic of)",
@@ -1306,7 +1419,8 @@
     "region": "Asia",
     "sub_region": "Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "030"
+    "sub_region_code": "030",
+    "country_dialing_code": "+82"
   },
   {
     "name": "Kuwait",
@@ -1317,7 +1431,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+965"
   },
   {
     "name": "Kyrgyzstan",
@@ -1328,7 +1443,8 @@
     "region": "Asia",
     "sub_region": "Central Asia",
     "region_code": "142",
-    "sub_region_code": "143"
+    "sub_region_code": "143",
+    "country_dialing_code": "+996"
   },
   {
     "name": "Lao People's Democratic Republic",
@@ -1339,7 +1455,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+856"
   },
   {
     "name": "Latvia",
@@ -1350,7 +1467,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+371"
   },
   {
     "name": "Lebanon",
@@ -1361,7 +1479,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+961"
   },
   {
     "name": "Lesotho",
@@ -1372,7 +1491,8 @@
     "region": "Africa",
     "sub_region": "Southern Africa",
     "region_code": "002",
-    "sub_region_code": "018"
+    "sub_region_code": "018",
+    "country_dialing_code": "+266"
   },
   {
     "name": "Liberia",
@@ -1383,7 +1503,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+231"
   },
   {
     "name": "Libya",
@@ -1394,7 +1515,8 @@
     "region": "Africa",
     "sub_region": "Northern Africa",
     "region_code": "002",
-    "sub_region_code": "015"
+    "sub_region_code": "015",
+    "country_dialing_code": "+218"
   },
   {
     "name": "Liechtenstein",
@@ -1405,7 +1527,8 @@
     "region": "Europe",
     "sub_region": "Western Europe",
     "region_code": "150",
-    "sub_region_code": "155"
+    "sub_region_code": "155",
+    "country_dialing_code": "+423"
   },
   {
     "name": "Lithuania",
@@ -1416,7 +1539,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+370"
   },
   {
     "name": "Luxembourg",
@@ -1427,7 +1551,8 @@
     "region": "Europe",
     "sub_region": "Western Europe",
     "region_code": "150",
-    "sub_region_code": "155"
+    "sub_region_code": "155",
+    "country_dialing_code": "+352"
   },
   {
     "name": "Macao",
@@ -1438,7 +1563,8 @@
     "region": "Asia",
     "sub_region": "Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "030"
+    "sub_region_code": "030",
+    "country_dialing_code": "+853"
   },
   {
     "name": "Macedonia (the former Yugoslav Republic of)",
@@ -1449,7 +1575,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+389"
   },
   {
     "name": "Madagascar",
@@ -1460,7 +1587,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+261"
   },
   {
     "name": "Malawi",
@@ -1471,7 +1599,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+265"
   },
   {
     "name": "Malaysia",
@@ -1482,7 +1611,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+60"
   },
   {
     "name": "Maldives",
@@ -1493,7 +1623,8 @@
     "region": "Asia",
     "sub_region": "Southern Asia",
     "region_code": "142",
-    "sub_region_code": "034"
+    "sub_region_code": "034",
+    "country_dialing_code": "+960"
   },
   {
     "name": "Mali",
@@ -1504,7 +1635,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+223"
   },
   {
     "name": "Malta",
@@ -1515,7 +1647,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+356"
   },
   {
     "name": "Marshall Islands",
@@ -1526,7 +1659,8 @@
     "region": "Oceania",
     "sub_region": "Micronesia",
     "region_code": "009",
-    "sub_region_code": "057"
+    "sub_region_code": "057",
+    "country_dialing_code": "+692"
   },
   {
     "name": "Martinique",
@@ -1537,7 +1671,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+596"
   },
   {
     "name": "Mauritania",
@@ -1548,7 +1683,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+222"
   },
   {
     "name": "Mauritius",
@@ -1559,7 +1695,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+230"
   },
   {
     "name": "Mayotte",
@@ -1570,7 +1707,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+262"
   },
   {
     "name": "Mexico",
@@ -1581,7 +1719,8 @@
     "region": "Americas",
     "sub_region": "Central America",
     "region_code": "019",
-    "sub_region_code": "013"
+    "sub_region_code": "013",
+    "country_dialing_code": "+52"
   },
   {
     "name": "Micronesia (Federated States of)",
@@ -1592,7 +1731,8 @@
     "region": "Oceania",
     "sub_region": "Micronesia",
     "region_code": "009",
-    "sub_region_code": "057"
+    "sub_region_code": "057",
+    "country_dialing_code": "+691"
   },
   {
     "name": "Moldova (Republic of)",
@@ -1603,7 +1743,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+373"
   },
   {
     "name": "Monaco",
@@ -1614,7 +1755,8 @@
     "region": "Europe",
     "sub_region": "Western Europe",
     "region_code": "150",
-    "sub_region_code": "155"
+    "sub_region_code": "155",
+    "country_dialing_code": "+377"
   },
   {
     "name": "Mongolia",
@@ -1625,7 +1767,8 @@
     "region": "Asia",
     "sub_region": "Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "030"
+    "sub_region_code": "030",
+    "country_dialing_code": "+976"
   },
   {
     "name": "Montenegro",
@@ -1636,7 +1779,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+382"
   },
   {
     "name": "Montserrat",
@@ -1647,7 +1791,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1664"
   },
   {
     "name": "Morocco",
@@ -1658,7 +1803,8 @@
     "region": "Africa",
     "sub_region": "Northern Africa",
     "region_code": "002",
-    "sub_region_code": "015"
+    "sub_region_code": "015",
+    "country_dialing_code": "+212"
   },
   {
     "name": "Mozambique",
@@ -1669,7 +1815,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+258"
   },
   {
     "name": "Myanmar",
@@ -1680,7 +1827,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+95"
   },
   {
     "name": "Namibia",
@@ -1691,7 +1839,8 @@
     "region": "Africa",
     "sub_region": "Southern Africa",
     "region_code": "002",
-    "sub_region_code": "018"
+    "sub_region_code": "018",
+    "country_dialing_code": "+264"
   },
   {
     "name": "Nauru",
@@ -1702,7 +1851,8 @@
     "region": "Oceania",
     "sub_region": "Micronesia",
     "region_code": "009",
-    "sub_region_code": "057"
+    "sub_region_code": "057",
+    "country_dialing_code": "+674"
   },
   {
     "name": "Nepal",
@@ -1713,7 +1863,8 @@
     "region": "Asia",
     "sub_region": "Southern Asia",
     "region_code": "142",
-    "sub_region_code": "034"
+    "sub_region_code": "034",
+    "country_dialing_code": "+977"
   },
   {
     "name": "Netherlands",
@@ -1724,7 +1875,8 @@
     "region": "Europe",
     "sub_region": "Western Europe",
     "region_code": "150",
-    "sub_region_code": "155"
+    "sub_region_code": "155",
+    "country_dialing_code": "+31"
   },
   {
     "name": "New Caledonia",
@@ -1735,7 +1887,8 @@
     "region": "Oceania",
     "sub_region": "Melanesia",
     "region_code": "009",
-    "sub_region_code": "054"
+    "sub_region_code": "054",
+    "country_dialing_code": "+687"
   },
   {
     "name": "New Zealand",
@@ -1746,7 +1899,8 @@
     "region": "Oceania",
     "sub_region": "Australia and New Zealand",
     "region_code": "009",
-    "sub_region_code": "053"
+    "sub_region_code": "053",
+    "country_dialing_code": "+64"
   },
   {
     "name": "Nicaragua",
@@ -1757,7 +1911,8 @@
     "region": "Americas",
     "sub_region": "Central America",
     "region_code": "019",
-    "sub_region_code": "013"
+    "sub_region_code": "013",
+    "country_dialing_code": "+505"
   },
   {
     "name": "Niger",
@@ -1768,7 +1923,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+227"
   },
   {
     "name": "Nigeria",
@@ -1779,7 +1935,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+234"
   },
   {
     "name": "Niue",
@@ -1790,7 +1947,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+683"
   },
   {
     "name": "Norfolk Island",
@@ -1801,7 +1959,8 @@
     "region": "Oceania",
     "sub_region": "Australia and New Zealand",
     "region_code": "009",
-    "sub_region_code": "053"
+    "sub_region_code": "053",
+    "country_dialing_code": "+672"
   },
   {
     "name": "Northern Mariana Islands",
@@ -1812,7 +1971,8 @@
     "region": "Oceania",
     "sub_region": "Micronesia",
     "region_code": "009",
-    "sub_region_code": "057"
+    "sub_region_code": "057",
+    "country_dialing_code": "+1 670"
   },
   {
     "name": "Norway",
@@ -1823,7 +1983,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+47"
   },
   {
     "name": "Oman",
@@ -1834,7 +1995,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+968"
   },
   {
     "name": "Pakistan",
@@ -1845,7 +2007,8 @@
     "region": "Asia",
     "sub_region": "Southern Asia",
     "region_code": "142",
-    "sub_region_code": "034"
+    "sub_region_code": "034",
+    "country_dialing_code": "+92"
   },
   {
     "name": "Palau",
@@ -1856,7 +2019,8 @@
     "region": "Oceania",
     "sub_region": "Micronesia",
     "region_code": "009",
-    "sub_region_code": "057"
+    "sub_region_code": "057",
+    "country_dialing_code": "+680"
   },
   {
     "name": "Palestine, State of",
@@ -1867,7 +2031,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+970"
   },
   {
     "name": "Panama",
@@ -1878,7 +2043,8 @@
     "region": "Americas",
     "sub_region": "Central America",
     "region_code": "019",
-    "sub_region_code": "013"
+    "sub_region_code": "013",
+    "country_dialing_code": "+507"
   },
   {
     "name": "Papua New Guinea",
@@ -1889,7 +2055,8 @@
     "region": "Oceania",
     "sub_region": "Melanesia",
     "region_code": "009",
-    "sub_region_code": "054"
+    "sub_region_code": "054",
+    "country_dialing_code": "+675"
   },
   {
     "name": "Paraguay",
@@ -1900,7 +2067,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+595"
   },
   {
     "name": "Peru",
@@ -1911,7 +2079,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+51"
   },
   {
     "name": "Philippines",
@@ -1922,7 +2091,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+63"
   },
   {
     "name": "Pitcairn",
@@ -1933,7 +2103,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+872"
   },
   {
     "name": "Poland",
@@ -1944,7 +2115,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+48"
   },
   {
     "name": "Portugal",
@@ -1955,7 +2127,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+351"
   },
   {
     "name": "Puerto Rico",
@@ -1966,7 +2139,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 939"
   },
   {
     "name": "Qatar",
@@ -1977,7 +2151,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+974"
   },
   {
     "name": "Réunion",
@@ -1988,7 +2163,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+262"
   },
   {
     "name": "Romania",
@@ -1999,7 +2175,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+40"
   },
   {
     "name": "Russian Federation",
@@ -2010,7 +2187,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+7"
   },
   {
     "name": "Rwanda",
@@ -2021,7 +2199,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+250"
   },
   {
     "name": "Saint Barthélemy",
@@ -2032,7 +2211,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+590"
   },
   {
     "name": "Saint Helena, Ascension and Tristan da Cunha",
@@ -2043,7 +2223,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+290"
   },
   {
     "name": "Saint Kitts and Nevis",
@@ -2054,7 +2235,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 869"
   },
   {
     "name": "Saint Lucia",
@@ -2065,7 +2247,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 758"
   },
   {
     "name": "Saint Martin (French part)",
@@ -2076,7 +2259,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+590"
   },
   {
     "name": "Saint Pierre and Miquelon",
@@ -2087,7 +2271,8 @@
     "region": "Americas",
     "sub_region": "Northern America",
     "region_code": "019",
-    "sub_region_code": "021"
+    "sub_region_code": "021",
+    "country_dialing_code": "+508"
   },
   {
     "name": "Saint Vincent and the Grenadines",
@@ -2098,7 +2283,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 784"
   },
   {
     "name": "Samoa",
@@ -2109,7 +2295,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+685"
   },
   {
     "name": "San Marino",
@@ -2120,7 +2307,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+378"
   },
   {
     "name": "Sao Tome and Principe",
@@ -2131,7 +2319,8 @@
     "region": "Africa",
     "sub_region": "Middle Africa",
     "region_code": "002",
-    "sub_region_code": "017"
+    "sub_region_code": "017",
+    "country_dialing_code": "+239"
   },
   {
     "name": "Saudi Arabia",
@@ -2142,7 +2331,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+966"
   },
   {
     "name": "Senegal",
@@ -2153,7 +2343,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+221"
   },
   {
     "name": "Serbia",
@@ -2164,7 +2355,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+381"
   },
   {
     "name": "Seychelles",
@@ -2175,7 +2367,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+248"
   },
   {
     "name": "Sierra Leone",
@@ -2186,7 +2379,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+232"
   },
   {
     "name": "Singapore",
@@ -2197,7 +2391,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+65"
   },
   {
     "name": "Sint Maarten (Dutch part)",
@@ -2219,7 +2414,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+421"
   },
   {
     "name": "Slovenia",
@@ -2230,7 +2426,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+386"
   },
   {
     "name": "Solomon Islands",
@@ -2241,7 +2438,8 @@
     "region": "Oceania",
     "sub_region": "Melanesia",
     "region_code": "009",
-    "sub_region_code": "054"
+    "sub_region_code": "054",
+    "country_dialing_code": "+677"
   },
   {
     "name": "Somalia",
@@ -2252,7 +2450,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+252"
   },
   {
     "name": "South Africa",
@@ -2263,7 +2462,8 @@
     "region": "Africa",
     "sub_region": "Southern Africa",
     "region_code": "002",
-    "sub_region_code": "018"
+    "sub_region_code": "018",
+    "country_dialing_code": "+27"
   },
   {
     "name": "South Georgia and the South Sandwich Islands",
@@ -2274,7 +2474,8 @@
     "sub_region_code": null,
     "region_code": null,
     "sub_region": null,
-    "region": null
+    "region": null,
+    "country_dialing_code": "+500"
   },
   {
     "name": "South Sudan",
@@ -2296,7 +2497,8 @@
     "region": "Europe",
     "sub_region": "Southern Europe",
     "region_code": "150",
-    "sub_region_code": "039"
+    "sub_region_code": "039",
+    "country_dialing_code": "+34"
   },
   {
     "name": "Sri Lanka",
@@ -2307,7 +2509,8 @@
     "region": "Asia",
     "sub_region": "Southern Asia",
     "region_code": "142",
-    "sub_region_code": "034"
+    "sub_region_code": "034",
+    "country_dialing_code": "+94"
   },
   {
     "name": "Sudan",
@@ -2318,7 +2521,8 @@
     "region": "Africa",
     "sub_region": "Northern Africa",
     "region_code": "002",
-    "sub_region_code": "015"
+    "sub_region_code": "015",
+    "country_dialing_code": "+249"
   },
   {
     "name": "Suriname",
@@ -2329,7 +2533,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+597"
   },
   {
     "name": "Svalbard and Jan Mayen",
@@ -2340,7 +2545,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+47"
   },
   {
     "name": "Swaziland",
@@ -2351,7 +2557,8 @@
     "region": "Africa",
     "sub_region": "Southern Africa",
     "region_code": "002",
-    "sub_region_code": "018"
+    "sub_region_code": "018",
+    "country_dialing_code": "+268"
   },
   {
     "name": "Sweden",
@@ -2362,7 +2569,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+46"
   },
   {
     "name": "Switzerland",
@@ -2373,7 +2581,8 @@
     "region": "Europe",
     "sub_region": "Western Europe",
     "region_code": "150",
-    "sub_region_code": "155"
+    "sub_region_code": "155",
+    "country_dialing_code": "+41"
   },
   {
     "name": "Syrian Arab Republic",
@@ -2384,7 +2593,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+963"
   },
   {
     "name": "Taiwan, Province of China",
@@ -2395,7 +2605,8 @@
     "region": "Asia",
     "sub_region": "Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "030"
+    "sub_region_code": "030",
+    "country_dialing_code": "+886"
   },
   {
     "name": "Tajikistan",
@@ -2406,7 +2617,8 @@
     "region": "Asia",
     "sub_region": "Central Asia",
     "region_code": "142",
-    "sub_region_code": "143"
+    "sub_region_code": "143",
+    "country_dialing_code": "+992"
   },
   {
     "name": "Tanzania, United Republic of",
@@ -2417,7 +2629,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+255"
   },
   {
     "name": "Thailand",
@@ -2428,7 +2641,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+66"
   },
   {
     "name": "Timor_Leste",
@@ -2439,7 +2653,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+670"
   },
   {
     "name": "Togo",
@@ -2450,7 +2665,8 @@
     "region": "Africa",
     "sub_region": "Western Africa",
     "region_code": "002",
-    "sub_region_code": "011"
+    "sub_region_code": "011",
+    "country_dialing_code": "+228"
   },
   {
     "name": "Tokelau",
@@ -2461,7 +2677,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+690"
   },
   {
     "name": "Tonga",
@@ -2472,7 +2689,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+676"
   },
   {
     "name": "Trinidad and Tobago",
@@ -2483,7 +2701,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 868"
   },
   {
     "name": "Tunisia",
@@ -2494,7 +2713,8 @@
     "region": "Africa",
     "sub_region": "Northern Africa",
     "region_code": "002",
-    "sub_region_code": "015"
+    "sub_region_code": "015",
+    "country_dialing_code": "+216"
   },
   {
     "name": "Turkey",
@@ -2505,7 +2725,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+90"
   },
   {
     "name": "Turkmenistan",
@@ -2516,7 +2737,8 @@
     "region": "Asia",
     "sub_region": "Central Asia",
     "region_code": "142",
-    "sub_region_code": "143"
+    "sub_region_code": "143",
+    "country_dialing_code": "+993"
   },
   {
     "name": "Turks and Caicos Islands",
@@ -2527,7 +2749,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 649"
   },
   {
     "name": "Tuvalu",
@@ -2538,7 +2761,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+688"
   },
   {
     "name": "Uganda",
@@ -2549,7 +2773,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+256"
   },
   {
     "name": "Ukraine",
@@ -2560,7 +2785,8 @@
     "region": "Europe",
     "sub_region": "Eastern Europe",
     "region_code": "150",
-    "sub_region_code": "151"
+    "sub_region_code": "151",
+    "country_dialing_code": "+380"
   },
   {
     "name": "United Arab Emirates",
@@ -2571,7 +2797,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+971"
   },
   {
     "name": "United Kingdom of Great Britain and Northern Ireland",
@@ -2582,7 +2809,8 @@
     "region": "Europe",
     "sub_region": "Northern Europe",
     "region_code": "150",
-    "sub_region_code": "154"
+    "sub_region_code": "154",
+    "country_dialing_code": "+44"
   },
   {
     "name": "United States of America",
@@ -2593,7 +2821,8 @@
     "region": "Americas",
     "sub_region": "Northern America",
     "region_code": "019",
-    "sub_region_code": "021"
+    "sub_region_code": "021",
+    "country_dialing_code": "+1"
   },
   {
     "name": "United States Minor Outlying Islands",
@@ -2615,7 +2844,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+598"
   },
   {
     "name": "Uzbekistan",
@@ -2626,7 +2856,8 @@
     "region": "Asia",
     "sub_region": "Central Asia",
     "region_code": "142",
-    "sub_region_code": "143"
+    "sub_region_code": "143",
+    "country_dialing_code": "+998"
   },
   {
     "name": "Vanuatu",
@@ -2637,7 +2868,8 @@
     "region": "Oceania",
     "sub_region": "Melanesia",
     "region_code": "009",
-    "sub_region_code": "054"
+    "sub_region_code": "054",
+    "country_dialing_code": "+678"
   },
   {
     "name": "Venezuela (Bolivarian Republic of)",
@@ -2648,7 +2880,8 @@
     "region": "Americas",
     "sub_region": "South America",
     "region_code": "019",
-    "sub_region_code": "005"
+    "sub_region_code": "005",
+    "country_dialing_code": "+58"
   },
   {
     "name": "Viet Nam",
@@ -2659,7 +2892,8 @@
     "region": "Asia",
     "sub_region": "South_Eastern Asia",
     "region_code": "142",
-    "sub_region_code": "035"
+    "sub_region_code": "035",
+    "country_dialing_code": "+84"
   },
   {
     "name": "Virgin Islands (British)",
@@ -2670,7 +2904,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 284"
   },
   {
     "name": "Virgin Islands (U.S.)",
@@ -2681,7 +2916,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+1 340"
   },
   {
     "name": "Wallis and Futuna",
@@ -2692,7 +2928,8 @@
     "region": "Oceania",
     "sub_region": "Polynesia",
     "region_code": "009",
-    "sub_region_code": "061"
+    "sub_region_code": "061",
+    "country_dialing_code": "+681"
   },
   {
     "name": "Western Sahara",
@@ -2714,7 +2951,8 @@
     "region": "Asia",
     "sub_region": "Western Asia",
     "region_code": "142",
-    "sub_region_code": "145"
+    "sub_region_code": "145",
+    "country_dialing_code": "+967"
   },
   {
     "name": "Zambia",
@@ -2725,7 +2963,8 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+260"
   },
   {
     "name": "Zimbabwe",
@@ -2736,6 +2975,7 @@
     "region": "Africa",
     "sub_region": "Eastern Africa",
     "region_code": "002",
-    "sub_region_code": "014"
+    "sub_region_code": "014",
+    "country_dialing_code": "+263"
   }
 ]
