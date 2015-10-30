@@ -79,13 +79,14 @@ module.exports.http = {
 
         requestLogger: function (req, res, next) {
             res.on("finish", function() {
+                var responseTime = res.get('X-Response-Time');
                 //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
                 var fromService = '->';
                 if (req.headers['x-blade-service']) {
                     fromService = ' [' + req.headers['x-blade-service'] + '] ->';
                 }
                 var payload = req.body ? '\n' + fromService + ' ' + JSON.stringify(req.body) : "";
-                console.log("%s %s: [%s] %s %s%s", fromService, new Date(), res.get('X-Response-Time'), req.method, req.url, payload);
+                console.log("%s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
 
                 sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
             });
