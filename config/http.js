@@ -10,7 +10,10 @@
  */
 
 var responseTime = require('response-time');
+var url = require('url');
 var util = require('util');
+
+var usingSocketIO = false;
 
 module.exports.http = {
 
@@ -79,24 +82,36 @@ module.exports.http = {
 
         requestLogger: function (req, res, next) {
             if (process.env.NODE_ENV != "test") {
-                var fromService = '->';
-                if (req.headers['x-blade-service']) {
-                    fromService = ' [' + req.headers['x-blade-service'] + '] ->';
+                var showLog = true;
+                //deal with socket.io requests
+                var url_parts = url.parse(req.url);
+                if (url_parts.pathname == '/socket.io/') {
+                    if (!usingSocketIO && (sails.config.log.level != 'silly')) {
+                        usingSocketIO = true;
+                        sails.log.info('Suppressing incoming socket.io request logs.  (If you want to see them, up your logging level to "silly")');
+                    }
+                    showLog = (sails.config.log.level == 'silly');
                 }
-                var payload = req.body ? '\n' + fromService + ' ' + JSON.stringify(req.body) : "";
+                if (showLog) {
+                    var fromService = '->';
+                    if (req.headers['x-blade-service']) {
+                        fromService = ' [' + req.headers['x-blade-service'] + '] ->';
+                    }
+                    var payload = req.body ? '\n' + fromService + ' ' + JSON.stringify(req.body) : "";
 
-                res.on("finish", function () {
-                    var responseTime = res.get('X-Response-Time');
-                    //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
-                    console.log("%s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
-                    sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
-                });
+                    res.on("finish", function () {
+                        var responseTime = res.get('X-Response-Time');
+                        //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
+                        console.log("%s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
+                        sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
+                    });
 
-                res.on("close", function () {
-                    //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
-                    console.log("[interrupted] %s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
-                    sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
-                });
+                    res.on("close", function () {
+                        //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
+                        console.log("[interrupted] %s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
+                        sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
+                    });
+                }
             }
             next();
         }
