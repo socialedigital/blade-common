@@ -11,6 +11,7 @@
 
 var responseTime = require('response-time');
 var url = require('url');
+var querystring = require('querystring');
 var util = require('util');
 
 var usingSocketIO = false;
@@ -98,18 +99,16 @@ module.exports.http = {
                         fromService = ' [' + req.headers['x-blade-service'] + '] ->';
                     }
                     var payload = req.body ? '\n' + fromService + ' ' + JSON.stringify(req.body) : "";
-
+                    var unescapedUrl = querystring.unescape(req.url);
                     res.on("finish", function () {
                         var responseTime = res.get('X-Response-Time');
-                        //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
-                        console.log("%s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
-                        sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
+                        console.log("%s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, unescapedUrl, payload);
+                        sails.config.metrics.httpRequestCounter.increment({method: req.method, url: unescapedUrl});
                     });
 
                     res.on("close", function () {
-                        //todo: unescape the query string on the url (if it exists) and replace so that any logging will show a pretty request without all that escaping
-                        console.log("[interrupted] %s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, req.url, payload);
-                        sails.config.metrics.httpRequestCounter.increment({method: req.method, url: req.url});
+                        console.log("[interrupted] %s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, unescapedUrl, payload);
+                        sails.config.metrics.httpRequestCounter.increment({method: req.method, url: unescapedUrl});
                     });
                 }
             }
