@@ -19,6 +19,9 @@ module.exports = {
         name: {
             type: 'string',
             required: true
+        },
+        adapter: {
+            type: 'string'
         }
     },
 
