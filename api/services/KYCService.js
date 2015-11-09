@@ -50,7 +50,7 @@ var upload = Promise.promisify(function(req, options, cb){
 
             try{
               Service.request('service.image')
-              .post('/images/clients/' + clientId + '/accountholders/' + cardAccount, {imagedocs: data})
+              .post('/images/clients/' + clientId + '/cardAccounts/' + cardAccount, {imagedocs: data})
               .then(function(response){
                 return cb(undefined, response.json);
             })
@@ -253,7 +253,7 @@ var download = Promise.promisify(function(files, options, cb){
             uploadedData.push(data);
             if(uploadedData.length === files.length){
                 Service.request('service.image')
-                .post('/images/clients/' + clientId + '/accountholders/' + cardAccount, {imagedocs: uploadedData})
+                .post('/images/clients/' + clientId + '/cardAccounts/' + cardAccount, {imagedocs: uploadedData})
                 .then(function(response){
                     return cb(undefined, response.json);
                 })
