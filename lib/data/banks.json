@@ -1,7 +1,8 @@
 [
   {
     "bank": "WAVEC",
-    "name": "Wavecrest"
+    "name": "Wavecrest",
+    "adapter": "adapter.wavecrest"
   },
   {
     "bank": "FIDOR",
