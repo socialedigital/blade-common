@@ -207,13 +207,14 @@ module.exports.upload = upload;
 var urlMatch = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
 var urlRegex = new RegExp(urlMatch);
 
-var download = Promise.promisify(function(files, options, cb){
+var download = Promise.promisify(function(req, options, cb){
     if(!options || !options.clientId || !options.cardAccount){
         return cb("Must pass options with 'clientId' and 'cardAccount'")
     } else {
         var clientId = options.clientId;
         var cardAccount = options.cardAccount;
     }
+    var files = req.body.files;
     var urlErr = validateUrls(files);
     if(urlErr){
         return cb(urlErr);
@@ -227,7 +228,7 @@ var download = Promise.promisify(function(files, options, cb){
         downloadState.removeListener("success", success);
         setTimeout(function(){ 
             if(uploadedData.length > 0) {
-                awsDeleteFiles(uploadedData, "filename") 
+                awsDeleteFiles(uploadedData, "filneame") 
             }
         }, 5000);
         return cb(err);
