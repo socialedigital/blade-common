@@ -1,43 +1,6 @@
 var Promise = require("bluebird");
 var _ = require("lodash");
 
-var mapFields = function(map, data){
-    return _.reduce(map, function(result, mappedKey, key){
-        var noData = (!data[key]);
-        var mapField = mappedKey;
-        if(_.isPlainObject(data[key])){
-            if(_.isPlainObject(mappedKey)){
-                mapField = _.get(mappedKey, "__fieldName", key);
-            } //what to do if map value is string? throw error? allow nested object?
-            result[mapField] = mapFields(mappedKey, data[key]);
-        }
-        else{
-            if(key !== "__fieldName"){
-                if(_.isPlainObject(mappedKey)){
-                    if(noData){
-                        mapField = _.get(mappedKey, "__fieldName", key);
-                        result[mapField] = undefined; //originally was set to empty object - causes validation errors on PUT
-                    }
-                    else if(_.isArray(data[key])){
-                        mapField = key;
-                        result[mapField] = [];
-                        for(var i in data[key]){
-                            result[mapField].push(mapFields(mappedKey, data[key][i]));
-                        }
-                    }
-                } else {
-                    if(noData){
-                        result[mapField] = undefined;
-                    } else {
-                        result[mapField] = data[key];
-                    }
-                }
-            }
-        }
-        return result;
-    }, {})
-}
-
 
 module.exports = function(req, res, routeCall, options){
     var queryDefaults = {
@@ -61,7 +24,7 @@ module.exports = function(req, res, routeCall, options){
         }
 
         if(reqVerb === "POST" || reqVerb === "PUT"){
-            req.body = mapFields(_.get(opts, "map.in", {}), req.body)
+            req.body = MapFields(_.get(opts, "map.in", {}), req.body)
         }
         else if(reqVerb === "GET"){
             var defaults = queryDefaults;
@@ -104,10 +67,10 @@ module.exports = function(req, res, routeCall, options){
             if(results.data && _.isArray(results.data)){
                 resource.total = results.total;
                 resource.data = _.map(results.data, function(item){
-                    return mapFields(_.get(opts, "map.out", {}), item);
+                    return MapFields(_.get(opts, "map.out", {}), item);
                 })
             } else if(!results.data && _.isPlainObject(results)){
-                resource = mapFields(_.get(opts, "map.out", {}), results);
+                resource = MapFields(_.get(opts, "map.out", {}), results);
             }
             if(reqVerb === "POST"){
                 return res.created(resource, options.resourceUrl);
@@ -117,6 +80,7 @@ module.exports = function(req, res, routeCall, options){
 
         })
         .catch(function(err){
+            console.log(err)
             var statusCode = getErrorStatus(err);
             var errorFunction = defaultErrorResponse;
             if(typeof opts.errors === "function"){
@@ -151,7 +115,7 @@ var defaultErrorResponse = function(err, statusCode, req, res, opts){
         var fields = _.get(err, "service.response.json.error.invalidAttributes", undefined);
         if(fields){
             var errorMap = mapInvertAndFlatten(_.get(opts, "map.in", {}));
-            customErr.fields = mapFields(errorMap, fields);
+            customErr.fields = MapFields(errorMap, fields);
         }
     }
     return res.send(statusCode, customErr);
