@@ -54,7 +54,6 @@ module.exports.http = {
         ],
 
         responseTimeLogger: function (req, res, next) {
-            //require('response-time')()(req, res, next);
             responseTime()(req, res, next);
         },
 
@@ -102,11 +101,13 @@ module.exports.http = {
                     var unescapedUrl = querystring.unescape(req.url);
                     res.on("finish", function () {
                         var responseTime = res.get('X-Response-Time');
-                        console.log("%s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, unescapedUrl, payload);
+                        var statusCode = res.statusCode;
+                        console.log("%s %s: [%s][%s] %s %s%s", fromService, new Date(), responseTime, statusCode, req.method, unescapedUrl, payload);
                         sails.config.metrics.httpRequestCounter.increment({method: req.method, url: unescapedUrl});
                     });
 
                     res.on("close", function () {
+                        var responseTime = res.get('X-Response-Time');
                         console.log("[interrupted] %s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, unescapedUrl, payload);
                         sails.config.metrics.httpRequestCounter.increment({method: req.method, url: unescapedUrl});
                     });
