@@ -26,6 +26,7 @@ var validTypes = {
 }
 
 var upload = Promise.promisify(function(req, options, cb){
+    console.log(req.body)
     if(!options || !options.clientId || !options.cardAccount){
         throw new Error("Must pass options with 'clientId' and 'cardAccount'")
     } else {
@@ -204,85 +205,109 @@ return documentReceiver;
 
 module.exports.upload = upload;
 
+// Retrieve KYC docs from remote server
+var download = Promise.promisify(function(req, options, cb){
+    var files = req.body.files;
+
+    //check all required parameters synchronously
+    var inputError = errorCheck(files, options);
+    if(inputError){
+        return cb(inputError);
+    }
+    //call client service to verify cardAccount exists and get the cardProgram
+    Service.request("service.client")
+    .get("/cardAccounts/" + options.cardAccount + "?populate=cardProgram")
+    .then(function(cardAccount){
+        cardAccount = cardAccount.json;
+        var downloadState = new EventEmitter();
+        var uploadedData = [];
+        var fileBuffers = [];
+        var i = 0;
+
+        downloadState.on("error", function(err){
+            downloadState.removeListener("next", next);
+            downloadState.removeListener("success", success);
+            setTimeout(function(){ 
+                if(uploadedData.length > 0) {
+                    awsDeleteFiles(uploadedData, "filename");
+                }
+            }, 5000);
+            return cb(err);
+        })
+
+        downloadState.on("next", next);
+        downloadState.on("success", success);
+
+        function next(){
+            if(i < files.length){
+                request(files[i], downloadState);
+                i += 1;
+            }
+        }
+
+        function success(downloadedFile){
+            s3upload(downloadedFile.fd, downloadedFile.fileBuffer, downloadedFile.type, function(err, data){
+                if(err){
+                    return cb(err);
+                }
+                data.name = downloadedFile.filename;
+                data.description = downloadedFile.description;
+                data.proof = downloadedFile.proof;
+                uploadedData.push(data);
+                fileBuffers.push(downloadedFile);
+                if(uploadedData.length === files.length){
+                    // send files to bank adapter
+                    sendToBankAdapter(fileBuffers, cardAccount)
+                    .then(function(bankResponse){
+                        //send meta data to image service and return response
+                        return Service.request('service.image')
+                        .post('/images/clients/' + options.clientId + '/cardAccounts/' + cardAccount, {imagedocs: uploadedData})
+                    })
+                    .then(function(imageResponse){
+                        return cb(undefined, imageResponse.json);
+                    })
+                    .catch(function(err){
+                        awsDeleteFiles(files, "fd");
+                        return cb(err);
+                    })
+                }
+            })
+            downloadState.emit("next");
+        }
+        downloadState.emit("next");
+    })
+})
+
 var urlMatch = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
 var urlRegex = new RegExp(urlMatch);
 
-var download = Promise.promisify(function(req, options, cb){
+var errorCheck = function(files, options){
     if(!options || !options.clientId || !options.cardAccount){
-        return cb("Must pass options with 'clientId' and 'cardAccount'")
-    } else {
-        var clientId = options.clientId;
-        var cardAccount = options.cardAccount;
+        return new ValidationError("files", "KYC", "Must send parameters 'clientId' and 'cardAccount'");
     }
-    var files = req.body.files;
-    var urlErr = validateUrls(files);
-    if(urlErr){
-        return cb(urlErr);
-    }
-    var downloadState = new EventEmitter();
-    var uploadedData = [];
-    var i = 0;
-
-    downloadState.on("error", function(err){
-        downloadState.removeListener("next", next);
-        downloadState.removeListener("success", success);
-        setTimeout(function(){ 
-            if(uploadedData.length > 0) {
-                awsDeleteFiles(uploadedData, "filneame") 
-            }
-        }, 5000);
-        return cb(err);
-    })
-
-    downloadState.on("next", next);
-    downloadState.on("success", success);
-
-    function next(){
-        if(i < files.length){
-            request(files[i], downloadState);
-            i += 1;
-        }
-    }
-
-    function success(downloadedFile){
-        s3upload(downloadedFile.fd, downloadedFile.data, downloadedFile.type, function(err, data){
-            if(err){
-                return cb(err);
-            }
-            data.name = downloadedFile.filename;
-            data.description = downloadedFile.description;
-            uploadedData.push(data);
-            if(uploadedData.length === files.length){
-                Service.request('service.image')
-                .post('/images/clients/' + clientId + '/cardAccounts/' + cardAccount, {imagedocs: uploadedData})
-                .then(function(response){
-                    return cb(undefined, response.json);
-                })
-                .catch(function(err){
-                    awsDeleteFiles(files, "fd");
-                    return cb(err);
-                })
-            }
-        })
-        downloadState.emit("next");
-    }
-
-    downloadState.emit("next");
-})
-
-var validateUrls = function(files){
     if(!files){
-        return new ValidationError("files", "Missing files field in request");
+        return new ValidationError("files", "KYC", "Missing files field in request");
+    }
+    if(files.length !== 2){
+        return new ValidationError("files", "KYC", "Must send exactly two documents");
     }
     for(var i in files){
         var file = files[i];
         if(!file.url){
-            return new ValidationError("files", "Cannot download file with missing URL");
+            return new ValidationError("files", "KYC", "Cannot download file with missing URL");
         }
         if(!file.url.match(urlRegex)){
-            return new ValidationError("files", file.url + " is an invalid URL"); 
+            return new ValidationError("files", "KYC", file.url + " is an invalid URL"); 
+        }
+        if(file.proof !== 'identity' && file.proof !== 'address'){
+            return new ValidationError("files", "KYC", "Must send proof field denoting whether document is proof of identity or address");
         }
     }
+    var proofs = _.uniq(_.pluck(files, 'proof'));
+    if(proofs.length !== 2){
+        return new ValidationError("files", "KYC", "One file must be denoted as proof of identity and one must be denoted as proof of address.");
+    }
+
     return false;
 }
 
@@ -292,13 +317,13 @@ var makeFilename = function(type){
 }
 
 var request = function(file, downloadState){
-    var stream = {length: 0, type: "", data: [], fd: "", filename: file.filename, description: file.description};
+    var stream = {length: 0, type: "", fileBuffer: [], fd: "", filename: file.filename, description: file.description, proof: file.proof};
     var fileReq = http.get(file.url, function(res){
 
         if(res.statusCode !== 200){
             res.destroy();
             fileReq.destroy();
-            downloadState.emit("error", new ValidationError("image", file.url + " is invalid."));
+            downloadState.emit("error", new ValidationError("image", "KYC", file.url + " is invalid."));
         }
 
         res.on('data', function(chunk){
@@ -306,15 +331,15 @@ var request = function(file, downloadState){
             if(stream.length > 2000000){
                 res.destroy();
                 fileReq.destroy();
-                downloadState.emit("error", new ValidationError("image", file.filename + " exceeds maximum file size of 2MB"));
+                downloadState.emit("error", new ValidationError("image", "KYC", file.filename + " exceeds maximum file size of 2MB"));
             } else {
-                stream.data.push(chunk);
+                stream.fileBuffer.push(chunk);
             }
         })
 
         res.on('end', function success(){
-            stream.data = Buffer.concat(stream.data);
-            magic.detect(stream.data, function(err, result){
+            stream.fileBuffer = Buffer.concat(stream.fileBuffer);
+            magic.detect(stream.fileBuffer, function(err, result){
                 if(err){
                   res.destroy();
                   fileReq.destroy();
@@ -324,7 +349,7 @@ var request = function(file, downloadState){
               if(!(stream.type in validTypes)){
                   res.destroy();
                   fileReq.destroy();
-                  downloadState.emit("error", new ValidationError("image", file.filename + " is invalid type, must be " + Object.keys(validTypes).join(', ')));
+                  downloadState.emit("error", new ValidationError("image", "KYC", file.filename + " is invalid type, must be " + Object.keys(validTypes).join(', ')));
               } else {
                   stream.fd = makeFilename(stream.type);
                   downloadState.emit("success", stream);
@@ -337,13 +362,37 @@ var request = function(file, downloadState){
         socket.setTimeout(4500);
         socket.on("timeout", function(){
             fileReq.destroy();
-            downloadState.emit("error", new ValidationError("image", "Request to " + file.url + " timed out."));
+            downloadState.emit("error", new ValidationError("image", "KYC", "Request to " + file.url + " timed out."));
         })
     })
 
     fileReq.on("error", function(err){
         fileReq.destroy();
         downloadState.emit("error", err);
+    })
+}
+
+var sendToBankAdapter = function(files, cardInfo, options){
+    if(!options){
+        options = {};
+    }
+    var encoding = options.encoding || "base64";
+    return Bank.findOne(cardInfo.cardProgram.bank)
+    .then(function(bank){
+        var payload = {};
+        payload["bankToken"] = cardInfo.bankToken;
+        for(var i in files){
+            if(files[i].proof === "identity"){
+                payload["identityProof"] = files[i].fileBuffer.toString(encoding);
+            } else if(files[i].proof === "address"){
+                payload["addressProof"] = files[i].fileBuffer.toString(encoding);
+            }
+        }
+        return Service.request(bank.adapter)
+        .post("/kyc", payload)
+    })
+    .then(function(adapterResponse){
+        return adapterResponse;
     })
 }
 
