@@ -14,6 +14,7 @@ function parseRoute(route) {
     if (_.endsWith(routePath, '?')) {
         var firstRoute = [];
         var secondRoute = [];
+        var optionalRoute;
         var pathParts = {};
         var routeParts = routePath.match(/\/:?[A-Za-z0-9_\\??]*/ig);
         _.each(routeParts, function(routePart, index) {
@@ -33,10 +34,21 @@ function parseRoute(route) {
             secondRoute.push(part);
             if (!isOptional) {
                 firstRoute.push(part);
+            } else {
+                //this is a hack - sorry!
+                //this adds a third route when parameters are optional that includes the question mark. 
+                //right now, routes in the api with optional parameters do not work, because the parameters do not match due to the question mark.
+                //this fixes that, though not very elegantly.
+                optionalRoute = firstRoute;
+                optionalRoute.push(part + "?")
             }
+
         });
         result.push(method + ' /' + firstRoute.join('/'));
         result.push(method + ' /' + secondRoute.join('/'));
+        if(optionalRoute){
+            result.push(method + ' /' + optionalRoute.join('/'));
+        }
 
     }
     else {
