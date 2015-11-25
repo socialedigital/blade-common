@@ -83,7 +83,7 @@ var s3upload = function(fileName, fileStream, mimeType, cb){
 
 var s3delete = function(filename){
     var params = {Bucket: sails.config.s3.bucket, Key: filename};
-    console.log("DELETING " + filename + "FROM S3 ON ERROR")
+    console.log("DELETING " + filename + " FROM S3 ON ERROR")
     s3.deleteObject(params, function(err, data){
 
     })
@@ -92,7 +92,7 @@ var s3delete = function(filename){
 var awsDeleteFiles = function(files, key){
     var params = {Bucket: sails.config.s3.bucket, Delete: {Objects:[]}};
     _.forEach(files, function(file){
-        console.log("DELETING " + file[key] + "FROM S3 ON ERROR")
+        console.log("DELETING " + file.name + " FROM S3 ON ERROR")
         params.Delete.Objects.push({Key: file[key]})
     })
     s3.deleteObjects(params, function(err, data){
@@ -260,14 +260,16 @@ var download = Promise.promisify(function(req, options, cb){
                     sendToBankAdapter(fileBuffers, cardAccount)
                     .then(function(bankResponse){
                         //send meta data to image service and return response
+                        var reqUrl = '/images/clients/' + options.clientId + '/cardAccounts/' + cardAccount.token;
                         return Service.request('service.image')
-                        .post('/images/clients/' + options.clientId + '/cardAccounts/' + cardAccount, {imagedocs: uploadedData})
+                        .post(reqUrl, {imagedocs: uploadedData})
                     })
                     .then(function(imageResponse){
+                        console.log(imageResponse)
                         return cb(undefined, imageResponse.json);
                     })
                     .catch(function(err){
-                        awsDeleteFiles(files, "fd");
+                        awsDeleteFiles(uploadedData, "filename");
                         return cb(err);
                     })
                 }
@@ -391,8 +393,8 @@ var sendToBankAdapter = function(files, cardInfo, options){
         return Service.request(bank.adapter)
         .post("/kyc", payload)
     })
-    .then(function(adapterResponse){
-        return adapterResponse;
+    .then(function(bankResponse){
+        return bankResponse;
     })
 }
 
