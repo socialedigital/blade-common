@@ -102,13 +102,14 @@ module.exports.http = {
                     res.on("finish", function () {
                         var responseTime = res.get('X-Response-Time');
                         var statusCode = res.statusCode;
+                        //todo: if res.statusCode is 404, then show the requesters IP address
+                        //todo: consider using the 404 middleware provided by sails to achieve this
                         console.log("%s %s: [%s][%s] %s %s%s", fromService, new Date(), responseTime, statusCode, req.method, unescapedUrl, payload);
                         sails.config.metrics.httpRequestCounter.increment({method: req.method, url: unescapedUrl});
                     });
 
                     res.on("close", function () {
-                        var responseTime = res.get('X-Response-Time');
-                        console.log("[interrupted] %s %s: [%s] %s %s%s", fromService, new Date(), responseTime, req.method, unescapedUrl, payload);
+                        console.log("[interrupted]%s %s: %s %s%s", fromService, new Date(), req.method, unescapedUrl, payload);
                         sails.config.metrics.httpRequestCounter.increment({method: req.method, url: unescapedUrl});
                     });
                 }
