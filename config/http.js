@@ -98,6 +98,9 @@ module.exports.http = {
                         fromService = ' [' + req.headers['x-blade-service'] + '] ->';
                     }
                     var payload = req.body ? '\n' + fromService + ' ' + JSON.stringify(req.body) : "";
+                    if (payload.length > 1024) {
+                        payload = payload.substring(0,1024) + " [too much data to display...truncated]";
+                    }
                     var unescapedUrl = querystring.unescape(req.url);
                     res.on("finish", function () {
                         var responseTime = res.get('X-Response-Time');
