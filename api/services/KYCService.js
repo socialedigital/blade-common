@@ -14,8 +14,7 @@ var s3 = new AWS.S3();
 
 var uploadDir = sails.config.uploadDirectory;
 
-//var http = require('https');
-var http = require('http');
+var http = require('https');
 var EventEmitter = require('events');
 var uuid = require('uuid');
 
