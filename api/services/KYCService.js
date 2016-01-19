@@ -242,6 +242,7 @@ var download = Promise.promisify(function(req, options, cb){
             if(i < files.length){
                 request(files[i], downloadState);
                 i += 1;
+                downloadState.emit("next");
             }
         }
 
@@ -274,7 +275,6 @@ var download = Promise.promisify(function(req, options, cb){
                     })
                 }
             })
-            downloadState.emit("next");
         }
         downloadState.emit("next");
     })
