@@ -222,7 +222,7 @@ var download = Promise.promisify(function(req, options, cb){
         var downloadState = new EventEmitter();
         var uploadedData = [];
         var fileBuffers = [];
-        var i = 0;
+        var numberOfFilesRequested = 0;
 
         downloadState.on("error", function(err){
             downloadState.removeListener("next", next);
@@ -236,12 +236,14 @@ var download = Promise.promisify(function(req, options, cb){
         })
 
         downloadState.on("next", next);
+        downloadState.on("start", next);
         downloadState.on("success", success);
 
         function next(){
-            if(i < files.length){
-                request(files[i], downloadState);
-                i += 1;
+            if(numberOfFilesRequested < files.length){
+                request(files[numberOfFilesRequested], downloadState);
+                numberOfFilesRequested += 1;
+                downloadState.emit("next");
             }
         }
 
@@ -265,7 +267,6 @@ var download = Promise.promisify(function(req, options, cb){
                         .post(reqUrl, {imagedocs: uploadedData})
                     })
                     .then(function(imageResponse){
-                        console.log(imageResponse)
                         return cb(undefined, imageResponse.json);
                     })
                     .catch(function(err){
@@ -274,13 +275,12 @@ var download = Promise.promisify(function(req, options, cb){
                     })
                 }
             })
-            downloadState.emit("next");
         }
-        downloadState.emit("next");
+        downloadState.emit("start");
     })
 })
 
-var urlMatch = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+var urlMatch = /https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
 var urlRegex = new RegExp(urlMatch);
 
 var errorCheck = function(files, options){

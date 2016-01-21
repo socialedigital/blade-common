@@ -15,6 +15,20 @@
  *
  */
 
+ var _ = require('lodash');
+
+var genericError = function(error){
+    if(_.isPlainObject(error)){
+        for(var prop in error){
+            this[prop] = error[prop];
+        }
+    } else if(_.isString(error)){
+        this.message = error;
+    }
+}
+
+genericError.prototype = new Error;
+
 module.exports = function (error) {
     //todo: should really check that error is an instance of WLError
     if (error.originalError) {
@@ -23,6 +37,10 @@ module.exports = function (error) {
 
     var res = this.res;
     var statusCode = error.status || 500;
+
+    if (!(error instanceof Error)) {
+        error = new genericError(error);
+    }
 
     res.status(statusCode);
 
