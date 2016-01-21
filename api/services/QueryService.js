@@ -55,23 +55,29 @@ var formatResponse = function(request, queryResult, criteria){
         var criteria = queryCriteria(request.allParams())
     }
     var url = request._parsedUrl;
-    if(criteria.where && Object.keys(criteria.where).length > 0){
-        var where = JSON.stringify(criteria.where);
-    }
     var skip = parseInt(criteria.skip || 0, 10);
     var limit = parseInt(criteria.limit || defaultPageSize, 10);
+
+    var queryParamString = "";
+
+    if(criteria.where && Object.keys(criteria.where).length > 0){
+        queryParamString += "&" + "where=" + JSON.stringify(criteria.where);
+    }
     if(criteria.select){
-        var select = criteria.select.join(',');
+        queryParamString += "&" + "select=" + criteria.select.join(',');
     }
     if(criteria.populate){
-        var populate = criteria.populate.join(',');
+        queryParamString += "&" + "populate=" + criteria.populate.join(',');
     }
+    if(criteria.sort){
+        queryParamString += "&" + "sort=" + criteria.sort;
+    }
+
     if(queryResult.links){
         queryResult.links = undefined;
     }
-    var sort = criteria.sort;
     //construct links
-    var query;
+    var query = [];
     //previous link
     var offset = skip;
     if (offset > 0) {
@@ -79,68 +85,37 @@ var formatResponse = function(request, queryResult, criteria){
         else offset -= limit;
         if (offset >= 0) {
             query = [];
-            if (where) query.push('where=' + where);
             query.push('limit=' + limit);
-            if (offset > 0) {
+            if (offset >= 0) {
                 query.push('skip=' + offset);
-            }
-            if (select){
-                query.push('select=' + select);
-            }
-            if (sort){
-                query.push('sort=' + sort);
-            }
-            if (populate){
-                query.push('populate=' + populate)
             }
             if (!queryResult.links) {
                 queryResult.links = {};
             }
-            queryResult.links.prev = url.pathname + '?' + query.join('&');
+            queryResult.links.prev = url.pathname + '?' + query.join('&') + queryParamString;
         }
     }
 
     //next link
-    offset = skip;
-    offset += limit;
+    offset = skip + limit;
     if (offset < queryResult.total) {
         query = [];
-        if (where) query.push('where=' + where);
         query.push('limit=' + limit);
         query.push('skip=' + offset);
-        if (select){
-            query.push('select=' + select)
-        }
-        if (sort){
-            query.push('sort=' + sort);
-        }
-        if (populate){
-            query.push('populate=' + populate)
-        }
         if (!queryResult.links) {
             queryResult.links = {};
         }
-        queryResult.links.next = url.pathname + '?' + query.join('&');
+        queryResult.links.next = url.pathname + '?' + query.join('&') + queryParamString;
     }
 
     //first link
     if(queryResult.total > 1){
         query = [];
-        if (where) query.push('where=' + where);
         query.push('limit=' + limit);
-        if (select){
-            query.push('select=' + select)
-        }
-        if (sort){
-            query.push('sort=' + sort);
-        }
-        if (populate){
-            query.push('populate=' + populate)
-        }
         if (!queryResult.links) {
             queryResult.links = {};
         }
-        queryResult.links.first = url.pathname + '?' + query.join('&');
+        queryResult.links.first = url.pathname + '?' + query.join('&') + queryParamString;
     }
 
     //last link
@@ -150,22 +125,12 @@ var formatResponse = function(request, queryResult, criteria){
         var remainder = queryResult.total % limit;
         if(remainder === 0) lastPage = queryResult.total - limit;
         else lastPage = queryResult.total - remainder;
-        if (where) query.push('where=' + where);
         query.push('limit=' + limit);
         query.push('skip=' + lastPage);
-        if (select){
-            query.push('select=' + select)
-        }
-        if (sort){
-            query.push('sort=' + sort);
-        }
-        if (populate){
-            query.push('populate=' + populate)
-        }
         if (!queryResult.links) {
             queryResult.links = {};
         }
-        queryResult.links.last = url.pathname + '?' + query.join('&');
+        queryResult.links.last = url.pathname + '?' + query.join('&') + queryParamString;
     }
 
     return queryResult;
@@ -194,7 +159,11 @@ var findOne = function (model, request, options){
             throw new Error("findOne error - your query criteria should be specific and only return one record.");
         }
         if(count < 1){
-            throw new NotFound('QueryService');
+            var messageContext = {model: request.options.model, param: parameters[getBy[primaryKey]] || key};
+            if(messageContext.model && messageContext.param){
+                var newMessage = messageContext.model.toUpperCase() + " " + messageContext.param + " does not exist.";
+            }
+            throw {status: 404, message: newMessage}
         }
         return dbQuery(model, criteria)
     })
