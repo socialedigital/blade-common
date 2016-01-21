@@ -69,10 +69,15 @@ function processRoute(callOptions){
         if(route[string][0] === ":"){
             var parameter = route[string].replace(":", "");
             if(parameter[parameter.length - 1] === "?"){
-                route[string] = params[parameter.replace("?", "")] || "";
+                parameter = parameter.replace("?", "");
+                if(params[parameter]){
+                    route[string] = params[parameter];
+                } else {
+                    route.splice(string, 1);
+                }
             } else {
                 if(params[parameter]){
-                route[string] = params[parameter];
+                    route[string] = params[parameter];
                 } else {
                     throw "No value provided for parameter " + parameter
                 }
