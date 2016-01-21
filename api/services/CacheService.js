@@ -127,6 +127,57 @@ module.exports = {
         });
     },
 
+    sortedSetAdd: function(key, field, score) {
+        return Promise.using(getRedisClient(), function (redis) {
+            return redis.zaddAsync(key, score, field);
+        });
+    },
+    sortedSetDelete: function(key, field){
+        return Promise.using(getRedisClient(), function (redis) {
+            return redis.zremAsync(key, field);
+        });
+    },
+    sortedSetGet: function(key, opts){
+        var rangeStart = 0;
+        var rangeEnd = -1;
+        if(!opts){
+            opts = {};
+        }
+        if(opts.range){
+            try{
+                rangeStart = opts.range[0];
+                rangeEnd = opts.range[1];
+            } catch(err) {
+                throw "Incorrect range specified"
+            }
+        }
+        return Promise.using(getRedisClient(), function (redis) {
+            if(opts.withscores === true){
+                return redis.zrangeAsync(key, rangeStart, rangeEnd, "WITHSCORES");
+            } else {
+                return redis.zrangeAsync(key, rangeStart, rangeEnd);
+            }
+        });
+    },
+
+    listGet: function(key, opts){
+        var rangeStart = 0;
+        var rangeEnd = -1;
+        if(!opts){
+            opts = {};
+        }
+        if(opts.range){
+            try{
+                rangeStart = opts.range[0];
+                rangeEnd = opts.range[1];
+            } catch(err) {
+                throw "Incorrect range specified"
+            }
+        }
+        return Promise.using(getRedisClient(), function (redis) {
+            return redis.lrangeAsync(key, rangeStart, rangeEnd);
+        });
+    },
     /**
      * enQueue - fifo queueing
      * @param key
