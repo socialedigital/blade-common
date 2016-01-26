@@ -144,7 +144,12 @@ module.exports = {
                                                 sails.config.blade.blockedEmailTimeout);
                                         });
                                 } else {
-                                    return CacheService.set('failed-email-' + req.body.email, {count: cnt});
+                                    return CacheService.set('failed-email-' + req.body.email, {count: cnt})
+                                        .then(function() {
+                                            return CacheService
+                                                .expireKey('failed-email-' + req.body.email,
+                                                sails.config.blade.blockedEmailTimeout);
+                                        })
                                 }
                             })
                             .then(function () {
