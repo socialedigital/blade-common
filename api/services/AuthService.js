@@ -191,7 +191,7 @@ module.exports = {
                 var msg = {
                     serviceType: authUser.twoFactorMethod,
                     to: authUser.mobile,
-                    message: 'Code: ' + newCode
+                    message: 'Your Two-Factor Verification Code: ' + newCode
                 };
                 if (authUser.twoFactorMethod !== 'sms') {
                     msg['to'] = authUser.email;
