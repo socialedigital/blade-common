@@ -21,7 +21,6 @@
     "clef": "^0.1.0",
     "content-type": "^1.0.1",
     "flake-idgen": "^1.0.0",
-    "heapdump": "^0.3.7",
     "lodash": "^3.7.0",
     "memwatch-next": "^0.2.9",
     "mmmagic": "^0.3.15",
