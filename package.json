@@ -25,6 +25,7 @@
     "mmmagic": "^0.4.5",
     "moment": "^2.10.3",
     "node-discover": "^0.3.0",
+    "node-uuid": "^1.4.7",
     "portfinder": "^0.4.0",
     "prometheus-client": "^0.1.0",
     "redis": "^0.12.1",

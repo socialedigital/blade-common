@@ -12,7 +12,7 @@ var Promise = require('bluebird');
  */
 
 function getRedisClient() {
-    return Connection.getClient().disposer(function(client) {
+    return Redis.getClient().disposer(function(client) {
         client.end();
     });
 }
@@ -28,6 +28,13 @@ module.exports = {
         return Promise.using(getRedisClient(), function (redis) {
             var keyValue = _.isString(value) ? value : JSON.stringify(value);
             return redis.setAsync(key, keyValue);
+        });
+    },
+
+    setNX   : function (key, value, ttl) {
+        return Promise.using(getRedisClient(), function (redis) {
+            var keyValue = _.isString(value) ? value : JSON.stringify(value);
+            return redis.setAsync(key, keyValue, 'PX', ttl, 'NX');
         });
     },
 
