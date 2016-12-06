@@ -22,6 +22,10 @@ module.exports = {
         },
         adapter: {
             type: 'string'
+        },
+        isDeleted: {
+            type: 'boolean',
+            defaultsTo: false
         }
     },
 

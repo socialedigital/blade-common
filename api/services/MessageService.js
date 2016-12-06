@@ -12,13 +12,13 @@ module.exports = {
      */
     sendMessage: function (msg) {
         var sMsg = _.extend(new MessageStructure(), msg);
-        return Connection.nextGlobalCounter()
+        return Redis.nextGlobalCounter()
             .then(function (newKey) {
                 sMsg.messageKey = newKey;
-                Connection.addHandler(newKey, function (messageKey) {
+                Redis.addHandler(newKey, function (messageKey) {
                     CacheService.hashDelete(sMsg.serviceType, messageKey)
                         .then(function () {
-                            Connection.removeHandler(messageKey);
+                            Redis.removeHandler(messageKey);
                         });
                 });
                 return CacheService.hashSet(sMsg.serviceType, sMsg.messageKey, JSON.stringify(sMsg));
