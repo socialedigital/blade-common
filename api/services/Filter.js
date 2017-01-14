@@ -23,6 +23,13 @@ module.exports = function(req, res, routeCall, options){
             throw new Error("No Route Call")
         }
 
+        var where;
+        //filter the query string if it exists
+        if (req.query) {
+            where = JSON.parse(req.query.where);
+        }
+
+
         if(reqVerb === "POST" || reqVerb === "PUT"){
             req.body = MapFields(_.get(opts, "map.in", {}), req.body)
         }
@@ -30,7 +37,7 @@ module.exports = function(req, res, routeCall, options){
             var defaults = queryDefaults;
             if(opts.override){
                 if(opts.override.where){
-                    defaults.where = _.merge(defaults.where, opts.override.where, function(a,b,k,obj){
+                    where = _.merge(where, opts.override.where, function(a,b,k,obj){
                         if(b === undefined){
                             obj[k] = undefined;
                         }
@@ -44,7 +51,7 @@ module.exports = function(req, res, routeCall, options){
                 }
             }
             // req.query.where = sanitizeWhere(req.query.where, defaults.where);
-            req.query.where = JSON.stringify(defaults.where);
+            req.query.where = JSON.stringify(where);
 
             if(defaults.populate.length > 0){
                 req.query.populate = sanitizeArrays(req.query.populate, defaults.populate);
