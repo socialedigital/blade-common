@@ -23,12 +23,11 @@ module.exports = function(req, res, routeCall, options){
             throw new Error("No Route Call")
         }
 
-        var where;
+        var where = {};
         //filter the query string if it exists
-        if (req.query) {
+        if (_.isObject(req.query.where)) {
             where = JSON.parse(req.query.where);
         }
-
 
         if(reqVerb === "POST" || reqVerb === "PUT"){
             req.body = MapFields(_.get(opts, "map.in", {}), req.body)
@@ -50,8 +49,10 @@ module.exports = function(req, res, routeCall, options){
                     defaults.select = opts.override.select; //must be array
                 }
             }
-            // req.query.where = sanitizeWhere(req.query.where, defaults.where);
-            req.query.where = JSON.stringify(where);
+            if (_.isObject(where)) {
+                // req.query.where = sanitizeWhere(req.query.where, defaults.where);
+                req.query.where = JSON.stringify(where);
+            }
 
             if(defaults.populate.length > 0){
                 req.query.populate = sanitizeArrays(req.query.populate, defaults.populate);
