@@ -25,7 +25,7 @@ module.exports = function(req, res, routeCall, options){
 
         var where = {};
         //filter the query string if it exists
-        if (_.isObject(req.query.where)) {
+        if (req.query.where) {
             where = JSON.parse(req.query.where);
         }
 
@@ -49,10 +49,14 @@ module.exports = function(req, res, routeCall, options){
                     defaults.select = opts.override.select; //must be array
                 }
             }
-            if (_.isObject(where)) {
-                // req.query.where = sanitizeWhere(req.query.where, defaults.where);
+            where = JSON.parse(JSON.stringify(where));
+            if (_.isEmpty(where)) {
+                delete req.query.where;
+            }
+            else {
                 req.query.where = JSON.stringify(where);
             }
+
 
             if(defaults.populate.length > 0){
                 req.query.populate = sanitizeArrays(req.query.populate, defaults.populate);
