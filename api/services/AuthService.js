@@ -216,7 +216,7 @@ module.exports = {
     },
 
     resolveAuthentication: function (req, res) {  // caller should be on authPass, see below and above
-        return CacheService.getTimedKey(req.headers.authorization, 0)// find token for auth
+        return CacheService.getTimedKey(req.headers.authorization)// find token for auth
             .then(function(result) {
                 if (!_.isEmpty(result)) {
                     return CacheService.getTimedKey(req.param('code'), 0);
