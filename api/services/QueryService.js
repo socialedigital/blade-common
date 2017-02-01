@@ -181,6 +181,10 @@ var find = function (model, request, options) {
     if(getBy){
         criteria = parseGetBy(getBy, parameters, criteria);
     }
+    var optionalWhere = options && options.where ? options.where : undefined;
+    if (optionalWhere) {
+        criteria = parseOptionalWhere(optionalWhere, parameters, criteria);
+    }
     var result = {
         data: [],
         total: 0
@@ -251,6 +255,15 @@ var parseGetBy = function(getBy, parameters, criteria){
     else if(_.isString(getBy)){
         if(parameters[getBy]){
             criteria.where[getBy] = parameters[getBy];
+        }
+    }
+    return criteria;
+}
+
+var parseOptionalWhere = function(where, parameters, criteria) {
+    if(_.isObject(where)) {
+        for (var key in where) {
+            criteria.where[key] = where[key];
         }
     }
     return criteria;
