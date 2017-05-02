@@ -690,7 +690,8 @@
     "region": "Americas",
     "sub_region": "Caribbean",
     "region_code": "019",
-    "sub_region_code": "029"
+    "sub_region_code": "029",
+    "country_dialing_code": "+599"
   },
   {
     "name": "Cyprus",
