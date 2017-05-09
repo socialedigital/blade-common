@@ -13,6 +13,7 @@ var responseTime = require('response-time');
 var url = require('url');
 var querystring = require('querystring');
 var util = require('util');
+var contentType = require('content-type')
 
 var usingSocketIO = false;
 
@@ -81,6 +82,7 @@ module.exports.http = {
         },
 
         requestLogger: function (req, res, next) {
+            sails.hooks.http.app.set('trust proxy', true);
             if (process.env.NODE_ENV != "test") {
                 var showLog = true;
                 //deal with socket.io requests
@@ -97,16 +99,38 @@ module.exports.http = {
                     if (req.headers['x-blade-service']) {
                         fromService = ' [' + req.headers['x-blade-service'] + '] ->';
                     }
-                    var payload = req.body ? '\n' + fromService + ' ' + JSON.stringify(req.body) : "";
+                    else {
+                        fromService = ' [' + req.ip + '] ->';
+                    }
+
+                    var payload = "";
+
+                    try {
+                        var requestContentType = contentType.parse(req);
+
+                        if (requestContentType.type == 'application/json') {
+                            //todo: filter out personal information as well as passwords and the like
+                            var body = req.body;
+                            if (body.hasOwnProperty('password')) {
+                                body.password = '_elided_';
+                            }
+                            payload = body ? '\n' + fromService + ' ' + JSON.stringify(body) : "";
+                        }
+                        else {
+                            payload = req.body ? '\n' + fromService + ' ' + req.body : "";
+                        }
+                    }
+                    catch(exception) {
+                        payload = req.body ? '\n' + fromService + ' ' + '[unable to display request body: unknown content type]' : "";
+                    }
                     if (payload.length > 1024) {
                         payload = payload.substring(0,1024) + " [too much data to display...truncated]";
                     }
+
                     var unescapedUrl = querystring.unescape(req.url);
                     res.on("finish", function () {
                         var responseTime = res.get('X-Response-Time');
                         var statusCode = res.statusCode;
-                        //todo: if res.statusCode is 404, then show the requesters IP address
-                        //todo: consider using the 404 middleware provided by sails to achieve this
                         console.log("%s %s: [%s][%s] %s %s%s", fromService, new Date(), responseTime, statusCode, req.method, unescapedUrl, payload);
                         sails.config.metrics.httpRequestCounter.increment({method: req.method, url: unescapedUrl});
                     });
