@@ -110,7 +110,7 @@ module.exports.http = {
 
                         if (requestContentType.type == 'application/json') {
                             //todo: filter out personal information as well as passwords and the like
-                            var body = req.body;
+                            var body = _.cloneDeep(req.body);
                             if (body.hasOwnProperty('password')) {
                                 body.password = '_elided_';
                             }
