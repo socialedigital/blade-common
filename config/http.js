@@ -104,7 +104,6 @@ module.exports.http = {
                     }
 
                     var payload = "";
-
                     try {
                         var requestContentType = contentType.parse(req);
 
@@ -121,7 +120,7 @@ module.exports.http = {
                         }
                     }
                     catch(exception) {
-                        payload = req.body ? '\n' + fromService + ' ' + '[unable to display request body: unknown content type]' : "";
+                        payload = req.body ? '\n' + fromService + ' ' + req.body : "";
                     }
                     if (payload.length > 1024) {
                         payload = payload.substring(0,1024) + " [too much data to display...truncated]";
