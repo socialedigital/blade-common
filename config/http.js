@@ -116,7 +116,7 @@ module.exports.http = {
                             payload = body ? '\n' + fromService + ' ' + JSON.stringify(body) : "";
                         }
                         else {
-                            payload = req.body ? '\n' + fromService + ' ' + req.body : "";
+                            payload = req.body ? '\n' + fromService + ' ' + JSON.stringify(req.body) : "";
                         }
                     }
                     catch(exception) {
