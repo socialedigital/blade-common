@@ -1,7 +1,7 @@
 
 module.exports = {
     autoPK: false,
-    tableName: 'lib_authApprover',
+    tableName: 'lib_authApprovers',
     attributes: {
         code: {
             type: 'string',

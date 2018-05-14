@@ -1,7 +1,7 @@
 
 module.exports = {
     autoPK: false,
-    tableName: 'lib_authBalanceHolder',
+    tableName: 'lib_authBalanceHolders',
     attributes: {
         code: {
             type: 'string',
