@@ -199,7 +199,7 @@ var find = function (model, request, options) {
             return result;
         })
             
-}
+};
 
 var dbQuery = function (model, criteria){
     var populate = criteria.populate;

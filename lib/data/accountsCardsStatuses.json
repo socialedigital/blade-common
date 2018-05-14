@@ -1,0 +1,37 @@
+[
+  {
+    "code": "ACT",
+    "label": "Active",
+    "description": "The card is active and is able to use for normal transactions."
+  },
+  {
+    "code": "BLO",
+    "label": "Blocked",
+    "description": "The card has been placed in a blocked state, probably due to a negative status with the accountholder."
+  },
+  {
+    "code": "CLO",
+    "label": "Closed",
+    "description": "The card has been closed (or cancelled) by an account administrator or by request of the accountholder."
+  },
+  {
+    "code": "DAM",
+    "label": "Damaged",
+    "description": "The card associated was damaged and cannot be used. So the account is closed because of it."
+  },
+  {
+    "code": "EXP",
+    "label": "Expired",
+    "description": "The card is past the expiry date. Expired cards effectively deactivated."
+  },
+  {
+    "code": "IAC",
+    "label": "Inactive",
+    "description": "The card has been issued, but the Accountholder has not activated the card yet."
+  },
+  {
+    "code": "LOS",
+    "label": "LOST",
+    "description": "The card associated was lost. So the account is closed because of it."
+  }
+]

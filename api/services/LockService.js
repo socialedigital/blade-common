@@ -50,7 +50,7 @@ Lock.prototype.release = function() {
         return CacheService.ttl(this.key);
     })
     .then(function(ttl) {
-console.log('TTL for', this.key, ttl);
+        console.log('TTL for', this.key, ttl);
         return CacheService.get(this.key);
     })
     .then(function(value) {

@@ -1,23 +1,19 @@
 /**
- * CardStatus.js
+ * Account Card Statuses
  *
- * @description :: TODO: You might write a short summary of how this model works and what it represents here.
- * @docs        :: http://sailsjs.org/#!documentation/models
  */
 
 module.exports = {
-
     autoPK: false,
-
     attributes: {
-        code: {
+        status: {
             type: 'string',
             size: 6,
             required: true,
             unique: true,
             primaryKey: true
         },
-        name: {
+        label: {
             type: 'string',
             required: true
         },
@@ -27,6 +23,5 @@ module.exports = {
         }
     },
 
-    seedData: __dirname + '/../../lib/data/cardStatus.json'
+    seedData: __dirname + '/../../lib/data/accountsCardsStatuses.json'
 };
-

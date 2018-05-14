@@ -1,7 +1,6 @@
 
 module.exports = {
     autoPK: false,
-
     attributes: {
         code: {
             type: 'string',

@@ -9,13 +9,6 @@ var FlakeId = require('flake-idgen');
 
 var authy = require('authy')('41f3fe0a27e1c9cba05c30933811a2b8');//test api key
 
-var clef = require('clef').initialize({
-    appID: '67645dc3c99a84adc0173a7e48b99db4',
-    appSecret: '488e54b49a659304932a6370593fb0ce'
-});
-
-var clefP = bluebird.promisifyAll(clef);
-
 var tokenGen = new FlakeId();
 var cyphGen = new FlakeId();
 
@@ -422,96 +415,5 @@ module.exports = {
         //
         var authUser = null;
         return
-    },
-
-    startClef: function(req, res) {
-        // Blade credentials
-        //Application ID: e94bd38d1a2089b95246bafbb9a871fb
-        //Application Secret: 6aba67deeaacbc185a766fd298239549
-        //That's for CLEF
-        var prm = req.allParams();
-        var authUser = null;
-        var clefUser = null;
-        var clefToken = null;
-
-
-        clefP.getLoginInformation({ code: req.query.code })
-            .then(function(userInfo) {
-                clefUser = userInfo;
-                return authValid({ body: { email: clefUser.email, password: '1' } });
-            })
-            .then(function(found) {
-                if (found) {
-                    authUser = found;
-                    // if clefID empty, update and save
-                    if (_.isEmpty(authUser.clefID)) {
-                        return authCheck()
-                            .then(function(authObj) {
-                                return authObj.setExternalID(authUser.userToken, 'clefID', clefUser.id );
-                            })
-                            .catch(function(err) {
-                                throw new Error('Could not set clef ID.');
-                            })
-                    } else {
-                        return createTokenSet();
-                    }
-                } else {
-                    throw new Error('Email not found.');
-                }
-            })
-            .then(function(tokens) {
-                return Authentication.create({
-                    serviceName: Service.getName(),
-                    userToken: authUser.userToken,
-                    email: req.body.email,
-                    authToken: tokens[0],
-                    authCode: tokens[1],
-                    requestToken: tokens[2],
-                    url: req.url,
-                    authMethod: 'clef',
-                    externalAuthCode: clefToken
-                });
-            })
-            .then(function(authRecord) {
-                return CacheService
-                    .setTimedKey(authRecord.authToken, sails.config.blade.inactivityTimeout, authRecord);
-            })
-            .then(function(newKey) {
-                res.json({authToken: newKey});
-            })
-            .catch(function(err) {
-                res.badRequest(err);
-            });
-
-        /*
-                return request({
-                    method: 'POST',
-                    url: 'https://clef.io/api/v1/authorize',
-                    headers: {'content-type': 'application/json'},
-                    body: {
-                        code: prm.code,
-                        app_id: '67645dc3c99a84adc0173a7e48b99db4',
-                        app_secret: '488e54b49a659304932a6370593fb0ce'
-                    },
-                    json: true
-                })
-                    .spread(function(content, body) {
-                        if (!_.isEmpty(body.success)) {
-                            clefToken = body.access_token;
-                            return request({
-                                method: 'GET',
-                                url: 'http://clef.io/api/v1/info?access_token=' + clefToken,
-                                headers: {'content-type': 'application/json'},
-                                json: true
-                            });
-                        } else {
-                            throw new Error(body.error);
-                        }
-                    })
-        */
-  },
-
-    resolveClef: function(req, res) {
-        // might be needed later for logout from phone (outsider call)
     }
 };

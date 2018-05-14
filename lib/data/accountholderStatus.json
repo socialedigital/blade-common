@@ -1,37 +1,32 @@
 [
   {
-    "code":"PRE",
+    "status":"PRE",
     "name": "Pre-Registration",
-    "description": "The account is currently being created."
+    "description": "The potential accountholder is currently being created and has not fully completed the process."
   },
   {
-    "code":"ACT",
+    "status":"ACT",
     "name": "Active",
-    "description": "The account is active in our system. But some information is unverified."
+    "description": "The accountholder is active in our system. But some information is unverified (eg: email or phone)."
   },
   {
-    "code":"LVE",
+    "status":"LVE",
     "name": "Live",
-    "description": "The account is active and live in our system. The Accountholder verified all information and can access the system."
+    "description": "The account is active and live in our system. The Accountholder verified all information and can access the system (this is separate from being able to use a card, which requires funding activation)."
   },
   {
-    "code":"ARC",
+    "status":"ARC",
     "name": "Archived (Removed)",
-    "description": "The account has been archived on our system and is no longer accessible through the API or UI."
+    "description": "The accountholder has been archived on our system and is no longer accessible through the API or UI."
   },
   {
-    "code":"DEA",
+    "status":"DEA",
     "name": "Deactivated",
-    "description": "The account has been deactivated. A deactivated account can be reinstated. While deactivated, all card transactions will fail."
+    "description": "The accountholder has been deactivated. A deactivated accountholder can be reinstated. While deactivated, all card transactions will fail."
   },
   {
-    "code":"HLD",
+    "status":"HLD",
     "name": "Hold",
-    "description": "The account has been placed on hold. The purpose of this status is to allow further review of KYC (Know-Your-Customer) submissions."
-  },
-  {
-    "code":"UNF",
-    "name": "Underfunded",
-    "description": "The account was funded, but due to recent purchases (debits), the account is below the minimum balance threshold."
+    "description": "The accountholder has been placed on hold. The purpose of this status is to allow further review of KYC (Know-Your-Customer) submissions."
   }
 ]
