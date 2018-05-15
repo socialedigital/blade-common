@@ -6,8 +6,9 @@
 */
 
 module.exports = {
-
     autoPK: false,
+    autoCreatedAt: false,
+    autoUpdatedAt: false,
     tableName: 'lib_mccs',
     attributes: {
         code: {

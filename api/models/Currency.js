@@ -7,6 +7,9 @@
 var accounting = require('accounting');
 
 module.exports = {
+    autoPK: false,
+    autoCreatedAt: false,
+    autoUpdatedAt: false,
     tableName: 'lib_currencies',
     attributes: {
         code: {
@@ -41,9 +44,6 @@ module.exports = {
             return accounting.formatMoney(parseFloat(amount), this.symbol, this.decimal_digits)
         }
     },
-
-    autoPK: false,
-
     seedData: __dirname + '/../../lib/data/currencies.json'
 };
 
