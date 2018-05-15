@@ -7,6 +7,8 @@
 
 module.exports = {
     autoPK: false,
+    autoCreatedAt: false,
+    autoUpdatedAt: false,
     tableName: 'clients_statuses',
     attributes: {
         status: {

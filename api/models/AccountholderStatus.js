@@ -1,8 +1,9 @@
 
 module.exports = {
     autoPK: false,
+    autoCreatedAt: false,
+    autoUpdatedAt: false,
     tableName: 'accountholders_statuses',
-    identity: 'accountholders_statuses',
     attributes: {
         status: {
             type: 'string',
