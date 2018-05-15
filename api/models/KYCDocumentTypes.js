@@ -3,15 +3,15 @@
 
 module.exports = {
     autoPK: false,
-
+    tableName: 'lib_kycDocumentTypes',
     attributes: {
-        code: {
+        type: {
             type: 'string',
             required: true,
             unique: true,
             primaryKey: true
         },
-        name: {
+        label: {
             type: 'string',
             required: true
         }

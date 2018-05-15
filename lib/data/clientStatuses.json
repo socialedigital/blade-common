@@ -1,0 +1,27 @@
+[
+  {
+    "code": "ACT",
+    "label": "Active",
+    "description": "The client is an active client."
+  },
+  {
+    "code": "ARC",
+    "label": "Archive",
+    "description": "The client is no longer active and their account has been deactivated and set to archive."
+  },
+  {
+    "code": "DEA",
+    "label": "Deactivated",
+    "description": "The client has been deactivated."
+  },
+  {
+    "code": "STG",
+    "label": "Staging",
+    "description": "The client is in a staging or testing state."
+  },
+  {
+    "code": "SUS",
+    "label": "Suspended",
+    "description": "The client has been suspended."
+  }
+]

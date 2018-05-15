@@ -8,7 +8,7 @@
 module.exports = {
 
     autoPK: false,
-
+    tableName: 'lib_mccs',
     attributes: {
         code: {
             type: 'integer',

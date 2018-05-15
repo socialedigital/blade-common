@@ -1,0 +1,32 @@
+[
+  {
+    "status":"PRE",
+    "name": "Pre-Registration",
+    "description": "The potential accountholder is currently being created and has not fully completed the process."
+  },
+  {
+    "status":"ACT",
+    "name": "Active",
+    "description": "The accountholder is active in our system. But some information is unverified (eg: email or phone)."
+  },
+  {
+    "status":"LVE",
+    "name": "Live",
+    "description": "The account is active and live in our system. The Accountholder verified all information and can access the system (this is separate from being able to use a card, which requires funding activation)."
+  },
+  {
+    "status":"ARC",
+    "name": "Archived (Removed)",
+    "description": "The accountholder has been archived on our system and is no longer accessible through the API or UI."
+  },
+  {
+    "status":"DEA",
+    "name": "Deactivated",
+    "description": "The accountholder has been deactivated. A deactivated accountholder can be reinstated. While deactivated, all card transactions will fail."
+  },
+  {
+    "status":"HLD",
+    "name": "Hold",
+    "description": "The accountholder has been placed on hold. The purpose of this status is to allow further review of KYC (Know-Your-Customer) submissions."
+  }
+]

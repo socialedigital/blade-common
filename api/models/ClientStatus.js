@@ -6,18 +6,17 @@
  */
 
 module.exports = {
-
     autoPK: false,
-
+    tableName: 'clients_statuses',
     attributes: {
-        code: {
+        status: {
             type: 'string',
             size: 3,
             required: true,
             unique: true,
             primaryKey: true
         },
-        name: {
+        label: {
             type: 'string',
             required: true
         },
@@ -27,6 +26,6 @@ module.exports = {
         }
     },
 
-    seedData: __dirname + '/../../lib/data/clientStatus.json'
+    seedData: __dirname + '/../../lib/data/clientStatuses.json'
 };
 

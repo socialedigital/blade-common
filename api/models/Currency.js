@@ -7,7 +7,7 @@
 var accounting = require('accounting');
 
 module.exports = {
-
+    tableName: 'lib_currencies',
     attributes: {
         code: {
             type: 'string',

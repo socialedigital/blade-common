@@ -1,7 +1,7 @@
 
 module.exports = {
-
     autoPK: false,
+    tableName: 'lib_usStates',
     attributes: {
         code: {
             type: 'string',
@@ -17,5 +17,4 @@ module.exports = {
     },
 
     seedData: __dirname + '/../../lib/data/usStates.json'
-
-}
+};

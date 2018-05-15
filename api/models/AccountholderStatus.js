@@ -1,17 +1,17 @@
 
 module.exports = {
-
     autoPK: false,
-
+    tableName: 'accountholders_statuses',
+    identity: 'accountholders_statuses',
     attributes: {
-        code: {
+        status: {
             type: 'string',
             size: 3,
             required: true,
             unique: true,
             primaryKey: true
         },
-        name: {
+        label: {
             type: 'string',
             required: true
         },
@@ -21,6 +21,5 @@ module.exports = {
         }
     },
 
-    seedData: __dirname + '/../../lib/data/accountholderStatus.json'
+    seedData: __dirname + '/../../lib/data/accountholderStatuses.json'
 };
-

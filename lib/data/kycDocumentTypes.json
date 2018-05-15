@@ -1,58 +1,58 @@
 [
   {
-    "code": "aliencard",
-    "name": "Alien or Foreign ID Card"
+    "type": "aliencard",
+    "label": "Alien or Foreign ID Card"
   },
   {
-    "code": "bankstate",
-    "name": "Bank Statement"
+    "type": "bankstate",
+    "label": "Bank Statement"
   },
   {
-    "code": "creditcard",
-    "name": "Credit Card Statement/Copy"
+    "type": "creditcard",
+    "label": "Credit Card Statement/Copy"
   },
   {
-    "code": "drivers",
-    "name": "Driver's License"
+    "type": "drivers",
+    "label": "Driver's License"
   },
   {
-    "code": "govphotoid",
-    "name": "Government Issued Photo ID"
+    "type": "govphotoid",
+    "label": "Government Issued Photo ID"
   },
   {
-    "code": "lease",
-    "name": "Lease Documentation"
+    "type": "lease",
+    "label": "Lease Documentation"
   },
   {
-    "code": "mortgage",
-    "name": "Mortgage Documentation"
+    "type": "mortgage",
+    "label": "Mortgage Documentation"
   },
   {
-    "code": "other",
-    "name": "Other"
+    "type": "other",
+    "label": "Other"
   },
   {
-    "code": "passport",
-    "name": "Passport"
+    "type": "passport",
+    "label": "Passport"
   },
   {
-    "code": "pension",
-    "name": "Pension Documentation"
+    "type": "pension",
+    "label": "Pension Documentation"
   },
   {
-    "code": "school",
-    "name": "School Card"
+    "type": "school",
+    "label": "School Card"
   },
   {
-    "code": "socialsec",
-    "name": "Social Security Documentation"
+    "type": "socialsec",
+    "label": "Social Security Documentation"
   },
   {
-    "code": "utility",
-    "name": "Utility Bill"
+    "type": "utility",
+    "label": "Utility Bill"
   },
   {
-    "code": "workdoc",
-    "name": "Work Permit/Document"
+    "type": "workdoc",
+    "label": "Work Permit/Document"
   }
 ]
