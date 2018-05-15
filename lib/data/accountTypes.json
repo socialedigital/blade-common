@@ -1,17 +1,17 @@
 [
   {
     "type":"CRD",
-    "name": "Card Account",
+    "label": "Card Account",
     "description": "Card Accounts (Credit, Debit, Prepaid)."
   },
   {
     "type":"BNK",
-    "name": "Bank Account",
+    "label": "Bank Account",
     "description": "Bank Accounts. (Checking, Savings, etc)."
   },
   {
     "type":"DAA",
-    "name": "Digital Asset Account",
+    "label": "Digital Asset Account",
     "description": "Digital Asset Account (BTC, ETH wallet)."
   }
 ]

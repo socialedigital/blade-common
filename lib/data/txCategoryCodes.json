@@ -5,7 +5,7 @@
   },
   {
     "code": "FUNDING",
-    "description": "TWhen money/assets are added to a Account."
+    "description": "When money/assets are added to a Account."
   },
   {
     "code": "FEE",
@@ -14,5 +14,21 @@
   {
     "code": "REVERSAL",
     "description": "When a previous transaction is reversed."
+  },
+  {
+    "code": "ATM",
+    "description": "When money/assets are withdrawn from an account for cash."
+  },
+  {
+    "code": "REFUND",
+    "description": "When a previous purchase is refunded."
+  },
+  {
+    "code": "FX",
+    "description": "Foreign Exchange fee or transaction."
+  },
+  {
+    "code": "PADDING",
+    "description": "When a transaction amount is increase to pad for additional funds."
   }
 ]
