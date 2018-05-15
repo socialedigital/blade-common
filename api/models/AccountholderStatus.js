@@ -2,6 +2,7 @@
 module.exports = {
     autoPK: false,
     tableName: 'accountholders_statuses',
+    identity: 'accountholderStatus',
     attributes: {
         status: {
             type: 'string',
