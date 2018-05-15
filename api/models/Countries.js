@@ -1,6 +1,7 @@
 
 module.exports = {
     autoPK: false,
+    tableName: 'lib_countries',
     attributes: {
         alpha_3: {
             type: 'string',

@@ -1,7 +1,0 @@
-[
-  {"code": "AH", "name": "Accountholder Holds Assets"},
-  {"code": "BL", "name": "Blade Holds Assets"},
-  {"code": "BK", "name": "Bank/Processor Holds Assets"},
-  {"code": "CL", "name": "Client Holds Assets"},
-  {"code": "FX", "name": "Exchange Service Holds Assets"}
-]

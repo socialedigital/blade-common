@@ -7,6 +7,7 @@
 
 module.exports = {
     autoPK: false,
+    tableName: 'clients_statuses',
     attributes: {
         status: {
             type: 'string',

@@ -5,6 +5,7 @@
 
 module.exports = {
     autoPK: false,
+    tableName: 'accountsCards_statuses',
     attributes: {
         status: {
             type: 'string',

@@ -1,12 +1,15 @@
 /**
  * Authentication.js
- *
- * @description :: TODO: You might write a short summary of how this model works and what it represents here.
- * @docs        :: http://sailsjs.org/#!documentation/models
  */
 module.exports = {
-
+    autoPK: false,
+    tableName: 'authentication',
     attributes: {
+        id: {
+            type: 'integer',
+            primaryKey: true,
+            autoIncrement: true
+        },
         serviceName: {
             type: 'string'
         },
@@ -47,7 +50,7 @@ module.exports = {
         },
         authMethod: {
             type: 'string',
-            enum: ['sms', 'mail', 'authy', 'clef', 'google']
+            enum: ['sms', 'mail', 'authy', 'google']
         },
         externalAuthCode: {
             type: 'string'

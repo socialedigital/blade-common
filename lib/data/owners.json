@@ -1,27 +1,27 @@
 [
   {
-    "code": "BL",
-    "name": "Blade",
-    "description": "Blade owns the corresponding responsibility."
+    "code": "CP",
+    "label": "Company",
+    "description": "The company owns the corresponding responsibility."
   },
   {
     "code": "CL",
-    "name": "Client",
+    "label": "Client",
     "description": "Client owns the corresponding responsibility."
   },
   {
     "code": "BK",
-    "name": "Bank/Processor",
+    "label": "Bank/Processor",
     "description": "Bank/Processor owns the corresponding responsibility."
   },
   {
     "code": "FX",
-    "name": "Foreign Exchange",
+    "label": "Foreign Exchange",
     "description": "Exchange own the corresponding responsibility."
   },
   {
     "code": "AH",
-    "name": "Accountholder",
+    "label": "Accountholder",
     "description": "Accountholder owns the corresponding responsibility."
   }
 ]

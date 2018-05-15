@@ -6,24 +6,22 @@
  */
 
 module.exports = {
-
     autoPK: false,
-
+    tableName: 'lib_associations',
     attributes: {
-        code: {
+        association: {
             type: 'string',
-            size: 4,
             required: true,
             unique: true,
             primaryKey: true
         },
-        name: {
+        label: {
             type: 'string',
             required: true
         }
     },
 
-    seedData: __dirname + '/../../lib/data/cardProgramAssociations.json'
+    seedData: __dirname + '/../../lib/data/associations.json'
 
 };
 
