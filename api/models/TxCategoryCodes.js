@@ -14,6 +14,11 @@ module.exports = {
             unique: true,
             primaryKey: true
         },
+        label: {
+            type: 'string',
+            required: true,
+            unique: true
+        },
         description: {
             type: 'string',
             required: true

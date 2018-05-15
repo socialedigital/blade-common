@@ -1,34 +1,42 @@
 [
   {
     "code": "PURCHASE",
+    "label": "Purchase",
     "description": "Sales, service payment, etc."
   },
   {
     "code": "FUNDING",
+    "label": "Funding",
     "description": "When money/assets are added to a Account."
   },
   {
     "code": "FEE",
+    "label": "Fee",
     "description": "Service-level fees, card-based, etc."
   },
   {
     "code": "REVERSAL",
+    "label": "Reversal",
     "description": "When a previous transaction is reversed."
   },
   {
     "code": "ATM",
+    "label": "ATM Transaction",
     "description": "When money/assets are withdrawn from an account for cash."
   },
   {
     "code": "REFUND",
+    "label": "Refund",
     "description": "When a previous purchase is refunded."
   },
   {
     "code": "FX",
+    "label": "Foreign Exchange Transaction",
     "description": "Foreign Exchange fee or transaction."
   },
   {
     "code": "PADDING",
+    "label": "Padding",
     "description": "When a transaction amount is increase to pad for additional funds."
   }
 ]
