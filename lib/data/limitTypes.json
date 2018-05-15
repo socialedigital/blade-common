@@ -1,0 +1,30 @@
+[
+  {
+    "code": "txMax",
+    "description": "The maximum amount for any single transaction. Any amount above this value will be rejected at the time of authorization. (0.00 = no limit)"
+  },
+  {
+    "code": "dailyMax",
+    "description": "The maximum amount for all transaction in a given day. Any transaction that would result in totalling above this value will be rejected at the time of authorization. (0.00 = no limit)"
+  },
+  {
+    "code": "monthlyMax",
+    "description": "The maximum amount for all transaction in a given month. Any transaction that would result in totalling above this value will be rejected at the time of authorization. (0.00 = no limit)"
+  },
+  {
+    "code": "minBalance",
+    "description": "The minimum balance needed on a card account in order to keep the account in an active `ACT` status. (0.00 = no limit)"
+  },
+  {
+    "code": "maxBalance",
+    "description": "The maximum balance that can be kept on a card account. Funds that are above this amount will be returned to the Accountholder. (0.00 = no limit)"
+  },
+  {
+    "code": "atmTxMax",
+    "description": "The maximum amount for any single ATM withdrawals. Any amount above this value will be rejected at the time of authorization. (0.00 = no limit)"
+  },
+  {
+    "code": "atmDailyMax",
+    "description": "The maximum amount for all total ATM withdrawals within a given day. Any amount above this value will be rejected at the time of authorization. (0.00 = no limit)"
+  }
+]
