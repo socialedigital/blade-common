@@ -1,0 +1,62 @@
+[
+  {
+    "type": "CARD_CREATE",
+    "label": "Card Creation Fee",
+    "description": "Fee charged for creating the card.",
+    "category": "FIXED_AMOUNT"
+  },
+  {
+    "type": "CARD_CREATE_SELECT",
+    "label": "Select Card Creation Fee",
+    "description": "Fee charged for creating a card for an accountholder with an address other than the default supported countries.",
+    "category": "FIXED_AMOUNT"
+  },
+  {
+    "type": "FUNDING_48HOUR",
+    "label": "Next Day Funding",
+    "description": "Fee charged for funds that will be available after forty-eight hours.",
+    "category": "FIXED_AMOUNT"
+  },
+  {
+    "type": "FUNDING_24HOUR",
+    "label": "Same Day Funding",
+    "description": "Fee charged for funds that will be available in twenty-four hours.",
+    "category": "FIXED_AMOUNT"
+  },
+  {
+    "type": "FUNDING_INSTANT",
+    "label": "Instant Funding",
+    "description": "Fee charged for funds that will be available instantly.",
+    "category": "FIXED_AMOUNT"
+  },
+  {
+    "type": "FUNDING",
+    "label": "Funding",
+    "description": "Fee charged to fund the card.",
+    "category": "PERCENT"
+  },
+  {
+    "type": "ATM_WITHDRAWAL",
+    "label": "ATM Withdrawal Fee",
+    "description": "Fee charged for an ATM withdrawal.",
+    "category": "FIXED_AMOUNT"
+  },
+  {
+    "type": "ATM_WITHDRAWAL_FX",
+    "label": "Foreign Currency ATM Withdrawal Fee",
+    "description": "Fee charged for withdrawing funds from an ATM in a currency other than that of the card.",
+    "category": "FIXED_AMOUNT"
+  },
+  {
+    "type": "ATM_DECLINE",
+    "label": "ATM Decline",
+    "description": "Fee charged for attempting to withdrawal funds from an ATM without sufficient funds.",
+    "category": "FIXED_AMOUNT"
+  },
+  {
+    "type": "ATM_BALANCE_INQUIRY",
+    "label": "ATM Balance Inquiry",
+    "description": "Fee charged for requesting a balance at an ATM.",
+    "category": "FIXED_AMOUNT"
+  }
+]
