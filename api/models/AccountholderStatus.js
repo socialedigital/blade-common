@@ -21,5 +21,5 @@ module.exports = {
         }
     },
 
-    seedData: __dirname + '/../../lib/data/accountholderStatus.json'
+    seedData: __dirname + '/../../lib/data/accountholderStatuses.json'
 };
