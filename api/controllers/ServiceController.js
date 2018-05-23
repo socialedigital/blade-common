@@ -2,7 +2,6 @@
  * ServiceController.js - handles common service level endpoints
  * @type {{info: Function}}
  */
-
 module.exports = {
     info: function (req, res) {
         if (!sails.config.service.routes) {
