@@ -1,6 +1,6 @@
 {
   "name": "blade-common",
-  "version": "v2018.05.24.21.39",
+  "version": "2018.05.24.21.39",
   "description": "Global BPE Functions",
   "main": "index.js",
   "sails": {
@@ -14,7 +14,7 @@
     {
       "name": "Steve A Williams",
       "email": "steve@raintiger.com"
-    },
+    }
   ],
   "license": "Blade",
   "dependencies": {
