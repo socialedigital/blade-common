@@ -1,7 +1,7 @@
 {
   "name": "blade-common",
-  "version": "0.1.0",
-  "description": "contains models, etc. that are common to all blade services",
+  "version": "2018.05.24.21.39",
+  "description": "Global BPE Functions",
   "main": "index.js",
   "sails": {
     "isHook": true
@@ -10,6 +10,12 @@
     "test": "make test"
   },
   "author": "Cliff Vick <cliff@bladepayments.com>",
+  "contributors": [
+    {
+      "name": "Steve A Williams",
+      "email": "steve@raintiger.com"
+    }
+  ],
   "license": "Blade",
   "dependencies": {
     "accounting": "^0.4.1",
@@ -51,6 +57,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/bladesystem/blade-common.git"
+    "url": "git://github.com/socialedigital/blade-common.git"
   }
 }
