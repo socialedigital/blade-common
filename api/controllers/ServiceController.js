@@ -5,7 +5,7 @@
 
 module.exports = {
     info: function (req, res) {
-        if (!sails.config.service.routes) {
+        if (!sails.config.service.hasOwnProperty('routes')) {
             //format routes
             var rawRoutes = sails.config.routes;
             var routes = _(_.keys(rawRoutes)).reduce(function (result, route) {
