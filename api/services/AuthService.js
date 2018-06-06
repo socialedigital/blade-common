@@ -39,12 +39,12 @@ function authValid(req) {
             }
         })
         .catch(function(err) {
+            sails.log.debug(err);
             throw new Error('Authentication not possible.');
         });
 }
 
 module.exports = {
-
     simpleAuthenticate: function (req, res) {
         var authUser = null;
         return authValid(req)
