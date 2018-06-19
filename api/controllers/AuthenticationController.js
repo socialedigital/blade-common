@@ -26,11 +26,5 @@ module.exports = {
     },
     resolveAuthy: function(req, res) {
         AuthService.resolveAuthy(req, res);
-    },
-    startClef: function(req, res) {
-        AuthService.startClef(req, res);
-    },
-    resolveClef: function(req, res) {
-        AuthService.resolveClef(req, res);
     }
 };

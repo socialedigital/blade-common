@@ -353,7 +353,7 @@ can also just pass "all" to populate all relationship fields
 
 ##KYC Service
 
-The KYC Service takes multipart file upload requests, validates them, and streams them to our Amazon S3 Bucket. It then calls the Images Service to create and store the KYC document metadata.
+The KYC Service takes multipart file upload requests, validates them, and streams them to the Amazon S3 Bucket. It then calls the Images Service to create and store the KYC document metadata.
 
 To use this facility, you will need:
 

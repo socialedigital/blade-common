@@ -23,15 +23,15 @@ var validTypes = {
     "image/gif": true,
     "image/png": true,
     "application/pdf": true
-}
+};
 
 var upload = Promise.promisify(function(req, options, cb){
-    console.log(req.body)
-    if(!options || !options.clientId || !options.cardAccount){
-        throw new Error("Must pass options with 'clientId' and 'cardAccount'")
+    console.log(req.body);
+    if(!options || !options.client_id || !options.accountholder_id){
+        throw new Error("Must pass options with 'client_id' and 'accountholder_id'")
     } else {
-        var clientId = options.clientId;
-        var cardAccount = options.cardAccount;
+        var client_id = options.client_id;
+        var accountholder_id = options.accountholder_id;
     }
     var listener = options.listener || "image";
     var data = [];
@@ -47,11 +47,11 @@ var upload = Promise.promisify(function(req, options, cb){
                 return cb("UPLOAD: ", err);
             }
 
-            if (files.length < 1) return cb(new ValidationError("image", "Must send atleast 1 image"));
+            if (files.length < 1) return cb(new ValidationError("image", "Must send at least 1 image"));
 
             try{
-              Service.request('service.image')
-              .post('/images/clients/' + clientId + '/cardAccounts/' + cardAccount, {imagedocs: data})
+              Service.request('service.core')
+              .post('/kyc/docs/' + client_id + '/' + accountholder_id, {imageData: data})
               .then(function(response){
                 return cb(undefined, response.json);
             })
@@ -66,7 +66,7 @@ var upload = Promise.promisify(function(req, options, cb){
               return cb(err);
             }
         })
-})
+});
 
 var s3upload = function(fileName, fileStream, mimeType, cb){
     var params = {Bucket: sails.config.s3.bucket, Key: null, Body: null};
@@ -79,15 +79,15 @@ var s3upload = function(fileName, fileStream, mimeType, cb){
             cb(null, {url: data.Location, filename: fileName, mimeType: mimeType})
         }
     })
-}
+};
 
 var s3delete = function(filename){
     var params = {Bucket: sails.config.s3.bucket, Key: filename};
-    console.log("DELETING " + filename + " FROM S3 ON ERROR")
+    console.log("DELETING " + filename + " FROM S3 ON ERROR");
     s3.deleteObject(params, function(err, data){
 
     })
-}
+};
 
 var awsDeleteFiles = function(files, key){
     var params = {Bucket: sails.config.s3.bucket, Delete: {Objects:[]}};
@@ -98,7 +98,7 @@ var awsDeleteFiles = function(files, key){
     s3.deleteObjects(params, function(err, data){
 
     })
-}
+};
 
 var checkFile = function(filePath, cb){
     magic.detectFile(filePath, function(err, result){
@@ -144,22 +144,22 @@ var documentReceiverStream = function(cb) {
         function gc(err) {
             sails.log.debug("Garbage collecting file '" + file.filename + "' located at '" + fileSavePath + "'");
             fs.unlink(fileSavePath, function(err){})
-        };
+        }
 
         file.on('data', function gotData(data){
             streams[file.filename].length += data.length;
             if(streams[file.filename].length > 2000000){
                 file.removeListener('data', gotData);
                 file.unpipe(outputs);
-                outputs.removeListener('finish', successfullyWroteFile)
+                outputs.removeListener('finish', successfullyWroteFile);
                 cb(new ValidationError("image", file.filename + " exceeds maximum file size of 2MB"));
                 done(true)
             }
-        })
+        });
 
         file.on('error', function (err) {
             sails.log.error('READ error on file ' + file.filename, '::', err);
-            outputs.end()
+            outputs.end();
             gc(err);
             if(streams[file.filename].uploadedToS3 === true){
                 s3delete(file.fd);
@@ -168,8 +168,8 @@ var documentReceiverStream = function(cb) {
 
         outputs.on('error', function failedToWriteFile (err) {
             sails.log.error('failed to write file', file.filename, 'with encoding', encoding, ': done =', done);
-            cb("write error")
-            done(true)
+            cb("write error");
+            done(true);
             gc(err);
             if(streams[file.filename].uploadedToS3 === true){
                 s3delete(file.fd);
@@ -179,13 +179,13 @@ var documentReceiverStream = function(cb) {
         function successfullyWroteFile () {
             checkFile(fileSavePath, function(err, mimeType){
                 if(err){
-                  cb(new ValidationError("image", file.filename + " is invalid type, must be " + Object.keys(validTypes).join(', ')))
+                  cb(new ValidationError("image", file.filename + " is invalid type, must be " + Object.keys(validTypes).join(', ')));
                   return done(true);
               }
               var fileStream = fs.createReadStream(fileSavePath);
               s3upload(file.fd, fileStream, mimeType, function(err, uploadData){
                   if(err){
-                    cb("S3: " + err)
+                    cb("S3: " + err);
                     return done(true);
                 }
                 streams[file.filename].uploadedToS3 = true;
@@ -262,9 +262,9 @@ var download = Promise.promisify(function(req, options, cb){
                     sendToBankAdapter(fileBuffers, cardAccount)
                     .then(function(bankResponse){
                         //send meta data to image service and return response
-                        var reqUrl = '/images/clients/' + options.clientId + '/cardAccounts/' + cardAccount.token;
+                        var reqUrl = '/images/clients/' + options.client_id + '/cardAccounts/' + cardAccount.token;
                         return Service.request('service.image')
-                        .post(reqUrl, {imagedocs: uploadedData})
+                        .post(reqUrl, {imageData: uploadedData})
                     })
                     .then(function(imageResponse){
                         return cb(undefined, imageResponse.json);
@@ -284,8 +284,8 @@ var urlMatch = /https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-
 var urlRegex = new RegExp(urlMatch);
 
 var errorCheck = function(files, options){
-    if(!options || !options.clientId || !options.cardAccount){
-        return new ValidationError("files", "KYC", "Must send parameters 'clientId' and 'cardAccount'");
+    if(!options || !options.client_id || !options.cardAccount){
+        return new ValidationError("files", "KYC", "Must send parameters 'client_id' and 'cardAccount'");
     }
     if(!files){
         return new ValidationError("files", "KYC", "Missing files field in request");
