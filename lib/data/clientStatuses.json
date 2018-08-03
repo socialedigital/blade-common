@@ -23,5 +23,10 @@
     "code": "SUS",
     "label": "Suspended",
     "description": "The client has been suspended."
+  },
+  {
+    "code": "TST",
+    "label": "Tester",
+    "description": "This client is for test purposes only"
   }
 ]

@@ -31,7 +31,12 @@
   },
   {
     "code": "LOS",
-    "label": "LOST",
+    "label": "Lost",
     "description": "The card associated was lost. So the account is closed because of it."
+  },
+  {
+    "code": "TST",
+    "label": "Tester",
+    "description": "The card account is for testing purposes only."
   }
 ]
