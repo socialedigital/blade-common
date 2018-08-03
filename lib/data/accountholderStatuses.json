@@ -28,5 +28,10 @@
     "status":"HLD",
     "name": "Hold",
     "description": "The accountholder has been placed on hold. The purpose of this status is to allow further review of KYC (Know-Your-Customer) submissions."
+  },
+  {
+    "status":"TST",
+    "name": "Tester",
+    "description": "The accountholder is solely for testing purposes. It carries a live state that can only do test functions."
   }
 ]
