@@ -7,7 +7,7 @@ module.exports = {
     autoPK: false,
     autoCreatedAt: false,
     autoUpdatedAt: false,
-    tableName: 'accountsCards_statuses',
+    tableName: 'accountsCards_cardStatuses',
     attributes: {
         status: {
             type: 'string',
