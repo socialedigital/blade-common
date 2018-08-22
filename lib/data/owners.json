@@ -1,13 +1,23 @@
 [
   {
-    "code": "CP",
-    "label": "Company",
-    "description": "The company owns the corresponding responsibility."
+    "code": "ABNK",
+    "label": "Bank Account",
+    "description": "Bank Account owns the corresponding responsibility."
   },
   {
-    "code": "CL",
-    "label": "Client",
-    "description": "Client owns the corresponding responsibility."
+    "code": "ACRD",
+    "label": "Card Account",
+    "description": "Card Account owns the corresponding responsibility."
+  },
+  {
+    "code": "ADAA",
+    "label": "Digital Asset",
+    "description": "Digital Asset Account owns the corresponding responsibility."
+  },
+  {
+    "code": "AH",
+    "label": "Accountholder",
+    "description": "Accountholder owns the corresponding responsibility."
   },
   {
     "code": "BK",
@@ -15,13 +25,23 @@
     "description": "Bank/Processor owns the corresponding responsibility."
   },
   {
-    "code": "FX",
-    "label": "Foreign Exchange",
-    "description": "Exchange own the corresponding responsibility."
+    "code": "CL",
+    "label": "Client",
+    "description": "Client owns the corresponding responsibility."
   },
   {
-    "code": "AH",
-    "label": "Accountholder",
-    "description": "Accountholder owns the corresponding responsibility."
+    "code": "CP",
+    "label": "Company",
+    "description": "The Company (Sociale) owns the corresponding responsibility."
+  },
+  {
+    "code": "FS",
+    "label": "Funding Source",
+    "description": "Funding Source owns the corresponding responsibility."
+  },
+  {
+    "code": "FX",
+    "label": "Foreign Exchange",
+    "description": "Exchange owns the corresponding responsibility."
   }
 ]
