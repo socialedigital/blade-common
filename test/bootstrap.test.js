@@ -1,4 +1,3 @@
-/*
 var Sails = require('sails').Sails;
 
 // Var to hold a running sails app instance
@@ -45,4 +44,3 @@ after(function (done) {
     // Otherwise just return
     return done();
 });
-*/
