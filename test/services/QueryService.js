@@ -1,4 +1,3 @@
-/*
 var expect = require('chai').expect;
 var path = require("path");
 var Promise = require("bluebird");
@@ -272,4 +271,3 @@ describe("The Query Service", function () {
     })
 })
 
-*/
