@@ -1,3 +1,4 @@
+/*
 var fs = require('fs');
 var _ = require('lodash');
 var Writable = require('stream').Writable;
@@ -399,3 +400,4 @@ var sendToBankAdapter = function(files, cardInfo, options){
 }
 
 module.exports.download = download;
+*/
