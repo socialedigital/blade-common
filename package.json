@@ -45,7 +45,8 @@
     "sails-redis": "^0.10.3",
     "sails-util": "^0.10.4",
     "sails-util-mvcsloader": "^0.1.7",
-    "uuid": "^2.0.1"
+    "use-strict": "^1.0.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "chai": "^3.2.0",
