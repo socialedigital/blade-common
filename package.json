@@ -28,7 +28,7 @@
     "content-type": "^1.0.1",
     "flake-idgen": "^1.0.0",
     "heapdump": "^0.3.9",
-    "lodash": "^3.7.0",
+    "lodash": "^4.17.10",
     "memwatch-next": "^0.3.0",
     "mmmagic": "^0.4.5",
     "moment": "^2.10.3",
@@ -54,7 +54,7 @@
     "sails-memory": "^0.10.5",
     "superagent": "1.1.0",
     "supertest": "^0.15.0",
-    "istanbul": "^0.3.17"
+    "istanbul": "^0.4.5"
   },
   "repository": {
     "type": "git",
